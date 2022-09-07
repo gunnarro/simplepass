@@ -15,7 +15,9 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.simplepass.R;
+import com.gunnarro.android.simplepass.ui.fragment.CredentialAddFragment;
 import com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment;
+import com.gunnarro.android.simplepass.ui.login.LoginActivity;
 import com.gunnarro.android.simplepass.utility.Utility;
 
 import java.io.File;
@@ -31,14 +33,13 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     public static final int PERMISSION_REQUEST = 1;
-
-    private DrawerLayout drawer;
-
+    private static final String TAG = MainActivity.class.getSimpleName();
     @Inject
     CredentialStoreListFragment credentialStoreListFragment;
+    @Inject
+    CredentialAddFragment credentialAddFragment;
+    private DrawerLayout drawer;
 
     public MainActivity() {
         this.credentialStoreListFragment = new CredentialStoreListFragment();
@@ -49,9 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         Log.d(Utility.buildTag(getClass(), "onCreate"), "context: " + getApplicationContext());
         Log.d(Utility.buildTag(getClass(), "onCreate"), "app file dir: " + getApplicationContext().getFilesDir().getPath());
-
-        // Initialize exception handler
-        //new UCEHandler.Builder(this).build();
+        Log.d(Utility.buildTag(getClass(), "onCreate"), String.format("user=%s", getIntent().getExtras().getString(LoginActivity.USERNAME_INTENT_NAME)));
 
         if (!new File(getApplicationContext().getFilesDir().getPath()).exists()) {
             Log.d(Utility.buildTag(getClass(), "onCreate"), "app file dir missing! " + getApplicationContext().getFilesDir().getPath());
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.e(Utility.buildTag(getClass(), "onCreate"), "Failed starting! " + e.getMessage());
         }
         drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, R.string.title_credential_register, R.string.title_credential_register);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, R.string.title_credential_add, R.string.title_credential_add);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -72,8 +71,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         // display home button for actionbar
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        // navigation view select timesheet menu as default
-        navigationView.setCheckedItem(R.id.nav_credential);
+        // navigation view select credential list menu as default
+        navigationView.setCheckedItem(R.id.nav_credential_list);
 
         if (savedInstanceState == null) {
             viewFragment(credentialStoreListFragment);
@@ -100,9 +99,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             Log.d("MainActivity.onNavigationItemSelected", "selected: " + menuItem.getItemId());
             int id = menuItem.getItemId();
-            if (id == R.id.nav_credential) {
+            if (id == R.id.nav_credential_list) {
                 setTitle(R.string.title_credential);
                 viewFragment(credentialStoreListFragment);
+            } else if (id == R.id.nav_credential_add) {
+                setTitle(R.string.title_credential_add);
+                viewFragment(credentialAddFragment);
+            } else if (id == R.id.nav_close) {
+                finish();
             }
             // close drawer after clicking the menu item
             DrawerLayout drawer = findViewById(R.id.drawer_layout);

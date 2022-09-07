@@ -86,7 +86,7 @@ public class CredentialStoreListFragment extends Fragment {
         // Add an observer on the LiveData returned by getAlphabetizedWords.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
-        // Update the cached copy of the words in the adapter.
+        // Update the cached copy of the credentials in the adapter.
         credentialsViewModel.getCredentialLiveData().observe(requireActivity(), adapter::submitList);
 
         FloatingActionButton addButton = view.findViewById(R.id.add_credential);

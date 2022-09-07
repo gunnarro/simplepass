@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class CredentialViewModel extends AndroidViewModel {
 
-    private final CredentialRepository repository;
+    private final CredentialRepository credentialRepository;
     // Using LiveData and caching what getAlphabetizedWords returns has several benefits:
     // - We can put an observer on the data (instead of polling for changes) and only update the
     //   the UI when the data actually changes.
@@ -26,8 +26,8 @@ public class CredentialViewModel extends AndroidViewModel {
 
     public CredentialViewModel(@NonNull Application application) {
         super(application);
-        repository = new CredentialRepository(application);
-        credentials = repository.getAllCredentials();
+        credentialRepository = new CredentialRepository(application);
+        credentials = credentialRepository.getAllCredentials();
     }
 
     public LiveData<List<Credential>> getCredentialLiveData() {
@@ -36,11 +36,11 @@ public class CredentialViewModel extends AndroidViewModel {
 
     public void save(Credential credential) {
         Log.d("CredentialViewModel.save" , "save: " + credential);
-        repository.save(credential);
+        credentialRepository.save(credential);
     }
 
     public void delete(Credential credential) {
         Log.d("CredentialViewModel.delete" , "save: " + credential);
-        repository.delete(credential);
+        credentialRepository.delete(credential);
     }
 }

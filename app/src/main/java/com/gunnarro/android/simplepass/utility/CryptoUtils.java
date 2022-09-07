@@ -15,9 +15,11 @@ import java.util.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -29,6 +31,42 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class CryptoUtils {
 
+    private final int KEY_SIZE = 128;
+    private final int DATA_LENGTH = 128;
+    private Cipher encryptionCipher;
+
+    public SecretKey getKey() throws Exception {
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+        keyGenerator.init(KEY_SIZE);
+        return keyGenerator.generateKey();
+    }
+
+    public String encrypt(String data) throws Exception {
+        byte[] dataInBytes = data.getBytes();
+        encryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
+        encryptionCipher.init(Cipher.ENCRYPT_MODE, getKey());
+        byte[] encryptedBytes = encryptionCipher.doFinal(dataInBytes);
+        return encode(encryptedBytes);
+    }
+
+    public String decrypt(String encryptedData) throws Exception {
+        byte[] dataInBytes = decode(encryptedData);
+        Cipher decryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
+        GCMParameterSpec spec = new GCMParameterSpec(DATA_LENGTH, encryptionCipher.getIV());
+        decryptionCipher.init(Cipher.DECRYPT_MODE, getKey(), spec);
+        byte[] decryptedBytes = decryptionCipher.doFinal(dataInBytes);
+        return new String(decryptedBytes);
+    }
+
+    private String encode(byte[] data) {
+        return Base64.getEncoder().encodeToString(data);
+    }
+
+    private byte[] decode(String data) {
+        return Base64.getDecoder().decode(data);
+    }
+
+    /*
     private static final String SYMMETRIC_KEY_ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES";
     private static final String PASSWORD_BASED_KEY_ALGORITHM = "PBKDF2WithHmacSHA256";
@@ -36,52 +74,20 @@ public class CryptoUtils {
     private static final int ITERATION_COUNT = 65536;
     private static final int KEY_LENGTH = 256;
     private static final String SALT = "mYsAlT";
-/*
-    public static void encrypt(String key, File inputFile, File outputFile) throws MediaCodec.CryptoException {
-        doCrypto(Cipher.ENCRYPT_MODE, key, inputFile, outputFile);
+
+    public static String encrypt(String key, String value) throws MediaCodec.CryptoException {
+        return doCrypto(Cipher.ENCRYPT_MODE, key,  Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8)));
     }
 
-    public static void decrypt(String key, File inputFile, File outputFile) throws MediaCodec.CryptoException {
-        doCrypto(Cipher.DECRYPT_MODE, key, inputFile, outputFile);
+    public static String decrypt(String key, String value) throws MediaCodec.CryptoException {
+        return doCrypto(Cipher.DECRYPT_MODE, key, value);
     }
 
-    private static void doCrypto(int cipherMode, String key, File inputFile, File outputFile) throws MediaCodec.CryptoException {
-        try {
-            Key secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
-            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-            cipher.init(cipherMode, secretKey);
-
-            FileInputStream inputStream = new FileInputStream(inputFile);
-            byte[] inputBytes = new byte[(int) inputFile.length()];
-            inputStream.read(inputBytes);
-
-            byte[] outputBytes = cipher.doFinal(inputBytes);
-
-            FileOutputStream outputStream = new FileOutputStream(outputFile);
-            outputStream.write(outputBytes);
-
-            inputStream.close();
-            outputStream.close();
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException
-                | InvalidKeyException | BadPaddingException
-                | IllegalBlockSizeException | IOException ex) {
-            throw new MediaCodec.CryptoException(1,"Error encrypting/decrypting file");
-        }
-    }
-*/
-    public static String encrypt(String password, String value) throws MediaCodec.CryptoException {
-        return doCrypto(Cipher.ENCRYPT_MODE, password,  Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8)));
-    }
-
-    public static String decrypt(String password, String value) throws MediaCodec.CryptoException {
-        return doCrypto(Cipher.DECRYPT_MODE, password, value);
-    }
-
-    private static String doCrypto(int cipherMode, String password, String value) throws MediaCodec.CryptoException {
+    private static String doCrypto(int cipherMode, String encryptionKey, String value) throws MediaCodec.CryptoException {
         try {
             //Key secretKey = new SecretKeySpec(password.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-            Key key = generateKeyFromPassword(password, SALT);
+            Key key = generateKeyFromPassword(encryptionKey, SALT);
             cipher.init(cipherMode, key);
             return new String(cipher.doFinal(value.getBytes(StandardCharsets.UTF_8)));
         } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | InvalidKeySpecException ex) {
@@ -95,14 +101,6 @@ public class CryptoUtils {
         KeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), ITERATION_COUNT, KEY_LENGTH);
         return new SecretKeySpec(factory.generateSecret(keySpec).getEncoded(), SYMMETRIC_KEY_ALGORITHM);
     }
-
-    /*
-    private static Key getPasswordBasedKey(String cipher, int keySize, char[] password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        PBEKeySpec pbeKeySpec = new PBEKeySpec(password, generateSalt(), 1000, keySize);
-        SecretKey pbeKey = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256").generateSecret(pbeKeySpec);
-        return new SecretKeySpec(pbeKey.getEncoded(), cipher);
-    }
-    */
 
     public static String encrypt(String algorithm, String input, SecretKey key, IvParameterSpec iv)
             throws NoSuchPaddingException,
@@ -157,4 +155,5 @@ public class CryptoUtils {
         new SecureRandom().nextBytes(iv);
         return new IvParameterSpec(iv);
     }
+     */
 }

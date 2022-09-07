@@ -1,17 +1,19 @@
 <resources>
     <string name="app_name">simplePass</string>
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="prompt_encryption_key">Encryption Key</string>
+    <string name="prompt_username">Username</string>
+    <string name="action_sign_in">Ok</string>
+    <string name="invalid_encryption_key">Encryption key must be > 7 characters</string>
+    <string name="invalid_username">Username must be > 1 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="login_user_access_denied">"Access is denied for user"</string>
 
     <string name="title_credential">Credential Store</string>
-    <string name="title_credential_register">Credential Store</string>
+    <string name="title_credential_list">Credentials</string>
+    <string name="title_credential_add">Add credential</string>
+    <string name="title_activity_login">Login SimplePass</string>
+    <string name="title_activity_close">Close</string>
+    <string name="title_activity_main">SimplePass</string>
     <string name="lbl_system">System</string>
     <string name="lbl_username">Username</string>
     <string name="lbl_password">Password</string>

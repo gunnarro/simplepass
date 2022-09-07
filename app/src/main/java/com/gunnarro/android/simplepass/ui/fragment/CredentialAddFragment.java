@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.simplepass.R;
+import com.gunnarro.android.simplepass.domain.EncryptedString;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
 import com.gunnarro.android.simplepass.utility.Utility;
 
@@ -69,7 +70,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         view.findViewById(R.id.btn_credential_register_cancel).setOnClickListener(v -> {
             // Simply return back to credential list
             NavigationView navigationView = requireActivity().findViewById(R.id.navigationView);
-            requireActivity().onOptionsItemSelected(navigationView.getMenu().findItem(R.id.nav_credential));
+            requireActivity().onOptionsItemSelected(navigationView.getMenu().findItem(R.id.nav_credential_add));
             returnToCredentialList();
         });
 
@@ -91,7 +92,6 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //updateRegisterWorkView(requireView(), RegisterWork.buildDefault("MasterCard"));
     }
 
     @Override
@@ -110,7 +110,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         usernameView.setText(credential.getUsername());
 
         EditText passwordView = view.findViewById(R.id.credential_password);
-        passwordView.setText(credential.getPassword());
+        passwordView.setText(credential.getPassword().getValue());
 
         EditText urlView = view.findViewById(R.id.credential_url);
         urlView.setText(credential.getUrl());
@@ -149,7 +149,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         credential.setUsername(usernameView.getText().toString());
 
         EditText passwordView = requireView().findViewById(R.id.credential_password);
-        credential.setPassword(passwordView.getText().toString());
+        credential.setPassword(new EncryptedString(passwordView.getText().toString()));
 
         EditText urlView = requireView().findViewById(R.id.credential_url);
         credential.setUrl(urlView.getText().toString());

@@ -2,14 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_credential"
-            android:icon="@drawable/baseline_settings_applications_black_24dp"
-            android:title="@string/title_credential" />
 
         <item
-            android:id="@+id/nav_credential_register"
+        android:id="@+id/nav_credential_list"
+        android:icon="@drawable/baseline_settings_applications_black_24dp"
+        android:title="@string/title_credential_list" />
+
+        <item
+            android:id="@+id/nav_credential_add"
             android:icon="@drawable/baseline_settings_applications_black_24dp"
-            android:title="@string/title_credential_register" />
+            android:title="@string/title_credential_add" />
+
+        <item
+            android:id="@+id/nav_close"
+            android:icon="@drawable/baseline_settings_applications_black_24dp"
+            android:title="@string/title_activity_close" />
     </group>
 </menu>

@@ -31,6 +31,6 @@ public class CredentialViewHolder extends RecyclerView.ViewHolder {
     public void bindListLine(Credential credential) {
         credentialLineHeaderView.setText(credential.getSystem());
         credentialLine1ValueView.setText(credential.getUsername());
-        credentialLine2ValueView.setText(credential.getPassword());
+        credentialLine2ValueView.setText(credential.getPassword().getValue());
     }
 }

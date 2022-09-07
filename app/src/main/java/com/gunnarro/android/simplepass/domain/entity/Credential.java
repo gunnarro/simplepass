@@ -4,9 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.gunnarro.android.simplepass.domain.EncryptedString;
+import com.gunnarro.android.simplepass.domain.converter.CipherConverter;
 
 import java.util.Objects;
 
+@TypeConverters({CipherConverter.class})
 @Entity(tableName = "credential")
 public class Credential {
 
@@ -26,7 +31,7 @@ public class Credential {
 
     @NonNull
     @ColumnInfo(name = "password", index = true)
-    private String password;
+    private EncryptedString password;
 
     /**
      * default constructor, Room accepts only one
@@ -69,11 +74,11 @@ public class Credential {
     }
 
     @NonNull
-    public String getPassword() {
+    public EncryptedString getPassword() {
         return password;
     }
 
-    public void setPassword(@NonNull String password) {
+    public void setPassword(@NonNull EncryptedString password) {
         this.password = password;
     }
 

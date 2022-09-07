@@ -28,7 +28,6 @@ public class CredentialListAdapter extends ListAdapter<Credential, CredentialVie
         Log.d("CredentialListAdapter", "init");
     }
 
-    // FIXME
     @NonNull
     @Override
     public CredentialViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
