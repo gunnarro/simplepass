@@ -1,7 +1,5 @@
 package com.gunnarro.android.simplepass.ui;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -33,8 +31,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final int PERMISSION_REQUEST = 1;
     private static final String TAG = MainActivity.class.getSimpleName();
+
     @Inject
     CredentialStoreListFragment credentialStoreListFragment;
     @Inject
@@ -52,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(Utility.buildTag(getClass(), "onCreate"), "app file dir: " + getApplicationContext().getFilesDir().getPath());
         Log.d(Utility.buildTag(getClass(), "onCreate"), String.format("user=%s", getIntent().getExtras().getString(LoginActivity.USERNAME_INTENT_NAME)));
 
+        setTitle("Credential store for " + getIntent().getExtras().getString(LoginActivity.USERNAME_INTENT_NAME));
+
         if (!new File(getApplicationContext().getFilesDir().getPath()).exists()) {
             Log.d(Utility.buildTag(getClass(), "onCreate"), "app file dir missing! " + getApplicationContext().getFilesDir().getPath());
         }
@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             setContentView(R.layout.activity_main);
         } catch (Exception e) {
-            e.printStackTrace();
             Log.e(Utility.buildTag(getClass(), "onCreate"), "Failed starting! " + e.getMessage());
         }
         drawer = findViewById(R.id.drawer_layout);
@@ -127,22 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void checkPermissions() {
-        Log.i(Utility.buildTag(getClass(), "checkPermissions"), "Start check permissions...");
-        // check and ask user for permission if not granted
-        String[] permissions = new String[]{
-                Manifest.permission.READ_SMS,
-                Manifest.permission.READ_CONTACTS};
-        for (String permission : permissions) {
-            if (super.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-                Log.i(Utility.buildTag(getClass(), "checkPermissions"), String.format("Not Granted, send request: %s", permission));
-                super.requestPermissions(new String[]{permission}, PERMISSION_REQUEST);
-            } else {
-                // show dialog explaining why this permission is needed
-                if (super.shouldShowRequestPermissionRationale(permission)) {
-                    Log.i(Utility.buildTag(getClass(), "checkPermissions"), "explain why we need this permission! permission: " + permission);
-                }
-            }
-        }
+        Log.i(Utility.buildTag(getClass(), "checkPermissions"), "Start check permissions...no permission needed");
     }
 
     /**
@@ -153,14 +137,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d(Utility.buildTag(getClass(), "onRequestPermissions"), String.format("requestCode=%s, permission=%s, grantResult=%s", requestCode, new ArrayList<>(Arrays.asList(permissions)), new ArrayList<>(Collections.singletonList(grantResults))));
-        // If request is cancelled, the result arrays are empty.
-        if (requestCode == PERMISSION_REQUEST) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(Utility.buildTag(getClass(), "onRequestPermissions"), String.format("permission granted for permission: %s", Arrays.asList(permissions)));
-            } else {
-                Log.i(Utility.buildTag(getClass(), "onRequestPermissions"), String.format("permission denied for permission: %s", Arrays.asList(permissions)));
-            }
-        }
+        Log.d(Utility.buildTag(getClass(), "onRequestPermissions"), String.format("no permission needed. requestCode=%s, permission=%s, grantResult=%s", requestCode, new ArrayList<>(Arrays.asList(permissions)), new ArrayList<>(Collections.singletonList(grantResults))));
     }
 }

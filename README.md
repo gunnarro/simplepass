@@ -8,3 +8,10 @@ This is only a secure way to store username and password on our mobile, this to 
 This app do not need any access rights and do not have any integration against 3-party systems. Saved credential stays on you mobile.
 
 All data is deleted if uninstalled.
+
+
+Simple app for storing credentials in a secure way on your mobile phone. You only need one master password in order to access stored credentials. All stored credentials are encrypted by help of the master password.
+
+If you forgot the master password, all data is lost. Because the master password  is never stored and you should be the only one that know it.
+
+All data is deleted if the app is uninstalled. 

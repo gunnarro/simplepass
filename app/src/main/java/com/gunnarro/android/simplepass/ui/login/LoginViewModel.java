@@ -12,6 +12,7 @@ import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.domain.entity.User;
 import com.gunnarro.android.simplepass.repository.UserRepository;
 import com.gunnarro.android.simplepass.utility.AESCrypto;
+import com.gunnarro.android.simplepass.validator.CustomPasswordValidator;
 
 import java.util.List;
 
@@ -63,21 +64,22 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     public void loginDataChanged(String userName, String encryptionKey) {
+        List list = isEncryptionKeyValid(encryptionKey);
         if (!isUsernameValid(userName)) {
             loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
-        } else if (!isEncryptionKeyValid(encryptionKey)) {
-            loginFormState.setValue(new LoginFormState(null, R.string.invalid_encryption_key));
+        } else if (!list.isEmpty()) {
+            loginFormState.setValue(new LoginFormState(null, list.toString()));
         } else {
             loginFormState.setValue(new LoginFormState(true));
         }
     }
 
     // A placeholder encryptionKey validation check
-    private boolean isEncryptionKeyValid(String encryptionKey) {
-        return encryptionKey != null && encryptionKey.trim().length() > 7;
+    private List<String> isEncryptionKeyValid(String encryptionKey) {
+        return CustomPasswordValidator.passwordStrength(encryptionKey);
     }
 
     private boolean isUsernameValid(String username) {
-        return username != null && username.trim().length() > 2;
+        return username != null && username.trim().length() > 1;
     }
 }

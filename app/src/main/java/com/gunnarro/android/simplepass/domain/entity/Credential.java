@@ -8,15 +8,21 @@ import androidx.room.TypeConverters;
 
 import com.gunnarro.android.simplepass.domain.EncryptedString;
 import com.gunnarro.android.simplepass.domain.converter.CipherConverter;
+import com.gunnarro.android.simplepass.domain.converter.LocalDateTimeConverter;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-@TypeConverters({CipherConverter.class})
+@TypeConverters({CipherConverter.class, LocalDateTimeConverter.class})
 @Entity(tableName = "credential")
 public class Credential {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
+
+    @NonNull
+    @ColumnInfo(name = "created_date")
+    private LocalDateTime createdDate = LocalDateTime.now();
 
     @NonNull
     @ColumnInfo(name = "system", index = true)
@@ -33,6 +39,9 @@ public class Credential {
     @ColumnInfo(name = "password", index = true)
     private EncryptedString password;
 
+    @ColumnInfo(name = "password_status", index = true)
+    private String passwordStatus;
+
     /**
      * default constructor, Room accepts only one
      */
@@ -45,6 +54,15 @@ public class Credential {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @NonNull
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(@NonNull LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     @NonNull
@@ -82,6 +100,14 @@ public class Credential {
         this.password = password;
     }
 
+    public String getPasswordStatus() {
+        return passwordStatus;
+    }
+
+    public void setPasswordStatus(String passwordStatus) {
+        this.passwordStatus = passwordStatus;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -99,12 +125,13 @@ public class Credential {
     public String toString() {
         final StringBuffer sb = new StringBuffer("Credential{");
         sb.append("id=").append(id);
+        sb.append(", createdDate=").append(createdDate);
         sb.append(", system='").append(system).append('\'');
         sb.append(", url='").append(url).append('\'');
         sb.append(", username='").append(username).append('\'');
-        sb.append(", password='").append(password).append('\'');
+        sb.append(", password=").append(password);
+        sb.append(", passwordStatus='").append(passwordStatus).append('\'');
         sb.append('}');
         return sb.toString();
     }
-
 }

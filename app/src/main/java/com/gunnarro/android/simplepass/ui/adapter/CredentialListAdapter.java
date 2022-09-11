@@ -32,7 +32,7 @@ public class CredentialListAdapter extends ListAdapter<Credential, CredentialVie
     @Override
     public CredentialViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         CredentialViewHolder th = CredentialViewHolder.create(parent);
-        th.itemView.findViewById(R.id.ic_credential_row_delete).setOnClickListener(v -> {
+        th.itemView.findViewById(R.id.ic_credential_row_delete_id).setOnClickListener(v -> {
             Bundle actionBundle = new Bundle();
             actionBundle.putString(CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY, toJson(getItem(th.getBindingAdapterPosition())));
             actionBundle.putString(CredentialStoreListFragment.CREDENTIALS_ACTION_KEY, CredentialStoreListFragment.CREDENTIALS_ACTION_DELETE);

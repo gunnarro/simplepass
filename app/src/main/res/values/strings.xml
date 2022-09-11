@@ -1,8 +1,11 @@
 <resources>
-    <string name="app_name">simplePass</string>
+    <string name="app_name">Simple Credential Store</string>
+    <string name="prompt_system_name">System name</string>
     <string name="prompt_encryption_key">Encryption Key</string>
     <string name="prompt_username">Username</string>
-    <string name="action_sign_in">Ok</string>
+    <string name="prompt_password">Master Password</string>
+    <string name="prompt_url">Url</string>
+    <string name="action_sign_in">Login</string>
     <string name="invalid_encryption_key">Encryption key must be > 7 characters</string>
     <string name="invalid_username">Username must be > 1 characters</string>
     <string name="login_failed">"Login failed"</string>
@@ -11,12 +14,13 @@
     <string name="title_credential">Credential Store</string>
     <string name="title_credential_list">Credentials</string>
     <string name="title_credential_add">Add credential</string>
-    <string name="title_activity_login">Login SimplePass</string>
+    <string name="title_activity_login">Login Credential Store</string>
     <string name="title_activity_close">Close</string>
     <string name="title_activity_main">SimplePass</string>
     <string name="lbl_system">System</string>
     <string name="lbl_username">Username</string>
     <string name="lbl_password">Password</string>
+    <string name="lbl_password_validation">Password Validation</string>
     <string name="lbl_url">Url</string>
     <string name="btn_save">Save</string>
     <string name="btn_cancel">Cancel</string>

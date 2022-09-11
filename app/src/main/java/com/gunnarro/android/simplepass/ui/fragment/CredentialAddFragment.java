@@ -21,9 +21,12 @@ import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.domain.EncryptedString;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
+import com.gunnarro.android.simplepass.utility.AESCrypto;
 import com.gunnarro.android.simplepass.utility.Utility;
+import com.gunnarro.android.simplepass.validator.CustomPasswordValidator;
 
 import org.jetbrains.annotations.NotNull;
+import org.passay.PasswordValidator;
 
 import javax.inject.Inject;
 
@@ -99,7 +102,8 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void updateRegisterWorkView(View view, Credential credential) {
+    /*
+    private void updateAddCredentialView(View view, Credential credential) {
         TextView id = requireView().findViewById(R.id.credential_entity_id);
         id.setText(null);
 
@@ -117,6 +121,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
 
         Log.d(Utility.buildTag(getClass(), "saveRegisterWork"), String.format("updated %s ", credential));
     }
+    */
 
     @Override
     public void onClick(View view) {
@@ -150,6 +155,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
 
         EditText passwordView = requireView().findViewById(R.id.credential_password);
         credential.setPassword(new EncryptedString(passwordView.getText().toString()));
+        credential.setPasswordStatus(CustomPasswordValidator.passwordStrength(passwordView.getText().toString()).toString());
 
         EditText urlView = requireView().findViewById(R.id.credential_url);
         credential.setUrl(urlView.getText().toString());

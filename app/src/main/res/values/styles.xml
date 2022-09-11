@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.Material3.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -76,6 +76,30 @@
 
     <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="CustomTextInputReadOnlyLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <!-- not editable -->
+        <item name="android:enabled">false</item>
+        <!-- no background, no boarder -->
+        <item name="boxBackgroundMode">none</item>
+        <!-- The color of the label when it is collapsed and the text field is active -->
+        <item name="hintTextColor">@color/colorPrimary</item>
+        <!-- The color of the label in all other text field states (such as resting and disabled) -->
+        <item name="android:textColorHint">@color/colorLabel</item>
+    </style>
+
+    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <!-- no background, no boarder -->
+        <item name="boxBackgroundMode">none</item>
+        <!-- box background color -->
+        <item name="boxBackgroundColor">@color/colorBackground</item>
+        <!-- border color -->
+        <item name="boxStrokeColor">@color/colorBackground</item>
+        <!-- The color of the label when it is collapsed and the text field is active -->
+        <item name="hintTextColor">@color/colorPrimary</item>
+        <!-- The color of the label in all other text field states (such as resting and disabled) -->
+        <item name="android:textColorHint">@color/colorPrimary</item>
     </style>
 
 </resources>

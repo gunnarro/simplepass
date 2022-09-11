@@ -40,7 +40,6 @@ public class AESCrypto {
     public static String encrypt(final String value) {
         if (secretKey == null) throw new RuntimeException("not initialized, must set key");
         try {
-            Log.i("AESCrypto.encrypt", "start encrypt: " + value);
             Cipher cipher = Cipher.getInstance(PASSWORD_BASED_KEY_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
             String encrypted = Base64.getEncoder().encodeToString(cipher.doFinal(value.getBytes(StandardCharsets.UTF_8)));
@@ -56,7 +55,6 @@ public class AESCrypto {
     public static String decrypt(final String value) {
         if (secretKey == null) throw new RuntimeException("not initialized, must set key");
         try {
-            Log.i("AESCrypto.decrypt", "start decrypt: " + value);
             Cipher cipher = Cipher.getInstance(PASSWORD_BASED_KEY_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             String decrypted = new String(cipher.doFinal(Base64.getDecoder().decode(value)));
