@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.DrawableRes;
@@ -42,7 +43,7 @@ public abstract class SwipeCallback extends ItemTouchHelper.Callback {
 
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        return makeMovementFlags(0, swipeDirection);
+        return makeMovementFlags(ItemTouchHelper.ACTION_STATE_IDLE, swipeDirection);
     }
 
     @Override
@@ -65,7 +66,15 @@ public abstract class SwipeCallback extends ItemTouchHelper.Callback {
         }
 
         background.setColor(backgroundColor);
-        background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+        // dX – The amount of horizontal displacement caused by user's action
+        if (dX < 0 ) {
+            // for left swipe
+            background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+        } else {
+            // for right swipe
+            background.setBounds(itemView.getLeft() + (int) dX, itemView.getTop(), itemView.getLeft(), itemView.getBottom());
+        }
+        Log.d("swipe", "dX: " + dX);
         background.draw(canvas);
 
         int iconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;

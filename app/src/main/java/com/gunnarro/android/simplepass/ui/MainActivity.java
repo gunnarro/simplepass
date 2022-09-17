@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public MainActivity() {
         this.credentialStoreListFragment = new CredentialStoreListFragment();
+        this.credentialAddFragment = new CredentialAddFragment();
     }
 
     @Override

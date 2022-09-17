@@ -171,7 +171,6 @@ public class CredentialStoreListFragment extends Fragment {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 openViewCredential(credentialsViewModel.getCredentialLiveData().getValue().get(viewHolder.getAbsoluteAdapterPosition()));
-             //   Log.d(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "swiped to right, not implemented yet, " + credential);
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
