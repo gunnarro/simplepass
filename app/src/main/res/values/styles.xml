@@ -25,35 +25,15 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-
-    <!-- The default font for RecyclerView items is too small.
-    The margin is a simple delimiter between the words. -->
-    <style name="timesheet_list_header">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:background">@android:color/holo_orange_light</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault.Medium</item>
-    </style>
-
-    <!-- The default font for RecyclerView items is too small.
-    The margin is a simple delimiter between the words. -->
-    <style name="timesheet_list_body">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:background">@android:color/holo_blue_bright</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault</item>
-    </style>
-
     <!-- The default font for RecyclerView items is too small.
    The margin is a simple delimiter between the words. -->
     <style name="credential_list_header">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
         <item name="android:paddingLeft">8dp</item>
         <item name="android:background">@android:color/holo_orange_light</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault.Medium</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault.Medium
+        </item>
     </style>
 
     <!-- The default font for RecyclerView items is too small.
@@ -66,16 +46,20 @@
         <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault</item>
     </style>
 
-    <style name="invoice_view">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:background">@android:color/holo_blue_bright</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault</item>
-    </style>
-
     <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="CustomTextViewLabelStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/colorLabel</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:textSize">14dp</item>
+    </style>
+
+    <style name="CustomTextViewStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">14dp</item>
     </style>
 
     <style name="CustomTextInputReadOnlyLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">

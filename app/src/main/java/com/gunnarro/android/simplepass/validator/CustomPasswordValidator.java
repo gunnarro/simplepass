@@ -1,5 +1,9 @@
 package com.gunnarro.android.simplepass.validator;
 
+import android.graphics.Color;
+
+import com.gunnarro.android.simplepass.utility.AESCrypto;
+
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.EnglishSequenceData;
@@ -20,6 +24,16 @@ import java.util.stream.Collectors;
  * check password strength https://www.passwordmonster.com/
  */
 public class CustomPasswordValidator {
+
+    enum PasswordStrengthEnum {
+        WEAK(Color.RED), FAIR(Color.MAGENTA), GOOD(Color.BLUE), STRONG(Color.GREEN);
+
+        private final int color;
+
+        PasswordStrengthEnum(int color) {
+            this.color = color;
+        }
+    }
 
     private static final PasswordValidator passwordValidator;
     static {
@@ -47,11 +61,6 @@ public class CustomPasswordValidator {
     private CustomPasswordValidator() {
     }
 
-    public static int passwordStrengthNumber(String password) {
-        RuleResult ruleResult = passwordValidator.validate(new PasswordData(password));
-        return ruleResult.getDetails().size();
-    }
-
     public static List<String> passwordStrength(String password) {
         RuleResult ruleResult = passwordValidator.validate(new PasswordData(password));
         return ruleResult.getDetails().stream().map(RuleResultDetail::getErrorCode).collect(Collectors.toList());
@@ -59,5 +68,21 @@ public class CustomPasswordValidator {
 
     public static boolean isValid(String password) {
         return passwordValidator.validate(new PasswordData(password)).isValid();
+    }
+
+    public static String passwordStrengthStatus(String password) {
+        return mapToPasswordStrength(passwordStrength(password));
+    }
+
+    public static String mapToPasswordStrength(List<String> passwordValidationResult) {
+        if (passwordValidationResult.isEmpty()) {
+            return PasswordStrengthEnum.STRONG.name();
+        } else if (passwordValidationResult.size() == 1) {
+            return PasswordStrengthEnum.GOOD.name();
+        } else if (passwordValidationResult.size() == 2) {
+            return PasswordStrengthEnum.FAIR.name();
+        } else {
+            return PasswordStrengthEnum.WEAK.name();
+        }
     }
 }

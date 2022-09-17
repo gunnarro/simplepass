@@ -1,5 +1,6 @@
 package com.gunnarro.android.simplepass.ui.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,9 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,9 +23,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
 import com.gunnarro.android.simplepass.ui.adapter.CredentialListAdapter;
+import com.gunnarro.android.simplepass.ui.swipe.SwipeCallback;
 import com.gunnarro.android.simplepass.ui.view.CredentialViewModel;
 import com.gunnarro.android.simplepass.utility.Utility;
 
@@ -83,10 +88,9 @@ public class CredentialStoreListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //recyclerView.setOnClickListener(v -> Log.d("", "clicked on list item...."));
 
-        // Add an observer on the LiveData returned by getAlphabetizedWords.
+        // Add an observer on the LiveData returned by getCredentialLiveData.
         // The onChanged() method fires when the observed data changes and the activity is
-        // in the foreground.
-        // Update the cached copy of the credentials in the adapter.
+        // in the foreground. Update the cached copy of the credentials in the adapter.
         credentialsViewModel.getCredentialLiveData().observe(requireActivity(), adapter::submitList);
 
         FloatingActionButton addButton = view.findViewById(R.id.add_credential);
@@ -104,6 +108,9 @@ public class CredentialStoreListFragment extends Fragment {
                     .setReorderingAllowed(true)
                     .commit();
         });
+        // enable swipe
+        enableSwipeToLeftAndDeleteItem(view.findViewById(R.id.list_layout), recyclerView);
+        enableSwipeToRightAndViewItem(recyclerView);
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
     }
@@ -124,5 +131,66 @@ public class CredentialStoreListFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    /**
+     *
+     */
+    private void enableSwipeToLeftAndDeleteItem(ConstraintLayout constraintLayout, RecyclerView recyclerView) {
+        SwipeCallback swipeToDeleteCallback = new SwipeCallback(getContext(), ItemTouchHelper.LEFT, getResources().getColor(R.color.color_bg_swipe_left, null), R.drawable.ic_delete_black_24dp) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int position = viewHolder.getAbsoluteAdapterPosition();
+                //   final Credential credential = credentialsViewModel.getCredentialLiveData().getValue().get(position);
+                credentialsViewModel.delete(credentialsViewModel.getCredentialLiveData().getValue().get(position));
+                //  mAdapter.removeItem(position);
+                Snackbar snackbar = Snackbar.make(constraintLayout, "Credential was removed from the list.", Snackbar.LENGTH_LONG);
+                /*
+                snackbar.setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mAdapter.restoreItem(credential, position);
+                        recyclerView.scrollToPosition(position);
+                    }
+                });
+                 */
+                snackbar.setActionTextColor(Color.YELLOW);
+                snackbar.show();
+            }
+        };
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+        Log.i(Utility.buildTag(getClass(), "enableSwipeToLeftAndDeleteItem"), "enabled swipe handler for delete list item");
+    }
+
+    /**
+     *
+     */
+    private void enableSwipeToRightAndViewItem(RecyclerView recyclerView) {
+        SwipeCallback swipeToDeleteCallback = new SwipeCallback(getContext(), ItemTouchHelper.RIGHT, getResources().getColor(R.color.color_bg_swipe_right, null), R.drawable.ic_add_black_24dp) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                openViewCredential(credentialsViewModel.getCredentialLiveData().getValue().get(viewHolder.getAbsoluteAdapterPosition()));
+             //   Log.d(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "swiped to right, not implemented yet, " + credential);
+            }
+        };
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+        Log.i(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "enabled swipe handler for view list item");
+    }
+
+    private void openViewCredential(Credential credential) {
+        Bundle arguments = new Bundle();
+        try {
+            arguments.putString(CREDENTIALS_JSON_INTENT_KEY, Utility.getJsonMapper().writeValueAsString(credential));
+        } catch (JsonProcessingException e) {
+            Log.e(Utility.buildTag(getClass(), "openViewCredential"), e.toString());
+        }
+
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, CredentialAddFragment.class, arguments)
+                .setReorderingAllowed(true)
+                .commit();
     }
 }

@@ -15,3 +15,6 @@ Simple app for storing credentials in a secure way on your mobile phone. You onl
 If you forgot the master password, all data is lost. Because the master password  is never stored and you should be the only one that know it.
 
 All data is deleted if the app is uninstalled. 
+
+# Resources
+[flatIcon android](https://www.flaticon.com/free-icons/android)

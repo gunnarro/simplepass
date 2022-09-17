@@ -155,7 +155,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
 
         EditText passwordView = requireView().findViewById(R.id.credential_password);
         credential.setPassword(new EncryptedString(passwordView.getText().toString()));
-        credential.setPasswordStatus(CustomPasswordValidator.passwordStrength(passwordView.getText().toString()).toString());
+        credential.setPasswordStatus(CustomPasswordValidator.passwordStrengthStatus(passwordView.getText().toString()));
 
         EditText urlView = requireView().findViewById(R.id.credential_url);
         credential.setUrl(urlView.getText().toString());

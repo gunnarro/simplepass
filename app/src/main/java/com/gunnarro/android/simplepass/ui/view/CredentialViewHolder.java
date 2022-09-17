@@ -19,18 +19,21 @@ public class CredentialViewHolder extends RecyclerView.ViewHolder {
     @NonNull
     private final TextView passwordView;
     @NonNull
-    private final TextView passwordValidationView;
+    private final View passwordStatusView;
+    @NonNull
+    private final View usernameStatusView;
 
     private CredentialViewHolder(@NonNull View itemView) {
         super(itemView);
         credentialHeaderView = itemView.findViewById(R.id.credential_header_txt);
-        usernameView = itemView.findViewById(R.id.credential_username_txt);
-        passwordView = itemView.findViewById(R.id.credential_password_txt);
-        passwordValidationView = itemView.findViewById(R.id.credential_password_validation_txt);
+        usernameView = itemView.findViewById(R.id.credential_username_value);
+        passwordView = itemView.findViewById(R.id.credential_password_value);
+        passwordStatusView = itemView.findViewById(R.id.credential_password_status);
+        usernameStatusView = itemView.findViewById(R.id.credential_username_status);
     }
 
     public static CredentialViewHolder create(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_credential_item_material, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_credential_item, parent, false);
         return new CredentialViewHolder(view);
     }
 
@@ -38,6 +41,20 @@ public class CredentialViewHolder extends RecyclerView.ViewHolder {
         credentialHeaderView.setText(credential.getSystem());
         usernameView.setText(credential.getUsername());
         passwordView.setText(credential.getPassword().getValue());
-        passwordValidationView.setText(credential.getPasswordStatus());
+        passwordStatusView.setBackgroundResource(mapPasswordStatusToColor(credential.getPasswordStatus()));
+        usernameStatusView.setBackgroundResource(mapPasswordStatusToColor(credential.getPasswordStatus()));
+    }
+
+    private int mapPasswordStatusToColor(String status) {
+        if ("STRONG".equals(status)) {
+            return R.color.color_password_strength_strong;
+        } else if ("GOOD".equals(status)) {
+            return R.color.color_password_strength_good;
+        }else if ("FAIR".equals(status)) {
+            return R.color.color_password_strength_fair;
+        }else if ("WEAK".equals(status)) {
+            return R.color.color_password_strength_weak;
+        }
+        return R.color.color_password_strength_default;
     }
 }

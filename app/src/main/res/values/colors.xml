@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="colorBackground">#ffffff</color>
-    <color name="colorText">#000000</color>
+    <color name="colorText">#032c6e</color>
+    <color name="colorBackgroundBtn">#ffffff</color>
     <color name="colorLabel">#000000</color>
-    <color name="colorPrimary">#3700B3</color>
+    <color name="colorPrimary">#1c4a01</color>
+    <color name="color_password_strength_default">#000000</color>
+    <color name="color_password_strength_strong">#7fc464</color>
+    <color name="color_password_strength_good">#4cc9f8</color>
+    <color name="color_password_strength_fair">#faf70d</color>
+    <color name="color_password_strength_weak">#fa5a48</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="color_tbl_header">#6699cc</color>
+    <color name="color_tbl_header">#d5e5f0</color>
     <color name="color_tbl_row_even">#ecf2f9</color>
     <color name="color_tbl_row_odd">#ecf2f9</color>
     <color name="color_btn_bg_default">#dee1bb</color>
-    <color name="color_btn_bg_delete">#FFFFFF</color>
+    <color name="color_btn_bg_delete">#fa2a12</color>
+    <color name="color_btn_bg_add">#7fc464</color>
+
+    <color name="color_bg_swipe_left">#fa2a12</color>
+    <color name="color_bg_swipe_right">#7fc464</color>
 
 </resources>
