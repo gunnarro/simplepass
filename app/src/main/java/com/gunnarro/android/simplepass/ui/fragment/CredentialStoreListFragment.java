@@ -52,6 +52,7 @@ public class CredentialStoreListFragment extends Fragment {
         // Get a new or existing ViewModel from the ViewModelProvider.
         credentialsViewModel = new ViewModelProvider(this).get(CredentialViewModel.class);
 
+        // Pick up callback from add credentials view
         getParentFragmentManager().setFragmentResultListener(CREDENTIALS_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {

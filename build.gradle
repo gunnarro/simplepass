@@ -7,6 +7,7 @@ plugins {
 ext {
     roomVersion = '2.4.3'
     kotlinVersion = '1.6.0'
+    biometricVersion = "1.1.0"
     // testing
     junitVersion = '4.13.2'
     androidxJunitVersion = '1.1.2'

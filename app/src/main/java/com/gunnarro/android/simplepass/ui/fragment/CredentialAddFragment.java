@@ -17,16 +17,16 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.domain.EncryptedString;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
-import com.gunnarro.android.simplepass.utility.AESCrypto;
 import com.gunnarro.android.simplepass.utility.Utility;
 import com.gunnarro.android.simplepass.validator.CustomPasswordValidator;
 
 import org.jetbrains.annotations.NotNull;
-import org.passay.PasswordValidator;
 
 import javax.inject.Inject;
 
@@ -35,6 +35,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class CredentialAddFragment extends Fragment implements View.OnClickListener {
+
+    private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Inject
     public CredentialAddFragment() {
@@ -51,10 +53,23 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_credential_add, container, false);
+        Credential credential = new Credential();
+        String credentialJson = getArguments().getString(CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY);
+        if (credentialJson != null) {
+            try {
+                credential = mapper.readValue(credentialJson, Credential.class);
+                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, credentials: %s", credentialJson, credential));
+            } catch (JsonProcessingException e) {
+                Log.e("", e.toString());
+                throw new RuntimeException("Application Error: " + e);
+            }
+        }
+
+        updateAddCredentialView(view, credential);
 
         view.findViewById(R.id.btn_credential_register_save).setOnClickListener(v -> {
             Bundle result = new Bundle();
-            result.putString(com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson());
+            result.putString(com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson(new Credential()));
             result.putString(com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_ACTION_KEY, com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_ACTION_SAVE);
             getParentFragmentManager().setFragmentResult(com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new item intent");
@@ -63,7 +78,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
 
         view.findViewById(R.id.btn_credential_register_delete).setOnClickListener(v -> {
             Bundle result = new Bundle();
-            result.putString(com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson());
+            result.putString(com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson(new Credential()));
             result.putString(com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_ACTION_KEY, com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_ACTION_DELETE);
             getParentFragmentManager().setFragmentResult(com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new item intent");
@@ -102,26 +117,31 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    /*
     private void updateAddCredentialView(View view, Credential credential) {
-        TextView id = requireView().findViewById(R.id.credential_entity_id);
-        id.setText(null);
+        TextView id = view.findViewById(R.id.credential_entity_id);
+        id.setText(credential.getId() != null ? credential.getId().toString() : null);
+
+        EditText createdDateView = view.findViewById(R.id.credential_created_date);
+        createdDateView.setText(Utility.formatDateTime(credential.getCreatedDate()));
+
+        EditText lastModifiedDateView = view.findViewById(R.id.credential_last_modified_date);
+        lastModifiedDateView.setText(Utility.formatDateTime(credential.getLastModifiedDate()));
 
         EditText systemView = view.findViewById(R.id.credential_system);
         systemView.setText(credential.getSystem());
+        systemView.requestFocus();
 
         EditText usernameView = view.findViewById(R.id.credential_username);
         usernameView.setText(credential.getUsername());
 
         EditText passwordView = view.findViewById(R.id.credential_password);
-        passwordView.setText(credential.getPassword().getValue());
+        passwordView.setText(credential.getPassword() != null ? credential.getPassword().getValue() : null);
 
         EditText urlView = view.findViewById(R.id.credential_url);
         urlView.setText(credential.getUrl());
 
-        Log.d(Utility.buildTag(getClass(), "saveRegisterWork"), String.format("updated %s ", credential));
+        Log.d(Utility.buildTag(getClass(), "updateAddCredentialView"), String.format("updated %s ", credential));
     }
-    */
 
     @Override
     public void onClick(View view) {
@@ -141,9 +161,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         }
     }
 
-    private String getCredentialsAsJson() {
-        Credential credential = new Credential();
-
+    private String getCredentialsAsJson(Credential credential) {
         TextView id = requireView().findViewById(R.id.credential_entity_id);
         credential.setId(!id.getText().toString().isEmpty() ? Long.parseLong(id.getText().toString()) : null);
 
@@ -163,7 +181,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         try {
             return Utility.getJsonMapper().writerWithDefaultPrettyPrinter().writeValueAsString(credential);
         } catch (JsonProcessingException e) {
-            Log.e("getTimesheetAsJson", e.toString());
+            Log.e("getCredentialsAsJson", e.toString());
             throw new RuntimeException("unable to parse object to json! " + e);
         }
     }

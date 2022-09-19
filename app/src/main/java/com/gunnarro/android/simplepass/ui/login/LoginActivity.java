@@ -15,14 +15,8 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.gunnarro.android.simplepass.databinding.ActivityLoginBinding;
 import com.gunnarro.android.simplepass.ui.MainActivity;
-import com.gunnarro.android.simplepass.validator.CustomPasswordValidator;
-
-import nu.aaro.gustav.passwordstrengthmeter.PasswordStrengthCalculator;
-import nu.aaro.gustav.passwordstrengthmeter.PasswordStrengthLevel;
-import nu.aaro.gustav.passwordstrengthmeter.PasswordStrengthMeter;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -39,45 +33,9 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
         final EditText usernameEditText = binding.loginUsernameInput;
+        usernameEditText.requestFocus();
         final EditText encryptionKeyEditText = binding.loginEncryptionKeyInput;
         final Button loginButton = binding.loginBtn;
-        TextInputLayout t;
-        /*
-        final PasswordStrengthMeter passwordStrengthMeter = binding.passwordInputMeter;
-        PasswordStrengthLevel[] strengthLevels = {
-                new PasswordStrengthLevel("Too short", android.R.color.darker_gray), // level 0
-                new PasswordStrengthLevel("Weak", android.R.color.holo_red_dark), // level 1
-                new PasswordStrengthLevel("Fair", android.R.color.holo_orange_dark), // level 2
-                new PasswordStrengthLevel("Good", android.R.color.holo_orange_light), // level 3
-                new PasswordStrengthLevel("Strong", android.R.color.holo_blue_light), // level 4
-                new PasswordStrengthLevel("Very strong", android.R.color.holo_green_dark)}; // level 5
-        passwordStrengthMeter.setStrengthLevels(strengthLevels);
-
-        passwordStrengthMeter.setPasswordStrengthCalculator(new PasswordStrengthCalculator() {
-            @Override
-            public int calculatePasswordSecurityLevel(String password) {
-                // Do some calculation and return an int corresponding to the "points" or "level" the user password got
-                return CustomPasswordValidator.passwordStrengthNumber(password);
-            }
-
-            @Override
-            public int getMinimumLength() {
-                // Define the minimum length of a password. Anything below this should always yield a score of 0
-                return 8;
-            }
-
-            @Override
-            public boolean passwordAccepted(int level) {
-                // Define whether or not the level is an accepted level or not.
-                return level > 3;
-            }
-
-            @Override
-            public void onPasswordAccepted(String password) {
-                // Called when the password entered meets your requirements of length and strength levels
-            }
-        });
-        */
 
         loginViewModel.getLoginFormState().observe(this, loginFormState -> {
             if (loginFormState == null) {

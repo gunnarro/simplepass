@@ -25,6 +25,10 @@ public class Credential {
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @NonNull
+    @ColumnInfo(name = "last_modified_date")
+    private LocalDateTime lastModifiedDate = LocalDateTime.now();
+
+    @NonNull
     @ColumnInfo(name = "system", index = true)
     private String system;
 
@@ -63,6 +67,15 @@ public class Credential {
 
     public void setCreatedDate(@NonNull LocalDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    @NonNull
+    public LocalDateTime getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(@NonNull LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     @NonNull
@@ -108,6 +121,7 @@ public class Credential {
         this.passwordStatus = passwordStatus;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -126,6 +140,7 @@ public class Credential {
         final StringBuffer sb = new StringBuffer("Credential{");
         sb.append("id=").append(id);
         sb.append(", createdDate=").append(createdDate);
+        sb.append(", lastModifiedDate=").append(lastModifiedDate);
         sb.append(", system='").append(system).append('\'');
         sb.append(", url='").append(url).append('\'');
         sb.append(", username='").append(username).append('\'');

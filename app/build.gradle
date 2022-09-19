@@ -72,6 +72,8 @@ dependencies {
     //noinspection GradleDependency
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
     annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
+    // for fingerprint login
+    implementation "androidx.biometric:biometric:$rootProject.biometricVersion"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

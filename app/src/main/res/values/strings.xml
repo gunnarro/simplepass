@@ -21,11 +21,15 @@
     <string name="lbl_username">Username</string>
     <string name="lbl_password">Password</string>
     <string name="lbl_password_validation">Password Validation</string>
+    <string name="prompt_created_date">Created date</string>
+    <string name="prompt_last_modified_date">Last modified date</string>
     <string name="lbl_url">Url</string>
     <string name="btn_save">Save</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_add">Add</string>
     <string name="btn_create">Create</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_fingerprint_login">Fingerprint Login</string>
 
     <string name="txt_colon">:</string>
     <string name="txt_empty"></string>

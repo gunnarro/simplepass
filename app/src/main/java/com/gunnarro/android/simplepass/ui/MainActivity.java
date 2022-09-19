@@ -3,6 +3,7 @@ package com.gunnarro.android.simplepass.ui;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -52,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(Utility.buildTag(getClass(), "onCreate"), String.format("user=%s", getIntent().getExtras().getString(LoginActivity.USERNAME_INTENT_NAME)));
 
         setTitle("Credential store for " + getIntent().getExtras().getString(LoginActivity.USERNAME_INTENT_NAME));
+
+        // Adding this line will prevent taking screenshot in your app
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         if (!new File(getApplicationContext().getFilesDir().getPath()).exists()) {
             Log.d(Utility.buildTag(getClass(), "onCreate"), "app file dir missing! " + getApplicationContext().getFilesDir().getPath());
