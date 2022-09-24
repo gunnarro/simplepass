@@ -4,6 +4,7 @@
     <color name="colorText">#032c6e</color>
     <color name="colorBackgroundBtn">#ffffff</color>
     <color name="colorLabel">#000000</color>
+    <color name="colorBtnHover">#ed35a2</color>
     <color name="colorPrimary">#1c4a01</color>
     <color name="color_password_strength_default">#000000</color>
     <color name="color_password_strength_strong">#7fc464</color>
@@ -18,6 +19,11 @@
     <color name="color_btn_bg_default">#dee1bb</color>
     <color name="color_btn_bg_delete">#fa2a12</color>
     <color name="color_btn_bg_add">#7fc464</color>
+
+    <color name="color_snackbar_background">#000000</color>
+    <color name="color_snackbar_text">#7fc464</color>
+    <color name="color_snackbar_text_delete">#fa2a12</color>
+    <color name="color_snackbar_text_add">#7fc464</color>
 
     <color name="color_bg_swipe_left">#fa2a12</color>
     <color name="color_bg_swipe_right">#7fc464</color>

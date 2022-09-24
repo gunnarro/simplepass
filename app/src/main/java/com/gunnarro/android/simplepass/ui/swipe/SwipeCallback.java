@@ -78,6 +78,7 @@ public abstract class SwipeCallback extends ItemTouchHelper.Callback {
         background.draw(canvas);
 
         int iconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+        int snaciconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
         int iconMargin = (itemHeight - intrinsicHeight) / 2;
         int iconLeft = itemView.getRight() - iconMargin - intrinsicWidth;
         int iconRight = itemView.getRight() - iconMargin;

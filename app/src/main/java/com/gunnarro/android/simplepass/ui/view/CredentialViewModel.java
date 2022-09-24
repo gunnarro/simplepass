@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 
 import com.gunnarro.android.simplepass.domain.entity.Credential;
 import com.gunnarro.android.simplepass.repository.CredentialRepository;
+import com.gunnarro.android.simplepass.validator.CustomPasswordValidator;
 
 import java.util.List;
 
@@ -42,5 +43,26 @@ public class CredentialViewModel extends AndroidViewModel {
     public void delete(Credential credential) {
         Log.d("CredentialViewModel.delete" , "save: " + credential);
         credentialRepository.delete(credential);
+    }
+
+    public void credentialDataChanged(String systemName, String userName, String password) {
+        if (!isUsernameValid(userName)) {
+          //  credentialFormState.setValue(new CredentialFormState(R.string.invalid_username, null, null, null));
+        } else if (!isSystemNameValid(systemName)) {
+          //  credentialFormState.setValue(new CredentialFormState(null, 23, null, null));
+        }
+    }
+
+    // A placeholder encryptionKey validation check
+    private List<String> isEncryptionKeyValid(String encryptionKey) {
+        return CustomPasswordValidator.passwordStrength(encryptionKey);
+    }
+
+    private boolean isSystemNameValid(String systemName) {
+        return systemName != null && systemName.trim().length() > 1;
+    }
+
+    private boolean isUsernameValid(String username) {
+        return username != null && username.trim().length() > 1;
     }
 }

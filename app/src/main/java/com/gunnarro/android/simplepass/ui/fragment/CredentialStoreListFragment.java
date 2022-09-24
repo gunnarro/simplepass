@@ -1,6 +1,6 @@
 package com.gunnarro.android.simplepass.ui.fragment;
 
-import android.graphics.Color;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
@@ -61,10 +60,11 @@ public class CredentialStoreListFragment extends Fragment {
                     Credential credential = mapper.readValue(bundle.getString(CREDENTIALS_JSON_INTENT_KEY), Credential.class);
                     if (bundle.getString(CREDENTIALS_ACTION_KEY).equals(CREDENTIALS_ACTION_SAVE)) {
                         credentialsViewModel.save(credential);
+                        showSnackbar("Added credential");
                         // Toast.makeText(getContext(), "saved credentials " + credential.getWorkdayDate(), Toast.LENGTH_SHORT).show();
                     } else if (bundle.getString(CREDENTIALS_ACTION_KEY).equals(CREDENTIALS_ACTION_DELETE)) {
                         credentialsViewModel.delete(credential);
-                        Toast.makeText(getContext(), "deleted credential " + credential.getUsername(), Toast.LENGTH_SHORT).show();
+                        showSnackbar("Deleted credential");
                     } else {
                         Log.w(Utility.buildTag(getClass(), "onFragmentResult"), "unknown action: " + (bundle.getString(CREDENTIALS_ACTION_KEY)));
                         Toast.makeText(getContext(), "unknown action " + bundle.getString(CREDENTIALS_ACTION_KEY), Toast.LENGTH_SHORT).show();
@@ -110,7 +110,7 @@ public class CredentialStoreListFragment extends Fragment {
                     .commit();
         });
         // enable swipe
-        enableSwipeToLeftAndDeleteItem(view.findViewById(R.id.list_layout), recyclerView);
+        enableSwipeToLeftAndDeleteItem(recyclerView);
         enableSwipeToRightAndViewItem(recyclerView);
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
@@ -137,15 +137,16 @@ public class CredentialStoreListFragment extends Fragment {
     /**
      *
      */
-    private void enableSwipeToLeftAndDeleteItem(ConstraintLayout constraintLayout, RecyclerView recyclerView) {
+    private void enableSwipeToLeftAndDeleteItem(RecyclerView recyclerView) {
         SwipeCallback swipeToDeleteCallback = new SwipeCallback(getContext(), ItemTouchHelper.LEFT, getResources().getColor(R.color.color_bg_swipe_left, null), R.drawable.ic_delete_black_24dp) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int position = viewHolder.getAbsoluteAdapterPosition();
                 //   final Credential credential = credentialsViewModel.getCredentialLiveData().getValue().get(position);
                 credentialsViewModel.delete(credentialsViewModel.getCredentialLiveData().getValue().get(position));
+                showSnackbar("Deleted credential");
                 //  mAdapter.removeItem(position);
-                Snackbar snackbar = Snackbar.make(constraintLayout, "Credential was removed from the list.", Snackbar.LENGTH_LONG);
+
                 /*
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     @Override
@@ -155,8 +156,6 @@ public class CredentialStoreListFragment extends Fragment {
                     }
                 });
                  */
-                snackbar.setActionTextColor(Color.YELLOW);
-                snackbar.show();
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
@@ -192,5 +191,17 @@ public class CredentialStoreListFragment extends Fragment {
                 .replace(R.id.content_frame, CredentialAddFragment.class, arguments)
                 .setReorderingAllowed(true)
                 .commit();
+    }
+
+    private void showSnackbar(String msg) {
+        Resources.Theme theme = getResources().newTheme();
+        Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.list_layout), msg, Snackbar.LENGTH_LONG);
+        snackbar.setBackgroundTint(getResources().getColor(R.color.color_snackbar_background, theme));
+        if (msg.contains("Delete"))
+            snackbar.setTextColor(getResources().getColor(R.color.color_snackbar_text_delete, theme));
+        else if (msg.contains("Add"))
+            snackbar.setTextColor(getResources().getColor(R.color.color_snackbar_text_add, theme));
+
+        snackbar.show();
     }
 }

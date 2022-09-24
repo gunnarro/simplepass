@@ -21,6 +21,7 @@ public class LoginViewModel extends AndroidViewModel {
     private final UserRepository userRepository;
 
     private final MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
+
     private final MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
 
     public LoginViewModel(@NonNull Application application) {

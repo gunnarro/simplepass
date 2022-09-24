@@ -86,4 +86,25 @@
         <item name="android:textColorHint">@color/colorPrimary</item>
     </style>
 
+    <style name="CustomIconButton" parent="Widget.Material3.Button.IconButton">
+        <!-- no background, no boarder -->
+        <item name="boxBackgroundMode">filled</item>
+        <!-- By default button will use the accent colour of your theme for the buttons filled -->
+        <item name="colorAccent">@color/colorBtnHover</item>
+        <!-- Used to apply a tint to the background of the button. If you wish to change the
+        background color of the button, use this attribute instead of background. -->
+        <item name="backgroundTint">@color/colorBackground</item>
+        <item name="paddingStart">0dp</item>
+        <item name="paddingEnd">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="iconGravity">textStart</item>
+
+        android:="0dp"
+        <!-- box background color -->
+        <!-- item name="boxBackgroundColor">@color/colorBackground</item -->
+        <!-- border color -->
+        <!-- item name="boxStrokeColor">@color/colorBackground</item -->
+    </style>
+
 </resources>
