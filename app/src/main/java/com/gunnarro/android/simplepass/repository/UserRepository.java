@@ -25,15 +25,21 @@ public class UserRepository {
         userDao = AppDatabase.getDatabase(application).userDao();
     }
 
-    public List<User> getUsers() throws InterruptedException, ExecutionException {
-        Log.d("UserRepository.getUsers", "start ...");
-        List<User> users = null;
-        Callable<List<User>> callableGetUsersTask = () -> userDao.getUsers();
+    public UserRepository(Application application, String masterPassword) {
+        userDao = AppDatabase.getDatabaseEncrypted(application, masterPassword).userDao();
+    }
 
+    public List<User> getUsers() throws Exception {
+        Log.d("UserRepository.getUsers", "start ...");
+        Callable<List<User>> callableGetUsersTask = userDao::getUsers;
         CompletionService<List<User>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(callableGetUsersTask);
-        Future<List<User>> future = service.take();
-        return future.get();
+        try {
+            Future<List<User>> future = service.take();
+            return future.get();
+        } catch (Exception e) {
+            throw new Exception("Login field!", e.getCause());
+        }
 /*
         Future<List<User>> result = AppDatabase.databaseExecutor.submit(callableGetUsersTask);
         while (!result.isDone()) {
@@ -58,7 +64,7 @@ public class UserRepository {
 
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
-    public User findUser(String username) throws Exception {
+    public User findUser(String username) {
         Log.d("UserRepository.findUser", "user: " + username);
         Callable<User> callableFindUserTask = () -> {
             Log.d("UserRepository.findUser", "current users: " + userDao.getUsers());
@@ -83,9 +89,23 @@ public class UserRepository {
         return null;
     }
 
+    public void updateFailedLoginAttempts(String username) {
+        AppDatabase.databaseExecutor.execute(() -> {
+            User user = userDao.getByUsername(username);
+            if (user != null) {
+                user.setFailedLoginAttempts(user.getFailedLoginAttempts() + 1);
+                userDao.updateFailedLoginAttempts(user);
+            } else {
+                Log.d("UserRepository.updateFailedLoginAttempts", "user do not exist. user: " + username);
+            }
+        });
+    }
+
     public void insert(User user) {
-        Log.d("UserRepository.insert", "create new user. user: " + user.getUsername());
-        AppDatabase.databaseExecutor.execute(() -> userDao.insert(user));
+        AppDatabase.databaseExecutor.execute(() -> {
+            userDao.insert(user);
+            Log.d("UserRepository.insert", "created new user. user: " + user.getUsername());
+        });
     }
 
     public void delete(User user) {

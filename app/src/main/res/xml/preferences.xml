@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:drawableStart="@android:drawable/ic_media_previous"
+        app:key="settings_back_button"
+        app:title="Settings" />
+
+    <PreferenceCategory
+        app:summary="Settings for simple password store"
+        app:title="SimplePassStore Settings">
+
+        <SeekBarPreference
+            android:max="300"
+            app:defaultValue="120"
+            app:key="pref_automatic_logout_timeout"
+            app:min="60"
+            app:seekBarIncrement="30"
+            app:showSeekBarValue="true"
+            app:singleLineTitle="true"
+            app:summary="Automatic logout after x seconds"
+            app:title="Automatic logout after x seconds" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

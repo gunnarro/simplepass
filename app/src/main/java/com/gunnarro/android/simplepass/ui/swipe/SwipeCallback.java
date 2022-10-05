@@ -7,7 +7,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.DrawableRes;
@@ -74,7 +73,6 @@ public abstract class SwipeCallback extends ItemTouchHelper.Callback {
             // for right swipe
             background.setBounds(itemView.getLeft() + (int) dX, itemView.getTop(), itemView.getLeft(), itemView.getBottom());
         }
-        Log.d("swipe", "dX: " + dX);
         background.draw(canvas);
 
         int iconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;

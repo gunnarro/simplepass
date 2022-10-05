@@ -21,8 +21,8 @@ public interface CredentialDao {
     @Query("SELECT * FROM credential WHERE username = :username")
     Credential getByUsername(String username);
 
-    @Query("SELECT * FROM credential ORDER BY system ASC")
-    LiveData<List<Credential>> getAll();
+    @Query("SELECT * FROM credential WHERE fk_user_id =:userId ORDER BY system ASC")
+    LiveData<List<Credential>> getAll(Long userId);
 
     /**
      * @param credential credential to be inserted

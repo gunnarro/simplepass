@@ -1,5 +1,6 @@
 package com.gunnarro.android.simplepass.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -14,9 +15,12 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.simplepass.R;
+import com.gunnarro.android.simplepass.ui.fragment.AdminFragment;
 import com.gunnarro.android.simplepass.ui.fragment.CredentialAddFragment;
 import com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment;
+import com.gunnarro.android.simplepass.ui.fragment.PreferencesFragment;
 import com.gunnarro.android.simplepass.ui.login.LoginActivity;
+import com.gunnarro.android.simplepass.utility.AESCrypto;
 import com.gunnarro.android.simplepass.utility.Utility;
 
 import java.io.File;
@@ -24,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.inject.Inject;
 
@@ -32,17 +38,23 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     @Inject
     CredentialStoreListFragment credentialStoreListFragment;
     @Inject
     CredentialAddFragment credentialAddFragment;
+    @Inject
+    PreferencesFragment preferencesFragment;
+    @Inject
+    AdminFragment adminFragment;
+
     private DrawerLayout drawer;
+    private Long loggedInUserId = null;
 
     public MainActivity() {
         this.credentialStoreListFragment = new CredentialStoreListFragment();
         this.credentialAddFragment = new CredentialAddFragment();
+        this.preferencesFragment = new PreferencesFragment();
+        this.adminFragment = new AdminFragment();
     }
 
     @Override
@@ -50,9 +62,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         Log.d(Utility.buildTag(getClass(), "onCreate"), "context: " + getApplicationContext());
         Log.d(Utility.buildTag(getClass(), "onCreate"), "app file dir: " + getApplicationContext().getFilesDir().getPath());
-        Log.d(Utility.buildTag(getClass(), "onCreate"), String.format("user=%s", getIntent().getExtras().getString(LoginActivity.USERNAME_INTENT_NAME)));
 
-        setTitle("Credential store for " + getIntent().getExtras().getString(LoginActivity.USERNAME_INTENT_NAME));
+        loggedInUserId = getIntent().getExtras().getLong(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY);
+
+        Log.i(Utility.buildTag(getClass(), "onCreate"), "Credential store for userId=" + loggedInUserId);
 
         // Adding this line will prevent taking screenshot in your app
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
@@ -81,8 +94,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (savedInstanceState == null) {
             viewFragment(credentialStoreListFragment);
         }
-        // Finally, check and grant or deny permissions
+        // check and grant or deny permissions
         checkPermissions();
+        // Finally, start timer for automatically logout user after å given period of time
+        startAutoLogoutUserTime(6000000);
     }
 
     @Override
@@ -102,14 +117,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         try {
             Log.d("MainActivity.onNavigationItemSelected", "selected: " + menuItem.getItemId());
+            Bundle args = new Bundle();
+            args.putLong(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY, loggedInUserId);
             int id = menuItem.getItemId();
-            if (id == R.id.nav_credential_list) {
+            if (id == R.id.nav_settings) {
+                setTitle(R.string.title_settings);
+                ((NavigationView) findViewById(R.id.navigationView)).setCheckedItem(R.id.nav_settings);
+                viewFragment(preferencesFragment);
+            } else if (id == R.id.nav_credential_list) {
                 setTitle(R.string.title_credential);
+                ((NavigationView) findViewById(R.id.navigationView)).setCheckedItem(R.id.nav_credential_list);
+                credentialStoreListFragment.setArguments(args);
                 viewFragment(credentialStoreListFragment);
-            } else if (id == R.id.nav_credential_add) {
-                setTitle(R.string.title_credential_add);
-                viewFragment(credentialAddFragment);
+            } else if (id == R.id.nav_admin) {
+                setTitle(R.string.title_admin);
+                ((NavigationView) findViewById(R.id.navigationView)).setCheckedItem(R.id.nav_admin);
+                viewFragment(adminFragment);
             } else if (id == R.id.nav_close) {
+                // always clear the key
+                AESCrypto.reset();
                 finish();
             }
             // close drawer after clicking the menu item
@@ -117,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
             return false;
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(Utility.buildTag(getClass(), "onNavigationItemSelected"), e.getMessage());
             return false;
         }
     }
@@ -126,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(Utility.buildTag(getClass(), "viewFragment"), "fragment: " + fragment.getTag());
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, fragment, fragment.getTag())
+                .replace(R.id.content_frame, fragment)
                 .commit();
     }
 
@@ -143,5 +169,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d(Utility.buildTag(getClass(), "onRequestPermissions"), String.format("no permission needed. requestCode=%s, permission=%s, grantResult=%s", requestCode, new ArrayList<>(Arrays.asList(permissions)), new ArrayList<>(Collections.singletonList(grantResults))));
+    }
+
+    /**
+     * logout user automatically after a time period
+     * redirect back to login page after timeout
+     */
+    private void startAutoLogoutUserTime(int timeMs) {
+        Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                AESCrypto.reset();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        }, timeMs);
     }
 }

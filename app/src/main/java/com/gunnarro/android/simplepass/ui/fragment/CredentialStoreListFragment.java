@@ -26,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
 import com.gunnarro.android.simplepass.ui.adapter.CredentialListAdapter;
+import com.gunnarro.android.simplepass.ui.login.LoginActivity;
 import com.gunnarro.android.simplepass.ui.swipe.SwipeCallback;
 import com.gunnarro.android.simplepass.ui.view.CredentialViewModel;
 import com.gunnarro.android.simplepass.utility.Utility;
@@ -43,6 +44,7 @@ public class CredentialStoreListFragment extends Fragment {
     public static final String CREDENTIALS_ACTION_DELETE = "credentials_delete";
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private CredentialViewModel credentialsViewModel;
+    private Long loggedInUserId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,6 @@ public class CredentialStoreListFragment extends Fragment {
         setHasOptionsMenu(true);
         // Get a new or existing ViewModel from the ViewModelProvider.
         credentialsViewModel = new ViewModelProvider(this).get(CredentialViewModel.class);
-
         // Pick up callback from add credentials view
         getParentFragmentManager().setFragmentResultListener(CREDENTIALS_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
@@ -89,6 +90,7 @@ public class CredentialStoreListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //recyclerView.setOnClickListener(v -> Log.d("", "clicked on list item...."));
 
+        loggedInUserId = getArguments() != null ? getArguments().getLong(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY) : 1L;
         // Add an observer on the LiveData returned by getCredentialLiveData.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground. Update the cached copy of the credentials in the adapter.
@@ -98,7 +100,9 @@ public class CredentialStoreListFragment extends Fragment {
         addButton.setOnClickListener(v -> {
             Bundle arguments = new Bundle();
             try {
-                arguments.putString(CREDENTIALS_JSON_INTENT_KEY, Utility.getJsonMapper().writeValueAsString(new Credential()));
+                Credential newCredential = new Credential();
+                newCredential.setFkUserId(loggedInUserId);
+                arguments.putString(CREDENTIALS_JSON_INTENT_KEY, Utility.getJsonMapper().writeValueAsString(newCredential));
             } catch (JsonProcessingException e) {
                 Log.e(Utility.buildTag(getClass(), "addBtn.setOnClickListener"), e.toString());
             }
@@ -122,6 +126,8 @@ public class CredentialStoreListFragment extends Fragment {
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //loggedInUserId = getArguments().getLong(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY);
+        //Log.d("onViewCreated", "args" + getArguments().getBundle(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY));
     }
 
     @Override

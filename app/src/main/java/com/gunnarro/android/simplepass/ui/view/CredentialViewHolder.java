@@ -40,7 +40,7 @@ public class CredentialViewHolder extends RecyclerView.ViewHolder {
     public void bindListLine(Credential credential) {
         credentialHeaderView.setText(credential.getSystem());
         usernameView.setText(credential.getUsername());
-        passwordView.setText(credential.getPassword().getValue());
+        passwordView.setText(credential.getPassword() != null ? credential.getPassword().getValue() : null);
         passwordStatusView.setBackgroundResource(mapPasswordStatusToColor(credential.getPasswordStatus()));
         usernameStatusView.setBackgroundResource(mapPasswordStatusToColor(credential.getPasswordStatus()));
     }
@@ -50,9 +50,9 @@ public class CredentialViewHolder extends RecyclerView.ViewHolder {
             return R.color.color_password_strength_strong;
         } else if ("GOOD".equals(status)) {
             return R.color.color_password_strength_good;
-        }else if ("FAIR".equals(status)) {
+        } else if ("FAIR".equals(status)) {
             return R.color.color_password_strength_fair;
-        }else if ("WEAK".equals(status)) {
+        } else if ("WEAK".equals(status)) {
             return R.color.color_password_strength_weak;
         }
         return R.color.color_password_strength_default;

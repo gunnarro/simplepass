@@ -3,6 +3,7 @@ package com.gunnarro.android.simplepass.domain.entity;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -14,11 +15,16 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @TypeConverters({CipherConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "credential")
+@Entity(tableName = "credential", foreignKeys = {@ForeignKey(entity = User.class, parentColumns = "id", childColumns = "fk_user_id")})
 public class Credential {
 
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id", index = true)
     private Long id;
+
+    @NonNull
+    @ColumnInfo(name = "fk_user_id", index = true)
+    private Long fkUserId;
 
     @NonNull
     @ColumnInfo(name = "created_date")
@@ -59,6 +65,16 @@ public class Credential {
     public void setId(Long id) {
         this.id = id;
     }
+
+    @NonNull
+    public Long getFkUserId() {
+        return fkUserId;
+    }
+
+    public void setFkUserId(@NonNull Long fkUserId) {
+        this.fkUserId = fkUserId;
+    }
+
 
     @NonNull
     public LocalDateTime getCreatedDate() {
@@ -139,6 +155,7 @@ public class Credential {
     public String toString() {
         final StringBuffer sb = new StringBuffer("Credential{");
         sb.append("id=").append(id);
+        sb.append(", fkUserId=").append(fkUserId);
         sb.append(", createdDate=").append(createdDate);
         sb.append(", lastModifiedDate=").append(lastModifiedDate);
         sb.append(", system='").append(system).append('\'');

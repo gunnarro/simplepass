@@ -9,7 +9,7 @@ public class EncryptedString {
 
     public EncryptedString() {}
 
-    public EncryptedString(String value) {
+    public EncryptedString(@NonNull String value) {
         this.value = value;
     }
 

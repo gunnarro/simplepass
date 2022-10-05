@@ -28,7 +28,13 @@ public class CredentialViewModel extends AndroidViewModel {
     public CredentialViewModel(@NonNull Application application) {
         super(application);
         credentialRepository = new CredentialRepository(application);
-        credentials = credentialRepository.getAllCredentials();
+        credentials = credentialRepository.getAllCredentials(1L);
+    }
+
+    public CredentialViewModel(@NonNull Application application,  @NonNull String password) {
+        super(application);
+        credentialRepository = new CredentialRepository(application, password);
+        credentials = credentialRepository.getAllCredentials(1L);
     }
 
     public LiveData<List<Credential>> getCredentialLiveData() {

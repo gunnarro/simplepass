@@ -2,12 +2,14 @@ package com.gunnarro.android.simplepass.ui.login;
 
 import androidx.annotation.Nullable;
 
+import com.gunnarro.android.simplepass.domain.dto.LoggedInUserDto;
+
 /**
  * Authentication result : success (user details) or error message.
  */
 class LoginResult {
     @Nullable
-    private LoggedInUserView success;
+    private LoggedInUserDto loggedInUserDto;
     @Nullable
     private Integer error;
 
@@ -15,13 +17,13 @@ class LoginResult {
         this.error = error;
     }
 
-    LoginResult(@Nullable LoggedInUserView success) {
-        this.success = success;
+    LoginResult(@Nullable LoggedInUserDto loggedInUserDto) {
+        this.loggedInUserDto = loggedInUserDto;
     }
 
     @Nullable
-    LoggedInUserView getSuccess() {
-        return success;
+    LoggedInUserDto getLoggedInUseDto() {
+        return loggedInUserDto;
     }
 
     @Nullable

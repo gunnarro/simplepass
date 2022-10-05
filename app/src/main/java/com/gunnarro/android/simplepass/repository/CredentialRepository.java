@@ -22,11 +22,15 @@ public class CredentialRepository {
         credentialDao = AppDatabase.getDatabase(application).credentialDao();
     }
 
+    public CredentialRepository(Application application, String masterPassword) {
+        credentialDao = AppDatabase.getDatabaseEncrypted(application, masterPassword).credentialDao();
+    }
+
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
-    public LiveData<List<Credential>> getAllCredentials() {
+    public LiveData<List<Credential>> getAllCredentials(Long userId) {
         Log.d("CredentialRepository.getAllCredentials", "refresh live data in fragment");
-        return credentialDao.getAll();
+        return credentialDao.getAll(userId);
     }
 
     public void delete(Credential credential) {

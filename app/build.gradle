@@ -57,7 +57,7 @@ dependencies {
     // google
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'com.google.dagger:hilt-android:2.43.2'
-    implementation 'androidx.annotation:annotation:1.4.0'
+    implementation 'androidx.annotation:annotation:1.5.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
@@ -72,10 +72,17 @@ dependencies {
     //noinspection GradleDependency
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
     annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
+    // encrypt/decrypt database
+    implementation "net.zetetic:android-database-sqlcipher:4.4.2"
+
     // for fingerprint login
     implementation "androidx.biometric:biometric:$rootProject.biometricVersion"
 
     testImplementation 'junit:junit:4.13.2'
+    testImplementation("org.mockito:mockito-inline:4.7.0")
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
+
+    debugImplementation "androidx.fragment:fragment-testing:1.4.1"
 }

@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.gunnarro.android.simplepass.R;
+import com.gunnarro.android.simplepass.domain.dto.LoggedInUserDto;
 import com.gunnarro.android.simplepass.domain.entity.User;
 import com.gunnarro.android.simplepass.repository.UserRepository;
 import com.gunnarro.android.simplepass.utility.AESCrypto;
@@ -37,24 +38,31 @@ public class LoginViewModel extends AndroidViewModel {
         return loginResult;
     }
 
+    public boolean isFistTimeLogin() throws Exception {
+        return userRepository.getUsers().size() == 0;
+    }
+
     public void login(String username, String encryptionKey) {
-        // Must init the AESCrypto here upon each login attempt.
-        AESCrypto.init(encryptionKey);
-        // can be launched in a separate asynchronous job
         try {
-            User loginUser = new User(username);
+            // Must first reset and then init the AESCrypto here upon each login attempt.
+            AESCrypto.reset();
+            AESCrypto.init(encryptionKey);
+            User encryptedLoginUser = new User(AESCrypto.encrypt(username));
             List<User> users = userRepository.getUsers();
+            User user = users.stream().filter(u -> u.getUsername().equals(encryptedLoginUser.getUsername())).findAny().orElse(null);
             Log.d("LoginViewModel.login", "got users: " + users);
-            if (users == null || users.isEmpty()) {
-                Log.d("LoginViewModel.login", "first time login! create user. " + loginUser);
-                userRepository.insert(loginUser);
-                loginResult.setValue(new LoginResult(new LoggedInUserView(username, null)));
-            } else if (users.stream().anyMatch(u -> u.getUsername().equals(loginUser.getUsername()))) {
+            if (user == null && users.isEmpty()) {
+                Log.d("LoginViewModel.login", "first time login! create user: " + username);
+                userRepository.insert(encryptedLoginUser);
+                loginResult.setValue(new LoginResult(new LoggedInUserDto(1L, username)));
+            } else if (user != null ) {
                 // If hit, we do know that the encryption key is correct, so let user pass.
-                Log.d("LoginViewModel.login", "user have access " + loginUser);
-                loginResult.setValue(new LoginResult(new LoggedInUserView(username, null)));
+                Log.d("LoginViewModel.login", "user have access: " + encryptedLoginUser);
+                loginResult.setValue(new LoginResult(new LoggedInUserDto(user.getId(), username)));
             } else {
-                Log.d("LoginViewModel.login", "access denied for user, " + loginUser);
+                Log.d("LoginViewModel.login", "access denied for user, " + encryptedLoginUser + "(" + username + ")");
+                // FIXME will never hit because username is decrypted with wrong password
+                userRepository.updateFailedLoginAttempts(encryptedLoginUser.getUsername());
                 // access denied for this user and encryption key combination
                 loginResult.setValue(new LoginResult(R.string.login_user_access_denied));
             }

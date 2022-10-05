@@ -17,14 +17,27 @@ public class AESCrypto {
     private static final String PASSWORD_BASED_KEY_ALGORITHM = "AES/ECB/PKCS5Padding";
     private static SecretKeySpec secretKey;
 
-    public static void init(String encryptionKey) {
+    /**
+     * initialize key
+     *
+     * @param encryptionKey key to be used for encryption and decryption
+     */
+    public static void init(String encryptionKey) throws CryptoException {
         if (secretKey == null) {
-            secretKey = getSecretKey(encryptionKey);
+            secretKey = buildSecretKey(encryptionKey);
             Log.i("AESCrypto.init", "init with encryption key");
         }
+        Log.i("AESCrypto.init", "done");
     }
 
-    private static SecretKeySpec getSecretKey(final String myKey) {
+    /*
+     * clear initialized key
+     */
+    public static void reset() {
+        secretKey = null;
+    }
+
+    private static SecretKeySpec buildSecretKey(final String myKey) throws CryptoException {
         try {
             byte[] key = myKey.getBytes(StandardCharsets.UTF_8);
             MessageDigest sha = MessageDigest.getInstance("SHA-1");
@@ -33,12 +46,12 @@ public class AESCrypto {
             return new SecretKeySpec(key, SYMMETRIC_KEY_ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
             Log.e("AESCrypto.getSecretKey", "Error while getSecretKey: " + e);
-            throw new RuntimeException("Error while getSecretKey:" + e.getMessage());
+            throw new CryptoException("Error while getSecretKey!", e.getCause());
         }
     }
 
-    public static String encrypt(final String value) {
-        if (secretKey == null) throw new RuntimeException("not initialized, must set key");
+    public static String encrypt(final String value) throws CryptoException {
+        if (secretKey == null) throw new CryptoException("Not initialized, must set key.", null);
         try {
             Cipher cipher = Cipher.getInstance(PASSWORD_BASED_KEY_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -46,14 +59,13 @@ public class AESCrypto {
             Log.i("AESCrypto.encrypt", "encrypted: " + value + " -> " + encrypted);
             return encrypted;
         } catch (Exception e) {
-            e.printStackTrace();
             Log.e("AESCrypto.encrypt", "Error while encrypting: " + e.getMessage());
+            throw new CryptoException("Error while encrypting!", e.getCause());
         }
-        return null;
     }
 
-    public static String decrypt(final String value) {
-        if (secretKey == null) throw new RuntimeException("not initialized, must set key");
+    public static String decrypt(final String value) throws CryptoException {
+        if (secretKey == null) throw new CryptoException("Not initialized, must set key.", null);
         try {
             Cipher cipher = Cipher.getInstance(PASSWORD_BASED_KEY_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
@@ -62,8 +74,7 @@ public class AESCrypto {
             return decrypted;
         } catch (Exception e) {
             Log.e("AESCrypto.decrypt", "Error while decrypting: " + e.getMessage());
+            throw new CryptoException("Error while decrypting!", e.getCause());
         }
-        return null;
     }
-
 }

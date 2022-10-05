@@ -17,6 +17,7 @@ import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
 import com.gunnarro.android.simplepass.R;
+import com.gunnarro.android.simplepass.domain.dto.LoggedInUserDto;
 import com.gunnarro.android.simplepass.ui.MainActivity;
 
 import java.io.IOException;
@@ -34,51 +35,48 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
-public class LoginBiometricActivity extends AppCompatActivity {
+public class LoginFingerprintActivity extends AppCompatActivity {
 
     public final static String USERNAME_INTENT_NAME = "USERNAME";
     private LoginViewModel loginViewModel;
-
-    private BiometricPrompt.PromptInfo promptInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkBiometric();
-        setContentView(R.layout.activity_biometric_login);
-        Executor executor = ContextCompat.getMainExecutor(this);
-        BiometricPrompt biometricPrompt = new BiometricPrompt(LoginBiometricActivity.this,
-                executor, new BiometricPrompt.AuthenticationCallback() {
-            @Override
-            public void onAuthenticationError(int errorCode,
-                                              @NonNull CharSequence errString) {
-                super.onAuthenticationError(errorCode, errString);
-                Toast.makeText(getApplicationContext(),
-                                "Authentication error: " + errString, Toast.LENGTH_SHORT)
-                        .show();
-            }
+        setContentView(R.layout.activity_fingerprint_login);
 
-            @Override
-            public void onAuthenticationSucceeded(
-                    @NonNull BiometricPrompt.AuthenticationResult result) {
-                super.onAuthenticationSucceeded(result);
-                Toast.makeText(getApplicationContext(),
-                        "Authentication succeeded!", Toast.LENGTH_SHORT).show();
-            }
+        BiometricPrompt biometricPrompt = new BiometricPrompt(
+                LoginFingerprintActivity.this,
+                ContextCompat.getMainExecutor(this),
+                new BiometricPrompt.AuthenticationCallback() {
+                    @Override
+                    public void onAuthenticationError(int errorCode, @NonNull CharSequence errorMsg) {
+                        super.onAuthenticationError(errorCode, errorMsg);
+                        if ("Back to user/password login".contentEquals(errorMsg)) {
+                            startLoginActivity();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Authentication error: " + errorMsg, Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-            @Override
-            public void onAuthenticationFailed() {
-                super.onAuthenticationFailed();
-                Toast.makeText(getApplicationContext(), "Authentication failed",
-                                Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
+                    @Override
+                    public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                        super.onAuthenticationSucceeded(result);
+                        Toast.makeText(getApplicationContext(), "Authentication succeeded!", Toast.LENGTH_SHORT).show();
+                    }
 
-        promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometric login for my app")
-                .setSubtitle("Log in using your biometric credential")
-                .setNegativeButtonText("Use account password")
+                    @Override
+                    public void onAuthenticationFailed() {
+                        super.onAuthenticationFailed();
+                        Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        BiometricPrompt.PromptInfo promptInfo; promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Login with fingerprint")
+                .setSubtitle("Log in using your fingerprint")
+                .setNegativeButtonText("Back to user/password login")
                 .build();
 
         // Prompt appears when user clicks "Log in".
@@ -111,7 +109,7 @@ public class LoginBiometricActivity extends AppCompatActivity {
 
     private void checkBiometric() {
         BiometricManager biometricManager = BiometricManager.from(this);
-        switch (biometricManager.canAuthenticate()) {
+        switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
             case BiometricManager.BIOMETRIC_SUCCESS:
                 Log.d("MY_APP_TAG", "App can authenticate using biometrics.");
                 break;
@@ -131,11 +129,9 @@ public class LoginBiometricActivity extends AppCompatActivity {
                 Toast.makeText(this, "Biometric not found on device!", Toast.LENGTH_LONG);
 
         }
-
     }
 
-
-    private void updateUiWithUser(LoggedInUserView model) {
+    private void updateUiWithUser(LoggedInUserDto model) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(USERNAME_INTENT_NAME, model.getUserName());
         startActivity(intent);
@@ -144,5 +140,10 @@ public class LoginBiometricActivity extends AppCompatActivity {
     private void showLoginFailed(@StringRes Integer errorString) {
         Log.i("LoginActivity.showLoginFailed", "login failed, " + errorString);
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_LONG).show();
+    }
+
+    private void startLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }
