@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.gunnarro.android.simplepass.R;
+import com.gunnarro.android.simplepass.config.AppDatabase;
 import com.gunnarro.android.simplepass.domain.dto.LoggedInUserDto;
 import com.gunnarro.android.simplepass.domain.entity.User;
 import com.gunnarro.android.simplepass.repository.UserRepository;
@@ -27,7 +28,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     public LoginViewModel(@NonNull Application application) {
         super(application);
-        userRepository = new UserRepository(application);
+        userRepository = new UserRepository(AppDatabase.getDatabase(application).userDao());
     }
 
     LiveData<LoginFormState> getLoginFormState() {
@@ -73,7 +74,7 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     public void loginDataChanged(String userName, String encryptionKey) {
-        List list = isEncryptionKeyValid(encryptionKey);
+        List<String> list = isEncryptionKeyValid(encryptionKey);
         if (!isUsernameValid(userName)) {
             loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
         } else if (!list.isEmpty()) {
@@ -83,7 +84,6 @@ public class LoginViewModel extends AndroidViewModel {
         }
     }
 
-    // A placeholder encryptionKey validation check
     private List<String> isEncryptionKeyValid(String encryptionKey) {
         return CustomPasswordValidator.passwordStrength(encryptionKey);
     }

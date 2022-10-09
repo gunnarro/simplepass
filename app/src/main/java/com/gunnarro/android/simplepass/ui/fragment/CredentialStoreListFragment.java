@@ -25,6 +25,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
+import com.gunnarro.android.simplepass.exception.SimpleCredStoreApplicationException;
 import com.gunnarro.android.simplepass.ui.adapter.CredentialListAdapter;
 import com.gunnarro.android.simplepass.ui.login.LoginActivity;
 import com.gunnarro.android.simplepass.ui.swipe.SwipeCallback;
@@ -60,9 +61,12 @@ public class CredentialStoreListFragment extends Fragment {
                 try {
                     Credential credential = mapper.readValue(bundle.getString(CREDENTIALS_JSON_INTENT_KEY), Credential.class);
                     if (bundle.getString(CREDENTIALS_ACTION_KEY).equals(CREDENTIALS_ACTION_SAVE)) {
-                        credentialsViewModel.save(credential);
-                        showSnackbar("Added credential");
-                        // Toast.makeText(getContext(), "saved credentials " + credential.getWorkdayDate(), Toast.LENGTH_SHORT).show();
+                        try {
+                            credentialsViewModel.save(credential);
+                            showSnackbar("Added credential");
+                        } catch (SimpleCredStoreApplicationException ex) {
+                            Toast.makeText(getContext(), ex.getErrorCode(), Toast.LENGTH_SHORT).show();
+                        }
                     } else if (bundle.getString(CREDENTIALS_ACTION_KEY).equals(CREDENTIALS_ACTION_DELETE)) {
                         credentialsViewModel.delete(credential);
                         showSnackbar("Deleted credential");
@@ -71,7 +75,7 @@ public class CredentialStoreListFragment extends Fragment {
                         Toast.makeText(getContext(), "unknown action " + bundle.getString(CREDENTIALS_ACTION_KEY), Toast.LENGTH_SHORT).show();
                     }
                     Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, credentials: %s", bundle.getString(CREDENTIALS_ACTION_KEY), credential));
-                } catch (JsonProcessingException e) {
+                } catch (Exception e) {
                     Log.e("", e.toString());
                     throw new RuntimeException("Application Error: " + e);
                 }

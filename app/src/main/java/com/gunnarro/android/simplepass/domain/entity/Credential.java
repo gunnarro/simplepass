@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -15,7 +16,9 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @TypeConverters({CipherConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "credential", foreignKeys = {@ForeignKey(entity = User.class, parentColumns = "id", childColumns = "fk_user_id")})
+@Entity(tableName = "credential",
+        indices = {@Index(value = {"fk_user_id", "system", "username"}, unique = true)},
+        foreignKeys = {@ForeignKey(entity = User.class, parentColumns = "id", childColumns = "fk_user_id")})
 public class Credential {
 
     @PrimaryKey(autoGenerate = true)
@@ -143,12 +146,12 @@ public class Credential {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Credential that = (Credential) o;
-        return system.equals(that.system) && username.equals(that.username);
+        return fkUserId.equals(that.fkUserId) && system.equals(that.system) && username.equals(that.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(system, username);
+        return Objects.hash(fkUserId, system, username);
     }
 
     @Override

@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -28,15 +27,15 @@ public interface CredentialDao {
      * @param credential credential to be inserted
      * @return the id of the inserted credential row
      */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     Long insert(Credential credential);
 
     /**
      * @param credential updated credential
      * @return number of updated row(S), should only be one for this method.
      */
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    int update(Credential credential);
+    @Update
+    Integer update(Credential credential);
 
     /**
      * @param credential to be deleted

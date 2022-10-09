@@ -1,10 +1,10 @@
 package com.gunnarro.android.simplepass.domain.entity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -12,9 +12,10 @@ import com.gunnarro.android.simplepass.domain.converter.EncryptConverter;
 import com.gunnarro.android.simplepass.domain.converter.LocalDateTimeConverter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @TypeConverters({EncryptConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "user")
+@Entity(tableName = "user", indices = {@Index(value = {"username"}, unique = true)})
 public class User {
 
     @NonNull
@@ -88,6 +89,19 @@ public class User {
 
     public void setLastLoginDate(@NonNull LocalDateTime lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return username.equals(user.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username);
     }
 
     @Override

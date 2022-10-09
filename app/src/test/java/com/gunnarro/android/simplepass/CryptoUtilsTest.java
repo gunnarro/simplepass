@@ -1,19 +1,17 @@
 package com.gunnarro.android.simplepass;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*;
-
+import com.gunnarro.android.simplepass.ui.fragment.CredentialAddFragment;
 import com.gunnarro.android.simplepass.utility.AESCrypto;
 import com.gunnarro.android.simplepass.utility.CryptoException;
-import com.gunnarro.android.simplepass.utility.CryptoUtils;
 
-import java.util.logging.Logger;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class CryptoUtilsTest {
@@ -39,5 +37,22 @@ public class CryptoUtilsTest {
         AESCrypto.init("wrong-pass");
         System.out.println("encrypted: " + encrypted);
         AESCrypto.decrypt(encrypted);
+    }
+
+    @Test
+    public void hasTextRegex() {
+        assertFalse(" ".matches(CredentialAddFragment.HAS_TEXT_REGEX));
+        assertFalse("   ".matches(CredentialAddFragment.HAS_TEXT_REGEX));
+        assertTrue("ddf".matches(CredentialAddFragment.HAS_TEXT_REGEX));
+        assertTrue("d d f".matches(CredentialAddFragment.HAS_TEXT_REGEX));
+    }
+
+    @Test
+    public void emptyTextRegex() {
+        assertTrue(" ".matches(CredentialAddFragment.EMPTY_TEXT_REGEX));
+        assertTrue("   ".matches(CredentialAddFragment.EMPTY_TEXT_REGEX));
+        assertFalse("ddf".matches(CredentialAddFragment.EMPTY_TEXT_REGEX));
+        assertFalse("d d f".matches(CredentialAddFragment.EMPTY_TEXT_REGEX));
+        assertFalse(" d d f ".matches(CredentialAddFragment.EMPTY_TEXT_REGEX));
     }
 }

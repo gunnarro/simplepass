@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,7 +27,6 @@ import com.gunnarro.android.simplepass.ui.MainActivity;
 public class LoginActivity extends AppCompatActivity {
 
     public final static String LOGGED_IN_USER_ID_INTENT_KEY = "LOGGED_IN_USER_ID";
-    public final static String USERNAME_INTENT_KEY = "USERNAME";
     private LoginViewModel loginViewModel;
 
     @Override
@@ -175,7 +175,9 @@ public class LoginActivity extends AppCompatActivity {
         return new BiometricPrompt.PromptInfo.Builder()
                 .setTitle("Login with fingerprint")
                 .setSubtitle("Log in using your fingerprint")
+                .setDescription("description goe here")
                 .setNegativeButtonText("Back to user/password login")
+                .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
                 .build();
     }
 }

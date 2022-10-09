@@ -3,7 +3,6 @@ package com.gunnarro.android.simplepass.repository;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -32,7 +31,7 @@ public interface UserDao {
      * Abort if user already exist
      * @param user user to be inserted
      */
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert
     void insert(User user);
 
     @Update

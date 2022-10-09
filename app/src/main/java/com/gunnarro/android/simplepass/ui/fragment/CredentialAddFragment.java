@@ -3,6 +3,8 @@ package com.gunnarro.android.simplepass.ui.fragment;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputLayout;
 import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.domain.EncryptedString;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
@@ -31,12 +34,19 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import kotlinx.coroutines.flow.MutableStateFlow;
 
 
 @AndroidEntryPoint
 public class CredentialAddFragment extends Fragment implements View.OnClickListener {
 
+    // Match a not-empty string. A string with only spaces or no characters is an empty-string.
+    public static final String HAS_TEXT_REGEX = "\\w.*+";
+    // match one or more withe space
+    public static final String EMPTY_TEXT_REGEX = "\\s+";
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
+    MutableStateFlow f;
 
     @Inject
     public CredentialAddFragment() {
@@ -67,26 +77,30 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         }
 
         updateAddCredentialView(view, credential);
-
+        // disable save button as default
+        view.findViewById(R.id.btn_credential_register_save).setEnabled(false);
         view.findViewById(R.id.btn_credential_register_save).setOnClickListener(v -> {
+            view.findViewById(R.id.btn_credential_register_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson(new Credential()));
-            result.putString(com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_ACTION_KEY, com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_ACTION_SAVE);
-            getParentFragmentManager().setFragmentResult(com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_REQUEST_KEY, result);
+            result.putString(CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson(new Credential()));
+            result.putString(CredentialStoreListFragment.CREDENTIALS_ACTION_KEY, CredentialStoreListFragment.CREDENTIALS_ACTION_SAVE);
+            getParentFragmentManager().setFragmentResult(CredentialStoreListFragment.CREDENTIALS_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new item intent");
             returnToCredentialList();
         });
 
         view.findViewById(R.id.btn_credential_register_delete).setOnClickListener(v -> {
+            view.findViewById(R.id.btn_credential_register_delete).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson(new Credential()));
-            result.putString(com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_ACTION_KEY, com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_ACTION_DELETE);
-            getParentFragmentManager().setFragmentResult(com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.CREDENTIALS_REQUEST_KEY, result);
+            result.putString(CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson(new Credential()));
+            result.putString(CredentialStoreListFragment.CREDENTIALS_ACTION_KEY, CredentialStoreListFragment.CREDENTIALS_ACTION_DELETE);
+            getParentFragmentManager().setFragmentResult(CredentialStoreListFragment.CREDENTIALS_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new item intent");
             returnToCredentialList();
         });
 
         view.findViewById(R.id.btn_credential_register_cancel).setOnClickListener(v -> {
+            view.findViewById(R.id.btn_credential_register_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             // Simply return back to credential list
             NavigationView navigationView = requireActivity().findViewById(R.id.navigationView);
             requireActivity().onOptionsItemSelected(navigationView.getMenu().findItem(R.id.nav_credential_list));
@@ -133,13 +147,22 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
 
         EditText systemView = view.findViewById(R.id.credential_system);
         systemView.setText(credential.getSystem());
+        systemView.addTextChangedListener(createEmptyTextValidator(systemView, HAS_TEXT_REGEX, "Can not be empty!"));
         systemView.requestFocus();
 
         EditText usernameView = view.findViewById(R.id.credential_username);
+        usernameView.addTextChangedListener(createEmptyTextValidator(usernameView, HAS_TEXT_REGEX, "Can not be empty!"));
         usernameView.setText(credential.getUsername());
 
         EditText passwordView = view.findViewById(R.id.credential_password);
+        passwordView.addTextChangedListener(createEmptyTextValidator(passwordView, HAS_TEXT_REGEX, "Can not be empty!"));
         passwordView.setText(credential.getPassword() != null ? credential.getPassword().getValue() : null);
+        passwordView.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                // means that user is finished to type text, the check if save button should be enabled
+                view.findViewById(R.id.btn_credential_register_save).setEnabled(isInputFormDataValid());
+            }
+        });
 
         EditText urlView = view.findViewById(R.id.credential_url);
         urlView.setText(credential.getUrl());
@@ -148,7 +171,10 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         if (credential.getId() == null) {
             view.findViewById(R.id.credential_created_date_layout).setVisibility(View.GONE);
             view.findViewById(R.id.credential_last_modified_date_layout).setVisibility(View.GONE);
+            view.findViewById(R.id.btn_credential_register_delete).setVisibility(View.GONE);
         } else {
+            TextInputLayout layout = view.findViewById(R.id.credential_password_layout);
+            layout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
         }
         Log.d(Utility.buildTag(getClass(), "updateAddCredentialView"), String.format("updated %s ", credential));
     }
@@ -197,5 +223,37 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
             Log.e("getCredentialsAsJson", e.toString());
             throw new RuntimeException("unable to parse object to json! " + e);
         }
+    }
+
+    /**
+     * For validation of text field input
+     *
+     * @param editText           text input to validate
+     * @param validationErrorMsg error message
+     * @return
+     */
+    private TextWatcher createEmptyTextValidator(EditText editText, String regexp, String validationErrorMsg) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // ignore
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // ignore
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!editText.getText().toString().matches(regexp)) {
+                    editText.setError(validationErrorMsg);
+                }
+            }
+        };
+    }
+
+    private boolean isInputFormDataValid() {
+        return true;
     }
 }

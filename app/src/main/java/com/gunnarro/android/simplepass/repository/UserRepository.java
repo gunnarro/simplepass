@@ -1,6 +1,6 @@
 package com.gunnarro.android.simplepass.repository;
 
-import android.app.Application;
+import android.database.sqlite.SQLiteConstraintException;
 import android.util.Log;
 
 import com.gunnarro.android.simplepass.config.AppDatabase;
@@ -17,16 +17,8 @@ public class UserRepository {
 
     private final UserDao userDao;
 
-    // Note that in order to unit test the WordRepository, you have to remove the Application
-    // dependency. This adds complexity and much more code, and this sample is not about testing.
-    // See the BasicSample in the android-architecture-components repository at
-    // https://github.com/googlesamples
-    public UserRepository(Application application) {
-        userDao = AppDatabase.getDatabase(application).userDao();
-    }
-
-    public UserRepository(Application application, String masterPassword) {
-        userDao = AppDatabase.getDatabaseEncrypted(application, masterPassword).userDao();
+    public UserRepository(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     public List<User> getUsers() throws Exception {
@@ -103,8 +95,12 @@ public class UserRepository {
 
     public void insert(User user) {
         AppDatabase.databaseExecutor.execute(() -> {
-            userDao.insert(user);
-            Log.d("UserRepository.insert", "created new user. user: " + user.getUsername());
+            try {
+                userDao.insert(user);
+                Log.d("UserRepository.insert", "created new user. user: " + user.getUsername());
+            } catch (SQLiteConstraintException e) {
+                Log.e("UserRepository.insert", e.getMessage());
+            }
         });
     }
 
@@ -114,5 +110,4 @@ public class UserRepository {
             Log.d("CredentialRepository.save", "deleted, id=" + user.getUsername());
         });
     }
-
 }

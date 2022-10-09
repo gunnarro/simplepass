@@ -1,29 +1,26 @@
 package com.gunnarro.android.simplepass.repository;
 
-import android.app.Application;
+import android.database.sqlite.SQLiteConstraintException;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
 import com.gunnarro.android.simplepass.config.AppDatabase;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
+import com.gunnarro.android.simplepass.exception.SimpleCredStoreApplicationException;
 
 import java.util.List;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.Future;
 
 public class CredentialRepository {
 
     private final CredentialDao credentialDao;
 
-    // Note that in order to unit test the WordRepository, you have to remove the Application
-    // dependency. This adds complexity and much more code, and this sample is not about testing.
-    // See the BasicSample in the android-architecture-components repository at
-    // https://github.com/googlesamples
-    public CredentialRepository(Application application) {
-        credentialDao = AppDatabase.getDatabase(application).credentialDao();
-    }
-
-    public CredentialRepository(Application application, String masterPassword) {
-        credentialDao = AppDatabase.getDatabaseEncrypted(application, masterPassword).credentialDao();
+    public CredentialRepository(CredentialDao credentialDao) {
+        this.credentialDao = credentialDao;
     }
 
     // Room executes all queries on a separate thread.
@@ -33,6 +30,10 @@ public class CredentialRepository {
         return credentialDao.getAll(userId);
     }
 
+    public Credential getCredential(Long id) {
+        return credentialDao.getById(id);
+    }
+
     public void delete(Credential credential) {
         AppDatabase.databaseExecutor.execute(() -> {
             credentialDao.delete(credential);
@@ -40,20 +41,51 @@ public class CredentialRepository {
         });
     }
 
+    public Long save(final Credential credential) throws Exception {
+        Long id;
+        try {
+            if (credential.getId() == null) {
+                id = insertCredentiaL(credential);
+            } else {
+                Integer i = updateCredentiaL(credential);
+                id = Long.valueOf(i);
+            }
+            return id;
+        } catch (Exception e) {
+            throw new SimpleCredStoreApplicationException("Error saving credential!", e.getMessage(), e.getCause());
+        }
+    }
+
+    private Long insertCredentiaL(Credential credential) throws InterruptedException, ExecutionException {
+        CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+        service.submit(() -> credentialDao.insert(credential));
+        Future<Long> future = service.take();
+        return future.get();
+    }
+
+    private Integer updateCredentiaL(Credential credential) throws InterruptedException, ExecutionException {
+        CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+        service.submit(() -> credentialDao.update(credential));
+        Future<Integer> future = service.take();
+        return future.get();
+    }
+
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
-    public void save(Credential credential) {
+    public void saveDeprecated(Credential credential) {
         Log.d("CredentialRepository.save", "start save: " + credential);
         AppDatabase.databaseExecutor.execute(() -> {
-            Credential credentialExisting = credentialDao.getByUsername(credential.getUsername());
-            if (credentialExisting == null) {
-                Long id = credentialDao.insert(credential);
-                Log.d("CredentialRepository.save", "inserted (new), id=" + credentialDao.getById(id));
-            } else {
-                credential.setId(credentialExisting.getId()); // FIXME hack
-                Log.d("CredentialRepository.save", "update: " + credential);
-                credentialDao.update(credential);
-                Log.d("CredentialRepository.save", "updated: " + credentialDao.getById(credential.getId()));
+            try {
+                if (credential.getId() == null) {
+                    Long id = credentialDao.insert(credential);
+                    Log.d("CredentialRepository.save", "inserted (new), id=" + id);
+                } else {
+                    credentialDao.update(credential);
+                    Log.d("CredentialRepository.save", "updated: " + credential);
+                }
+            } catch (SQLiteConstraintException e) {
+                Log.e("CredentialRepository.save", e.getMessage());
+                throw new SimpleCredStoreApplicationException("Error", e.getMessage(), e.getCause());
             }
         });
     }

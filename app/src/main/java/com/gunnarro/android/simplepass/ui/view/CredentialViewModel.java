@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.gunnarro.android.simplepass.config.AppDatabase;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
 import com.gunnarro.android.simplepass.repository.CredentialRepository;
 import com.gunnarro.android.simplepass.validator.CustomPasswordValidator;
@@ -27,13 +28,7 @@ public class CredentialViewModel extends AndroidViewModel {
 
     public CredentialViewModel(@NonNull Application application) {
         super(application);
-        credentialRepository = new CredentialRepository(application);
-        credentials = credentialRepository.getAllCredentials(1L);
-    }
-
-    public CredentialViewModel(@NonNull Application application,  @NonNull String password) {
-        super(application);
-        credentialRepository = new CredentialRepository(application, password);
+        credentialRepository = new CredentialRepository(AppDatabase.getDatabase(application).credentialDao());
         credentials = credentialRepository.getAllCredentials(1L);
     }
 
@@ -41,7 +36,7 @@ public class CredentialViewModel extends AndroidViewModel {
         return credentials;
     }
 
-    public void save(Credential credential) {
+    public void save(Credential credential) throws Exception {
         Log.d("CredentialViewModel.save" , "save: " + credential);
         credentialRepository.save(credential);
     }
