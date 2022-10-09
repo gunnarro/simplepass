@@ -20,6 +20,7 @@ task clean(type: Delete) {
 
 sonarqube {
     properties {
+        property "sonar.sourceEncoding", "UTF-8"
         property "sonar.projectKey", "gunnarro_simplepass"
         property "sonar.organization", "gunnarro"
         property "sonar.host.url", "https://sonarcloud.io"
