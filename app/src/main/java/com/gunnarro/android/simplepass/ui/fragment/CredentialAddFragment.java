@@ -34,7 +34,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import kotlinx.coroutines.flow.MutableStateFlow;
 
 
 @AndroidEntryPoint
@@ -46,10 +45,9 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
     public static final String EMPTY_TEXT_REGEX = "\\s+";
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-    MutableStateFlow f;
-
     @Inject
     public CredentialAddFragment() {
+        // Needed by dagger framework
     }
 
     @Override

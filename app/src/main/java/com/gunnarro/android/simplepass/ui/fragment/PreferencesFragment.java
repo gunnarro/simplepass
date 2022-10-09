@@ -21,6 +21,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
 
     @Inject
     public PreferencesFragment() {
+        // Needed by dagger framework
     }
 
     @Override

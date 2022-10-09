@@ -35,6 +35,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
 
     @Inject
     public AdminFragment() {
+        // Needed by dagger framework
     }
 
     @Override
