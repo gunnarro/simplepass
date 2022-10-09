@@ -41,7 +41,7 @@ public class CredentialRepository {
         });
     }
 
-    public Long save(final Credential credential) throws Exception {
+    public Long save(final Credential credential) {
         Long id;
         try {
             if (credential.getId() == null) {
@@ -51,7 +51,9 @@ public class CredentialRepository {
                 id = Long.valueOf(i);
             }
             return id;
-        } catch (Exception e) {
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
             throw new SimpleCredStoreApplicationException("Error saving credential!", e.getMessage(), e.getCause());
         }
     }
