@@ -1,4 +1,6 @@
 [![Android CI](https://github.com/gunnarro/simplepass/actions/workflows/android.yml/badge.svg)](https://github.com/gunnarro/simplepass/actions/workflows/android.yml)
+[![Known Vulnerabilities](https://snyk.io/test/github/gunnarro/simplepass/badge.svg)](https://snyk.io/test/github/gunnarro/simplepass)
+
 # simplePass
 Android App store username and password on your mobile.
 Username and password is stored using AES-256 bit encryption with PBKDF2 SHA-256 and salted hashes to keep it secure.
