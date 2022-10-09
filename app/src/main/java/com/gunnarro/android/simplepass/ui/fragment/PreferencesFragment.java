@@ -42,7 +42,8 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
             });
         }
 
-        getPreferenceManager().findPreference(Objects.requireNonNull(getResources().getString(R.string.pref_automatic_logout_time))).setOnPreferenceChangeListener(this);
+        // FIXME
+    //    getPreferenceManager().findPreference(Objects.requireNonNull(getResources().getString(R.string.pref_automatic_logout_time))).setOnPreferenceChangeListener(this);
     }
 
     @Override
