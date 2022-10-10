@@ -39,7 +39,7 @@ public class Utility {
         genNewUUID();
     }
 
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN,Locale.getDefault());
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
 
     static {
         dateFormatter = new SimpleDateFormat(DATE_TIME_PATTERN, Locale.getDefault());
@@ -78,20 +78,20 @@ public class Utility {
     }
 
     public static DateTimeFormatter dateTimeFormatter() {
-        return DateTimeFormatter.ofPattern(DATE_PATTERN,Locale.getDefault());
+        return DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.getDefault());
     }
 
     public static LocalDate toLocalDate(String dateStr) {
         Log.d("Utility", "toLocalDate: " + dateStr);
-        return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(DATE_PATTERN,Locale.getDefault()));
+        return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.getDefault()));
     }
 
     public static LocalTime toLocalTime(String timeStr) {
-        return LocalTime.parse(timeStr, DateTimeFormatter.ofPattern(TIME_PATTERN,Locale.getDefault()));
+        return LocalTime.parse(timeStr, DateTimeFormatter.ofPattern(TIME_PATTERN, Locale.getDefault()));
     }
 
     public static String formatTime(LocalTime localTime) {
-        return localTime != null ? localTime.format(DateTimeFormatter.ofPattern(TIME_PATTERN,Locale.getDefault())) : null;
+        return localTime != null ? localTime.format(DateTimeFormatter.ofPattern(TIME_PATTERN, Locale.getDefault())) : null;
     }
 
     public static String formatDate(LocalDate localDate) {
@@ -117,7 +117,7 @@ public class Utility {
             mm = String.format("0%s", minute);
         }
         return String.format("%s:%s", hh, mm);
-    };
+    }
 
     public static String formatToDDMMYYYY(int year, int month, int day) {
         String dd = String.format("%s", day);
@@ -129,7 +129,7 @@ public class Utility {
             mm = String.format("0%s", month);
         }
         return String.format("%s-%s-%s", dd, mm, year);
-    };
+    }
 
     /**
      * @param map the map of words to be sorted
