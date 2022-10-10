@@ -19,7 +19,8 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-allprojects {
+subprojects {
+apply plugin: "org.sonarqube"
 sonarqube {
     properties {
         property "sonar.sourceEncoding", "UTF-8"
@@ -27,5 +28,9 @@ sonarqube {
         property "sonar.organization", "gunnarro"
         property "sonar.host.url", "https://sonarcloud.io"
     }
+}
+
+tasks.withType(Test).configureEach { 
+useJUnitPlatform() 
 }
 }
