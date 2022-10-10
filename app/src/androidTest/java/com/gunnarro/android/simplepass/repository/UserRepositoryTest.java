@@ -8,7 +8,6 @@ import android.content.Context;
 
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.gunnarro.android.simplepass.config.AppDatabase;
 import com.gunnarro.android.simplepass.domain.entity.User;
@@ -16,9 +15,6 @@ import com.gunnarro.android.simplepass.domain.entity.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import java.io.IOException;
 
 public class UserRepositoryTest {
 

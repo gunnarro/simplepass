@@ -32,5 +32,10 @@ subprojects {
 
     tasks.withType(Test).configureEach {
         useJUnitPlatform()
+        exclude "**/*IT*", "**/*IntTest*"
+        testLogging {
+            events 'FAILED', 'SKIPPED'
+        }
+        reports.html.enabled(true)
     }
 }
