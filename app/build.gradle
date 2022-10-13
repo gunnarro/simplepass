@@ -22,6 +22,17 @@ android {
         }
     }
 
+    dataBinding {
+        enabled = true
+    }
+
+    productFlavors {
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -33,9 +44,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+
     buildFeatures {
         viewBinding true
     }
+    namespace 'com.gunnarro.android.simplepass'
 }
 
 dependencies {
