@@ -19,12 +19,6 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-jacocoTestReport { 
-   dependsOn test // tests are required to run before generating the report 
-}
-
-tasks['sonarqube'].dependsOn jacocoTestReport
-
 subprojects {
     apply plugin: "org.sonarqube"
     sonarqube {
