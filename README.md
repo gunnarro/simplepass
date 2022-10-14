@@ -1,6 +1,9 @@
 [![Android CI](https://github.com/gunnarro/simplepass/actions/workflows/android.yml/badge.svg)](https://github.com/gunnarro/simplepass/actions/workflows/android.yml)
+[![Build and Analyze](https://github.com/gunnarro/simplepass/actions/workflows/android-sonarqube.yml/badge.svg)](https://github.com/gunnarro/simplepass/actions/workflows/android-sonarqube.yml)
 [![Known Vulnerabilities](https://snyk.io/test/github/gunnarro/simplepass/badge.svg)](https://snyk.io/test/github/gunnarro/simplepass)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gunnarro_simplepass&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gunnarro_simplepass)
+
+
 
 # simplePass
 Android App store username and password on your mobile.
