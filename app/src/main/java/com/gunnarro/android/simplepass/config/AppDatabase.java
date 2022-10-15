@@ -40,10 +40,12 @@ public abstract class AppDatabase extends RoomDatabase {
             // new PopulateDbAsyncTask(INSTANCE).execute();
         }
     };
-    // marking the instance as volatile to ensure atomic access to the variable
-    private static volatile AppDatabase INSTANCE;
+    private static AppDatabase INSTANCE;
 
-    public static AppDatabase getDatabase(final Context context) {
+    /**
+     * Thread safe access to the database.
+     */
+    public static synchronized AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             // Allow only single single thread access to the database
             synchronized (AppDatabase.class) {
