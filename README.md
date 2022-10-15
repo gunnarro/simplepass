@@ -4,7 +4,6 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gunnarro_simplepass&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gunnarro_simplepass)
 
 
-
 # simplePass
 Android App store username and password on your mobile.
 Username and password is stored using AES-256 bit encryption with PBKDF2 SHA-256 and salted hashes to keep it secure.
