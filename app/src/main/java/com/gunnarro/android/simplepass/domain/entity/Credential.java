@@ -55,12 +55,6 @@ public class Credential {
     @ColumnInfo(name = "password_status", index = true)
     private String passwordStatus;
 
-    /**
-     * default constructor, Room accepts only one
-     */
-    public Credential() {
-    }
-
     public Long getId() {
         return id;
     }

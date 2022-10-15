@@ -45,7 +45,7 @@ public abstract class AppDatabase extends RoomDatabase {
     /**
      * Thread safe access to the database.
      */
-    public static synchronized AppDatabase getDatabase(final Context context) {
+    public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             // Allow only single single thread access to the database
             synchronized (AppDatabase.class) {
