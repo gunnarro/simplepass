@@ -28,7 +28,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.util.concurrent.Executor;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -38,7 +37,6 @@ import javax.crypto.SecretKey;
 public class LoginFingerprintActivity extends AppCompatActivity {
 
     public final static String USERNAME_INTENT_NAME = "USERNAME";
-    private LoginViewModel loginViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +133,8 @@ public class LoginFingerprintActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(USERNAME_INTENT_NAME, model.getUserName());
         startActivity(intent);
+        // finally finish login activity
+        finish();
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {

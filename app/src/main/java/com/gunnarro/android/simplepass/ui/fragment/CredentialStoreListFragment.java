@@ -63,7 +63,11 @@ public class CredentialStoreListFragment extends Fragment {
                     if (bundle.getString(CREDENTIALS_ACTION_KEY).equals(CREDENTIALS_ACTION_SAVE)) {
                         try {
                             credentialsViewModel.save(credential);
-                            showSnackbar("Added credential");
+                            if (credential.getId() == null) {
+                                showSnackbar("Added credential");
+                            } else {
+                                showSnackbar("Updated credential");
+                            }
                         } catch (SimpleCredStoreApplicationException ex) {
                             Toast.makeText(getContext(), ex.getErrorCode(), Toast.LENGTH_SHORT).show();
                         }

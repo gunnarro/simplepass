@@ -46,4 +46,15 @@ class LoginFormState {
     boolean isDataValid() {
         return isDataValid;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("LoginFormState{");
+        sb.append("usernameError=").append(usernameError);
+        sb.append(", encryptionKeyError=").append(encryptionKeyError);
+        sb.append(", encryptionKeyErrorMsg='").append(encryptionKeyErrorMsg).append('\'');
+        sb.append(", isDataValid=").append(isDataValid);
+        sb.append('}');
+        return sb.toString();
+    }
 }

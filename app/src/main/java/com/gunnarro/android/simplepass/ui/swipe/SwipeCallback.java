@@ -65,6 +65,13 @@ public abstract class SwipeCallback extends ItemTouchHelper.Callback {
         }
 
         background.setColor(backgroundColor);
+        // determine icon placement
+        int iconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+        int iconMargin = (itemHeight - intrinsicHeight) / 2;
+        int iconLeft = itemView.getRight() - iconMargin - intrinsicWidth;
+        int iconRight = itemView.getRight() - iconMargin;
+        int iconBottom = iconTop + intrinsicHeight;
+
         // dX – The amount of horizontal displacement caused by user's action
         if (dX < 0 ) {
             // for left swipe
@@ -72,15 +79,10 @@ public abstract class SwipeCallback extends ItemTouchHelper.Callback {
         } else {
             // for right swipe
             background.setBounds(itemView.getLeft() + (int) dX, itemView.getTop(), itemView.getLeft(), itemView.getBottom());
+            iconLeft = itemView.getLeft() + iconMargin;
+            iconRight = itemView.getLeft() + iconMargin + intrinsicWidth;
         }
         background.draw(canvas);
-
-        int iconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-        int snaciconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-        int iconMargin = (itemHeight - intrinsicHeight) / 2;
-        int iconLeft = itemView.getRight() - iconMargin - intrinsicWidth;
-        int iconRight = itemView.getRight() - iconMargin;
-        int iconBottom = iconTop + intrinsicHeight;
 
         swipeDrawable.setBounds(iconLeft, iconTop, iconRight, iconBottom);
         swipeDrawable.draw(canvas);

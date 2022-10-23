@@ -2,6 +2,7 @@ package com.gunnarro.android.simplepass.ui.login;
 
 import android.app.Application;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -16,6 +17,8 @@ import com.gunnarro.android.simplepass.repository.UserRepository;
 import com.gunnarro.android.simplepass.utility.AESCrypto;
 import com.gunnarro.android.simplepass.validator.CustomPasswordValidator;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 
 public class LoginViewModel extends AndroidViewModel {
@@ -26,9 +29,10 @@ public class LoginViewModel extends AndroidViewModel {
 
     private final MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
 
-    public LoginViewModel(@NonNull Application application) {
+    public LoginViewModel(@NonNull Application application) throws GeneralSecurityException, IOException {
         super(application);
-        userRepository = new UserRepository(AppDatabase.getDatabase(application).userDao());
+        userRepository = new UserRepository(AppDatabase.getDatabaseEncrypted(application, null).userDao());
+        Log.i("LoginViewModel", "initialized");
     }
 
     LiveData<LoginFormState> getLoginFormState() {
@@ -39,11 +43,23 @@ public class LoginViewModel extends AndroidViewModel {
         return loginResult;
     }
 
-    public boolean isFistTimeLogin() throws Exception {
-        return userRepository.getUsers().size() == 0;
+    public boolean isFirstTimeLogin() throws Exception {
+        return userRepository.isFirstTimeLogin();
     }
 
-    public void login(String username, String encryptionKey) {
+    /**
+     * Account must exist before fingerprint login are available
+     */
+    public void loginFingerprint() throws Exception {
+        AESCrypto.reset();
+        AESCrypto.init(AppDatabase.getEncryptionMasterPass(getApplication().getApplicationContext()));
+        List<User> users = userRepository.getUsers();
+        User user = users.stream().findFirst().orElse(null);
+        Log.d("LoginViewModel.loginFingerprint", "login user OK: " + user);
+        loginResult.setValue(new LoginResult(new LoggedInUserDto(user.getId(), user.getUsername())));
+    }
+
+    public void login(String username, String encryptionKey, boolean isFingerprintLoginEnabled) {
         try {
             // Must first reset and then init the AESCrypto here upon each login attempt.
             AESCrypto.reset();
@@ -67,8 +83,9 @@ public class LoginViewModel extends AndroidViewModel {
                 // access denied for this user and encryption key combination
                 loginResult.setValue(new LoginResult(R.string.login_user_access_denied));
             }
+            // check and save key if fingerprint login is enabled
+            enableFingerprintLogin(isFingerprintLoginEnabled, encryptionKey);
         } catch (Exception e) {
-            e.printStackTrace();
             loginResult.setValue(new LoginResult(R.string.login_failed));
         }
     }
@@ -82,6 +99,7 @@ public class LoginViewModel extends AndroidViewModel {
         } else {
             loginFormState.setValue(new LoginFormState(true));
         }
+        Log.d("loginDataChanged", loginFormState.toString());
     }
 
     private List<String> isEncryptionKeyValid(String encryptionKey) {
@@ -90,5 +108,17 @@ public class LoginViewModel extends AndroidViewModel {
 
     private boolean isUsernameValid(String username) {
         return username != null && username.trim().length() > 1;
+    }
+
+    private void enableFingerprintLogin(boolean isEnableFingerprintLogin, String masterPass) {
+        if (isEnableFingerprintLogin) {
+            // save master password in encrypted shared preferences for use when fingerprint login
+            try {
+                AppDatabase.saveEncryptionMasterPass(getApplication().getApplicationContext(), masterPass);
+            } catch (Exception e) {
+                // something failed during saving master password, show an alert that fingerprint login could not be activated
+                Toast.makeText(getApplication().getApplicationContext(), "Fingerprint login could not be activated! Please report error! Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

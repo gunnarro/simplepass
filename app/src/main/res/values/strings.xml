@@ -7,6 +7,7 @@
     <string name="prompt_password">Master Password</string>
     <string name="prompt_password_repeat">Master Password Repeat</string>
     <string name="prompt_url">Url</string>
+    <string name="lbl_activate_fingerprint_login">"Activate fingerprint login"</string>
     <string name="action_sign_in">Login</string>
     <string name="invalid_encryption_key">Encryption key must be > 7 characters</string>
     <string name="invalid_username">Username must be > 1 characters</string>

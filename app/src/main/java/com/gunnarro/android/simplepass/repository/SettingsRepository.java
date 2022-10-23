@@ -6,6 +6,9 @@ import android.util.Log;
 import com.gunnarro.android.simplepass.config.AppDatabase;
 import com.gunnarro.android.simplepass.domain.config.Settings;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -19,9 +22,9 @@ public class SettingsRepository {
     // See the BasicSample in the android-architecture-components repository at
     // https://github.com/googlesamples
     @Inject
-    public SettingsRepository(Application application) {
+    public SettingsRepository(Application application) throws GeneralSecurityException, IOException {
         Log.d("SettingsRepository", "init database..");
-        settingsDao = AppDatabase.getDatabase(application).settingsDao();
+        settingsDao = AppDatabase.getDatabaseEncrypted(application, null).settingsDao();
     }
 
     // Room executes all queries on a separate thread.

@@ -2,21 +2,34 @@ package com.gunnarro.android.simplepass.utility;
 
 import android.util.Log;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
 
+import kotlin.text.Charsets;
+
+/*
+* Use AES algorithm of 256-bit for encrypt/decrypt data.
+ */
 public class AESCrypto {
 
     private static final String SYMMETRIC_KEY_ALGORITHM = "AES";
     private static final String PASSWORD_BASED_KEY_ALGORITHM = "AES/ECB/PKCS5Padding";
+    private static final Integer KEY_SIZE = 256;
     private static SecretKeySpec secretKey;
 
+
+    public static String getSecretKey() {
+        return secretKey != null ?  secretKey.getEncoded().toString() : null;
+    }
     /**
      * initialize key
      *
@@ -76,5 +89,15 @@ public class AESCrypto {
             Log.e("AESCrypto.decrypt", "Error while decrypting: " + e.getMessage());
             throw new CryptoException("Error while decrypting!", e.getCause());
         }
+    }
+
+    /**
+     * generate a symmetric cryptographic key
+     * Generates and returns a passphrase.
+     */
+    public static String generatePassphrase() throws GeneralSecurityException, IOException {
+        KeyGenerator keyGenerator = KeyGenerator.getInstance(SYMMETRIC_KEY_ALGORITHM);
+        keyGenerator.init(KEY_SIZE);
+        return new String(keyGenerator.generateKey().getEncoded(), Charsets.ISO_8859_1);
     }
 }

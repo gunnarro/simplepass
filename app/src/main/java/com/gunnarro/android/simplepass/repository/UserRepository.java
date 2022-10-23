@@ -21,6 +21,10 @@ public class UserRepository {
         this.userDao = userDao;
     }
 
+    public boolean isFirstTimeLogin() throws Exception {
+        return getUsers().size() == 0;
+    }
+
     public List<User> getUsers() throws Exception {
         Log.d("UserRepository.getUsers", "start ...");
         Callable<List<User>> callableGetUsersTask = userDao::getUsers;
@@ -30,7 +34,7 @@ public class UserRepository {
             Future<List<User>> future = service.take();
             return future.get();
         } catch (Exception e) {
-            throw new Exception("Login field!", e.getCause());
+            throw new Exception("get users failures!", e.getCause());
         }
 /*
         Future<List<User>> result = AppDatabase.databaseExecutor.submit(callableGetUsersTask);
@@ -91,6 +95,10 @@ public class UserRepository {
                 Log.d("UserRepository.updateFailedLoginAttempts", "user do not exist. user: " + username);
             }
         });
+    }
+
+    public User getByUsername(String username) {
+        return userDao.getByUsername(username);
     }
 
     public void insert(User user) {

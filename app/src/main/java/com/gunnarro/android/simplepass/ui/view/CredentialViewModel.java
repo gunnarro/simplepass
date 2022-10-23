@@ -12,6 +12,8 @@ import com.gunnarro.android.simplepass.domain.entity.Credential;
 import com.gunnarro.android.simplepass.repository.CredentialRepository;
 import com.gunnarro.android.simplepass.validator.CustomPasswordValidator;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 
 /**
@@ -26,9 +28,9 @@ public class CredentialViewModel extends AndroidViewModel {
     //   the UI when the data actually changes.
     private final LiveData<List<Credential>> credentials;
 
-    public CredentialViewModel(@NonNull Application application) {
+    public CredentialViewModel(@NonNull Application application) throws GeneralSecurityException, IOException {
         super(application);
-        credentialRepository = new CredentialRepository(AppDatabase.getDatabase(application).credentialDao());
+        credentialRepository = new CredentialRepository(AppDatabase.getDatabaseEncrypted(application, null).credentialDao());
         credentials = credentialRepository.getAllCredentials(1L);
     }
 

@@ -30,6 +30,11 @@ public class CredentialRepository {
         return credentialDao.getAll(userId);
     }
 
+    public List<Credential> getCredentials(Long userId) {
+        Log.d("CredentialRepository.getAllCredentials", "refresh live data in fragment");
+        return credentialDao.getCredentials(userId);
+    }
+
     public Credential getCredential(Long id) {
         return credentialDao.getById(id);
     }
@@ -45,9 +50,9 @@ public class CredentialRepository {
         Long id;
         try {
             if (credential.getId() == null) {
-                id = insertCredentiaL(credential);
+                id = insertCredential(credential);
             } else {
-                Integer i = updateCredentiaL(credential);
+                Integer i = updateCredential(credential);
                 id = Long.valueOf(i);
             }
             return id;
@@ -58,14 +63,14 @@ public class CredentialRepository {
         }
     }
 
-    private Long insertCredentiaL(Credential credential) throws InterruptedException, ExecutionException {
+    private Long insertCredential(Credential credential) throws InterruptedException, ExecutionException {
         CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> credentialDao.insert(credential));
         Future<Long> future = service.take();
         return future.get();
     }
 
-    private Integer updateCredentiaL(Credential credential) throws InterruptedException, ExecutionException {
+    private Integer updateCredential(Credential credential) throws InterruptedException, ExecutionException {
         CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> credentialDao.update(credential));
         Future<Integer> future = service.take();

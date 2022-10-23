@@ -1,5 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+ext {
+    agp_version = '7.3.0'
+}
 }
 
 plugins {
@@ -8,6 +11,12 @@ plugins {
     id "org.sonarqube" version "3.4.0.2513"
     id "java"
     id "jacoco"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 allprojects {

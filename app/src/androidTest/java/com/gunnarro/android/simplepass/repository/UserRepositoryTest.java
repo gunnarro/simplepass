@@ -19,7 +19,6 @@ import org.junit.Test;
 public class UserRepositoryTest {
 
     AppDatabase db;
-
     private UserRepository userRepository;
 
     @Before
@@ -32,6 +31,11 @@ public class UserRepositoryTest {
     @After
     public void closeDb() {
         db.close();
+    }
+
+    @Test
+    public void isFirstTimeLogin() throws Exception {
+        assertTrue(userRepository.isFirstTimeLogin());
     }
 
     @Test
@@ -62,5 +66,4 @@ public class UserRepositoryTest {
         userRepository.insert(new User("new-user"));
         assertEquals(1, userRepository.getUsers().size());
     }
-
 }

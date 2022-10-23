@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         loggedInUserId = getIntent().getExtras().getLong(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY);
 
-        Log.i(Utility.buildTag(getClass(), "onCreate"), "Credential store for userId=" + loggedInUserId);
+        Log.i(Utility.buildTag(getClass(), "onCreate"), "Credential store for userId=" + loggedInUserId + ", secret key: " + AESCrypto.getSecretKey());
 
         // Adding this line will prevent taking screenshot in your app
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(Utility.buildTag(getClass(), "viewFragment"), "fragment: " + fragment.getTag());
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, fragment)
+                .replace(R.id.content_frame, fragment) // remove current fragment and add the new one
                 .commit();
     }
 
