@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -68,18 +67,15 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
             }
         }
 
-         view.findViewById(R.id.change_master_password_btn).setOnClickListener(v -> {
+        view.findViewById(R.id.change_master_password_btn).setOnClickListener(v -> {
             returnToCredentialList();
         });
 
         SwitchMaterial fingerprintLoginSwitch = view.findViewById(R.id.admin_disable_fingerprint_login_switch);
         try {
-            if (AppDatabase.isFingerprintLoginEnabled(getContext())) {
-                fingerprintLoginSwitch.setSelected(true);
-            } else {
-                fingerprintLoginSwitch.setSelected(false);
-                fingerprintLoginSwitch.setEnabled(false);
-            }
+            boolean isEnabled = AppDatabase.isFingerprintLoginEnabled(getContext());
+            fingerprintLoginSwitch.setChecked(isEnabled);
+            fingerprintLoginSwitch.setEnabled(isEnabled);
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -88,9 +84,9 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
 
         fingerprintLoginSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (!isChecked) {
-                disableFingerprintLogin();
-                // then disable, because this is an irreversible operation
+                // first disable, because this is an irreversible operation
                 buttonView.setEnabled(false);
+                disableFingerprintLogin();
             }
         });
 

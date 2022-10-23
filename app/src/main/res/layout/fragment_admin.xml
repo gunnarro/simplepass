@@ -53,5 +53,7 @@
         android:id="@+id/admin_disable_fingerprint_login_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:enabled="true"
         android:text="@string/lbl_deactivate_fingerprint_login" />
 </LinearLayout>
