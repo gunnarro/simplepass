@@ -114,7 +114,7 @@ public class LoginViewModel extends AndroidViewModel {
         if (isEnableFingerprintLogin) {
             // save master password in encrypted shared preferences for use when fingerprint login
             try {
-                AppDatabase.saveEncryptionMasterPass(getApplication().getApplicationContext(), masterPass);
+                AppDatabase.enableFingerprintLogin(getApplication().getApplicationContext(), masterPass);
             } catch (Exception e) {
                 // something failed during saving master password, show an alert that fingerprint login could not be activated
                 Toast.makeText(getApplication().getApplicationContext(), "Fingerprint login could not be activated! Please report error! Error: " + e.getMessage(), Toast.LENGTH_LONG).show();

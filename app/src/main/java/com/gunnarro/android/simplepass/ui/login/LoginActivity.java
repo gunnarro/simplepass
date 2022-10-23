@@ -66,12 +66,13 @@ public class LoginActivity extends AppCompatActivity {
                 // hide everything else
                 loginBinding.loginUsernameInputLayout.setVisibility(View.INVISIBLE);
                 loginBinding.loginEncryptionKeyInputLayout.setVisibility(View.INVISIBLE);
-                loginBinding.loginEnableFingerprintLoginChkbox.setVisibility(View.INVISIBLE);
+                loginBinding.loginEnableFingerprintLoginSwitch.setVisibility(View.INVISIBLE);
                 loginBinding.loginBtn.setVisibility(View.INVISIBLE);
                 // show fingerprint login dialog
                 createBiometricPrompt().authenticate(createBiometricPromptInfo());
             } else {
                 Log.d("LoginActivity.onCreate", "ordinary login, with user and pass");
+                loginBinding.loginFingerprintBtn.setVisibility(View.INVISIBLE);
                 loginViewModel.getLoginFormState().observe(this, loginFormState -> {
                     Log.d("LoginActivity.getLoginFormState", "login, " + loginFormState.toString());
                     loginButton.setEnabled(true);
@@ -130,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
             });
              */
             // username/password login
-            loginButton.setOnClickListener(v -> loginViewModel.login(usernameEditText.getText().toString(), encryptionKeyEditText.getText().toString(), loginBinding.loginEnableFingerprintLoginChkbox.isChecked()));
+            loginButton.setOnClickListener(v -> loginViewModel.login(usernameEditText.getText().toString(), encryptionKeyEditText.getText().toString(), loginBinding.loginEnableFingerprintLoginSwitch.isChecked()));
             // fingerprint login dialog
             loginBinding.loginFingerprintBtn.setOnClickListener(view -> createBiometricPrompt().authenticate(createBiometricPromptInfo()));
         } catch (Exception e) {

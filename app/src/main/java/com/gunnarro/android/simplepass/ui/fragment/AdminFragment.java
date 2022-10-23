@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -17,11 +18,16 @@ import androidx.fragment.app.Fragment;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.gunnarro.android.simplepass.R;
+import com.gunnarro.android.simplepass.config.AppDatabase;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
 import com.gunnarro.android.simplepass.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 import javax.inject.Inject;
 
@@ -62,8 +68,30 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
             }
         }
 
-        view.findViewById(R.id.change_master_password_btn).setOnClickListener(v -> {
+         view.findViewById(R.id.change_master_password_btn).setOnClickListener(v -> {
             returnToCredentialList();
+        });
+
+        SwitchMaterial fingerprintLoginSwitch = view.findViewById(R.id.admin_disable_fingerprint_login_switch);
+        try {
+            if (AppDatabase.isFingerprintLoginEnabled(getContext())) {
+                fingerprintLoginSwitch.setSelected(true);
+            } else {
+                fingerprintLoginSwitch.setSelected(false);
+                fingerprintLoginSwitch.setEnabled(false);
+            }
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        fingerprintLoginSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isChecked) {
+                disableFingerprintLogin();
+                // then disable, because this is an irreversible operation
+                buttonView.setEnabled(false);
+            }
         });
 
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
@@ -106,6 +134,16 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
             Log.d(Utility.buildTag(getClass(), "onClick"), "save button, save entry: ");
         } else if (id == R.id.btn_credential_register_cancel) {
             // return back to main view
+        }
+    }
+
+    private void disableFingerprintLogin() {
+        try {
+            AppDatabase.disableFingerprintLogin(getContext());
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

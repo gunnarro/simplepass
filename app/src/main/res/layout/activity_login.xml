@@ -42,7 +42,7 @@
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.checkbox.MaterialCheckBox
+    <!-- com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/login_enable_fingerprint_login_chkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,9 +52,18 @@
         android:layout_marginEnd="10dp"
         android:clickable="true"
         android:text="@string/lbl_activate_fingerprint_login"
-        android:textAlignment="textStart">
+        android:textAlignment="textStart" / -->
 
-    </com.google.android.material.checkbox.MaterialCheckBox>
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/login_enable_fingerprint_login_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="@string/lbl_activate_fingerprint_login"
+        android:textAlignment="textStart"/>
 
     <Button
         android:id="@+id/login_btn"

@@ -108,7 +108,7 @@ public abstract class AppDatabase extends RoomDatabase {
         Log.d("AppDatabase.savePassPhrase", passphrase);
     }
 
-    public static void saveEncryptionMasterPass(Context context, String masterPass) throws GeneralSecurityException, IOException {
+    private static void saveEncryptionMasterPass(Context context, String masterPass) throws GeneralSecurityException, IOException {
         getEncryptedSharedPrefs(context).edit().putString(PREFS_KEY_MASTER_PASSWORD, masterPass).apply();
         Log.d("AppDatabase.saveEncryptionMasterPass", PREFS_KEY_MASTER_PASSWORD + "=" + masterPass);
     }
@@ -121,7 +121,17 @@ public abstract class AppDatabase extends RoomDatabase {
         return getEncryptionMasterPass(context) != null;
     }
 
-    public static void deleteEncryptionMasterPass(Context context) throws GeneralSecurityException, IOException {
+    public static void enableFingerprintLogin(Context context, String masterPass) throws GeneralSecurityException, IOException {
+       saveEncryptionMasterPass(context, masterPass);
+        Log.d("AppDatabase.enableFingerprintLogin", "enabled fingerprint login");
+    }
+
+    public static void disableFingerprintLogin(Context context) throws GeneralSecurityException, IOException {
+        deleteEncryptionMasterPass(context);
+        Log.d("AppDatabase.disableFingerprintLogin", "disabled fingerprint login");
+    }
+
+    private static void deleteEncryptionMasterPass(Context context) throws GeneralSecurityException, IOException {
         getEncryptedSharedPrefs(context).edit().remove(PREFS_KEY_MASTER_PASSWORD).apply();
         Log.d("AppDatabase.deleteEncryptionMasterPass", PREFS_KEY_MASTER_PASSWORD);
     }
