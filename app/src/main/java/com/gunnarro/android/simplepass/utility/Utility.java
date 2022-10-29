@@ -20,30 +20,27 @@ import java.util.stream.Collectors;
 
 public class Utility {
 
+    public static final String WORKDAY_DATE_PATTERN = "EEE d MMM";
     private static final String LOG_TAG = Utility.class.getSimpleName();
     private static final SimpleDateFormat dateFormatter;
     private static final String DATE_TIME_PATTERN = "dd-MM-yyyy HH:mm";
-    public static final String WORKDAY_DATE_PATTERN = "EEE d MMM";
     private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final String TIME_PATTERN = "HH:mm";
-
+    private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
     private static String currentUUID;
 
-    private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
-
-    public static ObjectMapper getJsonMapper() {
-        return mapper;
+    static {
+        dateFormatter = new SimpleDateFormat(DATE_TIME_PATTERN, Locale.getDefault());
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     private Utility() {
         genNewUUID();
     }
 
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
-
-    static {
-        dateFormatter = new SimpleDateFormat(DATE_TIME_PATTERN, Locale.getDefault());
-        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+    public static ObjectMapper getJsonMapper() {
+        return mapper;
     }
 
     public static void genNewUUID() {
@@ -74,7 +71,11 @@ public class Utility {
     }
 
     public static String formatDateTime(LocalDateTime localDateTime) {
-        return localDateTime.format(dateTimeFormatter);
+        if (localDateTime != null) {
+            return localDateTime.format(dateTimeFormatter);
+        } else {
+            return null;
+        }
     }
 
     public static DateTimeFormatter dateTimeFormatter() {

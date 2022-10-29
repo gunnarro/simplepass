@@ -9,6 +9,7 @@ import com.gunnarro.android.simplepass.config.AppDatabase;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
 import com.gunnarro.android.simplepass.exception.SimpleCredStoreApplicationException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
@@ -50,8 +51,11 @@ public class CredentialRepository {
         Long id;
         try {
             if (credential.getId() == null) {
+                credential.setCreatedDate(LocalDateTime.now());
+                credential.setLastModifiedDate(LocalDateTime.now());
                 id = insertCredential(credential);
             } else {
+                credential.setLastModifiedDate(LocalDateTime.now());
                 Integer i = updateCredential(credential);
                 id = Long.valueOf(i);
             }

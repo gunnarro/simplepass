@@ -17,7 +17,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.ui.fragment.AdminFragment;
 import com.gunnarro.android.simplepass.ui.fragment.CredentialAddFragment;
-import com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment;
+import com.gunnarro.android.simplepass.ui.fragment.CredentialListFragment;
 import com.gunnarro.android.simplepass.ui.fragment.PreferencesFragment;
 import com.gunnarro.android.simplepass.ui.login.LoginActivity;
 import com.gunnarro.android.simplepass.utility.AESCrypto;
@@ -39,7 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
-    CredentialStoreListFragment credentialStoreListFragment;
+    CredentialListFragment credentialStoreListFragment;
     @Inject
     CredentialAddFragment credentialAddFragment;
     @Inject
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Long loggedInUserId = null;
 
     public MainActivity() {
-        this.credentialStoreListFragment = new CredentialStoreListFragment();
+        this.credentialStoreListFragment = new CredentialListFragment();
         this.credentialAddFragment = new CredentialAddFragment();
         this.preferencesFragment = new PreferencesFragment();
         this.adminFragment = new AdminFragment();
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // check and grant or deny permissions
         checkPermissions();
         // Finally, start timer for automatically logout user after å given period of time
-        startAutoLogoutUserTime(6000000);
+        startAutoLogoutUserTime(600000);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ((NavigationView) findViewById(R.id.navigationView)).setCheckedItem(R.id.nav_settings);
                 viewFragment(preferencesFragment);
             } else if (id == R.id.nav_credential_list) {
-                setTitle(R.string.title_credential);
+                setTitle(R.string.title_credential_list);
                 ((NavigationView) findViewById(R.id.navigationView)).setCheckedItem(R.id.nav_credential_list);
                 credentialStoreListFragment.setArguments(args);
                 viewFragment(credentialStoreListFragment);

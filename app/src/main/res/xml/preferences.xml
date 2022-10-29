@@ -2,11 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Preference
-        android:drawableStart="@android:drawable/ic_media_previous"
-        app:key="settings_back_button"
-        app:title="Settings" />
-
     <PreferenceCategory
         app:summary="Settings for simple password store"
         app:title="SimplePassStore Settings">

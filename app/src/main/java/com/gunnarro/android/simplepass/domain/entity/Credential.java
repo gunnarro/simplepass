@@ -31,17 +31,17 @@ public class Credential {
 
     @NonNull
     @ColumnInfo(name = "created_date")
-    private LocalDateTime createdDate = LocalDateTime.now();
+    private LocalDateTime createdDate;
 
     @NonNull
     @ColumnInfo(name = "last_modified_date")
-    private LocalDateTime lastModifiedDate = LocalDateTime.now();
+    private LocalDateTime lastModifiedDate;
 
     @NonNull
     @ColumnInfo(name = "system", index = true)
     private String system;
 
-    @ColumnInfo(name = "url", index = false)
+    @ColumnInfo(name = "url")
     private String url;
 
     @NonNull
@@ -148,6 +148,7 @@ public class Credential {
         return Objects.hash(fkUserId, system, username);
     }
 
+    @NonNull
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Credential{");

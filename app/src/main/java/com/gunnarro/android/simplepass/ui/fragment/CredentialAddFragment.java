@@ -7,14 +7,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -53,7 +50,6 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 
@@ -63,7 +59,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         View view = inflater.inflate(R.layout.fragment_credential_add, container, false);
         Credential credential = new Credential();
         // check if this is an existing or a new credential
-        String credentialJson = getArguments() != null ? getArguments().getString(CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY) : null;
+        String credentialJson = getArguments() != null ? getArguments().getString(CredentialListFragment.CREDENTIALS_JSON_INTENT_KEY) : null;
         if (credentialJson != null) {
             try {
                 credential = mapper.readValue(credentialJson, Credential.class);
@@ -80,9 +76,9 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         view.findViewById(R.id.btn_credential_register_save).setOnClickListener(v -> {
             view.findViewById(R.id.btn_credential_register_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson(new Credential()));
-            result.putString(CredentialStoreListFragment.CREDENTIALS_ACTION_KEY, CredentialStoreListFragment.CREDENTIALS_ACTION_SAVE);
-            getParentFragmentManager().setFragmentResult(CredentialStoreListFragment.CREDENTIALS_REQUEST_KEY, result);
+            result.putString(CredentialListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson(new Credential()));
+            result.putString(CredentialListFragment.CREDENTIALS_ACTION_KEY, CredentialListFragment.CREDENTIALS_ACTION_SAVE);
+            getParentFragmentManager().setFragmentResult(CredentialListFragment.CREDENTIALS_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new item intent");
             returnToCredentialList();
         });
@@ -90,9 +86,9 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         view.findViewById(R.id.btn_credential_register_delete).setOnClickListener(v -> {
             view.findViewById(R.id.btn_credential_register_delete).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson(new Credential()));
-            result.putString(CredentialStoreListFragment.CREDENTIALS_ACTION_KEY, CredentialStoreListFragment.CREDENTIALS_ACTION_DELETE);
-            getParentFragmentManager().setFragmentResult(CredentialStoreListFragment.CREDENTIALS_REQUEST_KEY, result);
+            result.putString(CredentialListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson(new Credential()));
+            result.putString(CredentialListFragment.CREDENTIALS_ACTION_KEY, CredentialListFragment.CREDENTIALS_ACTION_DELETE);
+            getParentFragmentManager().setFragmentResult(CredentialListFragment.CREDENTIALS_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new item intent");
             returnToCredentialList();
         });
@@ -112,7 +108,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
     private void returnToCredentialList() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment.class, null)
+                .replace(R.id.content_frame, CredentialListFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
     }
@@ -123,11 +119,6 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     private void updateAddCredentialView(View view, Credential credential) {
@@ -224,11 +215,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
     }
 
     /**
-     * For validation of text field input
      *
-     * @param editText           text input to validate
-     * @param validationErrorMsg error message
-     * @return
      */
     private TextWatcher createEmptyTextValidator(EditText editText, String regexp, String validationErrorMsg) {
         return new TextWatcher() {

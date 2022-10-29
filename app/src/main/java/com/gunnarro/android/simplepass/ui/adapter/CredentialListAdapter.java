@@ -1,6 +1,5 @@
 package com.gunnarro.android.simplepass.ui.adapter;
 
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
-import com.gunnarro.android.simplepass.ui.fragment.CredentialStoreListFragment;
 import com.gunnarro.android.simplepass.ui.view.CredentialViewHolder;
 import com.gunnarro.android.simplepass.utility.Utility;
 

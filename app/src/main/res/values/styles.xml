@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.Material3.Light">
@@ -62,7 +62,7 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="CustomTextInputReadOnlyLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="CustomTextInputReadOnlyLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <!-- not editable -->
         <item name="android:enabled">false</item>
         <!-- no background, no boarder -->
@@ -71,9 +71,17 @@
         <item name="hintTextColor">@color/colorPrimary</item>
         <!-- The color of the label in all other text field states (such as resting and disabled) -->
         <item name="android:textColorHint">@color/colorLabel</item>
+        <!-- -->
+        <item name="boxCollapsedPaddingTop">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingStart" tools:ignore="NewApi">0dp</item>
+        <item name="android:paddingEnd" tools:ignore="NewApi">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
     </style>
 
-    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <!-- no background, no boarder -->
         <item name="boxBackgroundMode">none</item>
         <!-- box background color -->
@@ -84,6 +92,18 @@
         <item name="hintTextColor">@color/colorPrimary</item>
         <!-- The color of the label in all other text field states (such as resting and disabled) -->
         <item name="android:textColorHint">@color/colorPrimary</item>
+
+    </style>
+
+    <style name="CustomTextInputEditText" parent="Widget.MaterialComponents.TextInputEditText.FilledBox">
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingStart" tools:ignore="NewApi">0dp</item>
+        <item name="android:paddingEnd" tools:ignore="NewApi">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <!-- Edit text's default text size is 16sp which currently equals to 22dp total line height -->
+        <item name="android:layout_height">22dp</item>
     </style>
 
     <style name="CustomIconButton" parent="Widget.Material3.Button.IconButton">

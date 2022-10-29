@@ -42,18 +42,6 @@
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/login_enable_fingerprint_login_chkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:clickable="true"
-        android:text="@string/lbl_activate_fingerprint_login"
-        android:textAlignment="textStart" / -->
-
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/login_enable_fingerprint_login_switch"
         android:layout_width="match_parent"
@@ -63,7 +51,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:text="@string/lbl_activate_fingerprint_login"
-        android:textAlignment="textStart"/>
+        android:textAlignment="textStart" />
 
     <Button
         android:id="@+id/login_btn"
@@ -85,48 +73,3 @@
         android:enabled="true"
         android:text="@string/btn_fingerprint_login" />
 </LinearLayout>
-
-    <!-- another input text style
-      <EditText
-          android:id="@+id/login_username_txt"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="10dp"
-          android:layout_marginStart="10dp"
-          android:layout_marginEnd="10dp"
-          android:autofillHints="@string/prompt_username"
-          android:hint="@string/prompt_username"
-          android:imeActionLabel="@string/action_sign_in"
-          android:imeOptions="actionDone"
-          android:inputType="text" />
-
-      <EditText
-          android:id="@+id/login_encryption_key_txt"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:layout_below="@id/login_username_txt"
-          android:layout_marginTop="10dp"
-          android:layout_marginStart="10dp"
-          android:layout_marginEnd="10dp"
-          android:autofillHints="@string/prompt_encryption_key"
-          android:hint="@string/prompt_encryption_key"
-          android:imeActionLabel="@string/action_sign_in"
-          android:imeOptions="actionDone"
-          android:inputType="text" />
-      -->
-    <!--
-    <nu.aaro.gustav.passwordstrengthmeter.PasswordStrengthMeter xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/passwordInputMeter"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/login_encryption_key_txt"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        app:animateChanges="true"
-        app:animationDuration="300"
-        app:labelTextSize="12sp"
-        app:showStrengthBar="true"
-        app:showStrengthLabel="true"
-        app:strengthBarHeight="5dp" />
--->

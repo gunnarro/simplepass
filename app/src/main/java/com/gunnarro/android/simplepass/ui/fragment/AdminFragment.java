@@ -46,7 +46,6 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 
@@ -56,7 +55,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_admin, container, false);
         Credential credential = new Credential();
         // check if this is an existing or a new credential
-        String credentialJson = getArguments() != null ? getArguments().getString(CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY) : null;
+        String credentialJson = getArguments() != null ? getArguments().getString(CredentialListFragment.CREDENTIALS_JSON_INTENT_KEY) : null;
         if (credentialJson != null) {
             try {
                 credential = mapper.readValue(credentialJson, Credential.class);
@@ -97,7 +96,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
     private void returnToCredentialList() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, CredentialStoreListFragment.class, null)
+                .replace(R.id.content_frame, CredentialListFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
     }

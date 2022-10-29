@@ -27,7 +27,6 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
     }
 
     @Override

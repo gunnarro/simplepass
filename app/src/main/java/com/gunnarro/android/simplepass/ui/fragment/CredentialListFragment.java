@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -37,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class CredentialStoreListFragment extends Fragment {
+public class CredentialListFragment extends Fragment {
     public static final String CREDENTIALS_JSON_INTENT_KEY = "credentials_as_json";
     public static final String CREDENTIALS_REQUEST_KEY = "2";
     public static final String CREDENTIALS_ACTION_KEY = "12";
@@ -50,7 +51,6 @@ public class CredentialStoreListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         // Get a new or existing ViewModel from the ViewModelProvider.
         credentialsViewModel = new ViewModelProvider(this).get(CredentialViewModel.class);
         // Pick up callback from add credentials view
@@ -140,7 +140,18 @@ public class CredentialStoreListFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.options_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_sort_list) {
+            //do your function here
+            Toast.makeText(getActivity(), "Sort list", Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
