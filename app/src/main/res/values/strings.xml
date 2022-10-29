@@ -26,7 +26,7 @@
     <string name="title_credential_add">Add credential</string>
     <string name="title_activity_login">Login Credential Store</string>
     <string name="title_activity_close">Close</string>
-    <string name="title_activity_main">SimplePass</string>
+    <string name="title_activity_main">saFe-P</string>
     <string name="lbl_system">System</string>
     <string name="lbl_username">Username</string>
     <string name="lbl_password">Password</string>

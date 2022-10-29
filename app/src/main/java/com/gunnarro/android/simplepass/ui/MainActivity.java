@@ -3,8 +3,6 @@ package com.gunnarro.android.simplepass.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
@@ -101,14 +99,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Finally, start timer for automatically logout user after å given period of time
         startAutoLogoutUserTime(600000);
     }
-/*
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Log.d(Utility.buildTag(getClass(), "onOptionsItemSelected"), "selected: " + item);
+        if (item.getItemId() == android.R.id.home) {// Open Close Drawer Layout
+            if (drawer.isOpen()) {
+                drawer.closeDrawers();
+            } else {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
-*/
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
