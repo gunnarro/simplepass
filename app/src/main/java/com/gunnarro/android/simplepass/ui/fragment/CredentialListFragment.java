@@ -4,9 +4,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -138,6 +135,7 @@ public class CredentialListFragment extends Fragment {
         //Log.d("onViewCreated", "args" + getArguments().getBundle(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY));
     }
 
+    /*
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.options_menu, menu);
@@ -148,11 +146,11 @@ public class CredentialListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_sort_list) {
-            //do your function here
-            Toast.makeText(getActivity(), "Sort list", Toast.LENGTH_SHORT).show();
+           Log.d("onOptionsItemSelected", "sort list");
         }
         return super.onOptionsItemSelected(item);
     }
+ */
 
     @Override
     public void onDestroyView() {
@@ -222,11 +220,11 @@ public class CredentialListFragment extends Fragment {
         Resources.Theme theme = getResources().newTheme();
         Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.list_layout), msg, Snackbar.LENGTH_LONG);
         snackbar.setBackgroundTint(getResources().getColor(R.color.color_snackbar_background, theme));
-        if (msg.contains("Delete"))
+        if (msg.contains("Delete")) {
             snackbar.setTextColor(getResources().getColor(R.color.color_snackbar_text_delete, theme));
-        else if (msg.contains("Add"))
+        } else if (msg.contains("Add")) {
             snackbar.setTextColor(getResources().getColor(R.color.color_snackbar_text_add, theme));
-
+        }
         snackbar.show();
     }
 }

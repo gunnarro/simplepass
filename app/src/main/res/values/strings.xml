@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Simple Credential Store</string>
+    <string name="app_name">saFe-P</string>
     <string name="prompt_system_name">System name</string>
     <string name="prompt_encryption_key">Encryption Key</string>
     <string name="prompt_encryption_key_repeat">Repeat Encryption Key</string>
