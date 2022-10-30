@@ -87,6 +87,11 @@ public class Utility {
         return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.getDefault()));
     }
 
+    public static LocalDateTime toLocalDateTime(String dateTimeStr) {
+        Log.d("Utility", "toLocalDateTime: " + dateTimeStr);
+        return LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ofPattern(DATE_TIME_PATTERN, Locale.getDefault()));
+    }
+
     public static LocalTime toLocalTime(String timeStr) {
         return LocalTime.parse(timeStr, DateTimeFormatter.ofPattern(TIME_PATTERN, Locale.getDefault()));
     }

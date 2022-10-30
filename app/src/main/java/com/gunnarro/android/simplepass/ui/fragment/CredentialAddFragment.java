@@ -193,6 +193,12 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         TextView userId = requireView().findViewById(R.id.credential_user_id);
         credential.setFkUserId(!userId.getText().toString().isEmpty() ? Long.parseLong(userId.getText().toString()) : null);
 
+        EditText createdDateView = requireView().findViewById(R.id.credential_created_date);
+        credential.setCreatedDate(Utility.toLocalDateTime(createdDateView.getText().toString()));
+
+        EditText lastModifiedDateView = requireView().findViewById(R.id.credential_last_modified_date);
+        credential.setLastModifiedDate(Utility.toLocalDateTime(lastModifiedDateView.getText().toString()));
+
         EditText systemView = requireView().findViewById(R.id.credential_system);
         credential.setSystem(systemView.getText().toString());
 
