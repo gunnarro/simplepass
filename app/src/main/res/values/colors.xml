@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
+    <color name="colorPrimary">#0553a6</color>
+    <color name="colorPrimaryDark">#1c4a01</color>
     <color name="colorBackground">#ffffff</color>
     <color name="colorText">#032c6e</color>
     <color name="colorBackgroundBtn">#ffffff</color>
     <color name="colorLabel">#000000</color>
     <color name="colorBtnHover">#ed35a2</color>
-    <color name="colorPrimary">#1c4a01</color>
+    <color name="color_password_toggle_icon">#000000</color>
+
     <color name="color_password_strength_default">#000000</color>
     <color name="color_password_strength_strong">#7fc464</color>
     <color name="color_password_strength_good">#4cc9f8</color>
     <color name="color_password_strength_fair">#faf70d</color>
     <color name="color_password_strength_weak">#fa5a48</color>
-    <color name="colorPrimaryDark">#3700B3</color>
+
     <color name="colorAccent">#03DAC5</color>
     <color name="color_tbl_header">#d5e5f0</color>
     <color name="color_tbl_row_even">#ecf2f9</color>
