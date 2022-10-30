@@ -34,4 +34,6 @@ Key features:
 
 
 # Resources
-[flatIcon android](https://www.flaticon.com/free-icons/android)
+ - [flatIcon android](https://www.flaticon.com/free-icons/android)
+ - [icons8](https://icons8.com/icons/set/android-logout)
+ - [fonts.google.com/icons](https://fonts.google.com/icons)

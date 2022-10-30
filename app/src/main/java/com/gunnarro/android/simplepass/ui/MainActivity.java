@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // check and grant or deny permissions
         checkPermissions();
         // Finally, start timer for automatically logout user after å given period of time
-        startAutoLogoutUserTime(600000);
+        startAutoLogoutUserTimer(600000);
     }
 
     @Override
@@ -133,10 +133,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 setTitle(R.string.title_admin);
                 ((NavigationView) findViewById(R.id.navigationView)).setCheckedItem(R.id.nav_admin);
                 viewFragment(adminFragment);
-            } else if (id == R.id.nav_close) {
+            } else if (id == R.id.nav_logout) {
                 // always clear the key
                 AESCrypto.reset();
-                finish();
+                startAutoLogoutUserTimer(1);
             }
             // close drawer after clicking the menu item
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -172,15 +172,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /**
-     * logout user automatically after a time period
+     * logout user automatically after a given period of time.
      * redirect back to login page after timeout
      */
-    private void startAutoLogoutUserTime(int timeMs) {
+    private void startAutoLogoutUserTimer(int timeMs) {
         Timer t = new Timer();
         t.schedule(new TimerTask() {
             @Override
             public void run() {
                 AESCrypto.reset();
+                finish();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
             }

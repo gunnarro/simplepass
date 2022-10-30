@@ -119,8 +119,6 @@
         <item name="android:paddingBottom">0sp</item>
         <item name="android:paddingTop">0sp</item>
         <item name="iconGravity">textStart</item>
-
-        android:="0sp"
         <!-- box background color -->
         <!-- item name="boxBackgroundColor">@color/colorBackground</item -->
         <!-- border color -->
