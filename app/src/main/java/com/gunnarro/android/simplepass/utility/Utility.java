@@ -89,6 +89,9 @@ public class Utility {
 
     public static LocalDateTime toLocalDateTime(String dateTimeStr) {
         Log.d("Utility", "toLocalDateTime: " + dateTimeStr);
+        if (dateTimeStr == null || dateTimeStr.length() != DATE_TIME_PATTERN.length()) {
+            return null;
+        }
         return LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ofPattern(DATE_TIME_PATTERN, Locale.getDefault()));
     }
 

@@ -28,6 +28,7 @@
     <color name="color_snackbar_text">#7fc464</color>
     <color name="color_snackbar_text_delete">#fa2a12</color>
     <color name="color_snackbar_text_add">#7fc464</color>
+    <color name="color_snackbar_text_update">#7fc464</color>
 
     <color name="color_bg_swipe_left">#fa2a12</color>
     <color name="color_bg_swipe_right">#7fc464</color>

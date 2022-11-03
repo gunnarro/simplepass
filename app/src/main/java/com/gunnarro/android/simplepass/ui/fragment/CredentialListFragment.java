@@ -1,13 +1,15 @@
 package com.gunnarro.android.simplepass.ui.fragment;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
@@ -61,24 +63,24 @@ public class CredentialListFragment extends Fragment {
                         try {
                             credentialsViewModel.save(credential);
                             if (credential.getId() == null) {
-                                showSnackbar("Added credential");
+                                showSnackbar("Added credential", R.color.color_snackbar_text_add);
                             } else {
-                                showSnackbar("Updated credential");
+                                showSnackbar("Updated credential", R.color.color_snackbar_text_update);
                             }
                         } catch (SimpleCredStoreApplicationException ex) {
-                            Toast.makeText(getContext(), ex.getErrorCode(), Toast.LENGTH_SHORT).show();
+                            showInfoDialog(String.format("Application error!\nError: %s\n Please report.", ex.getMessage()), getActivity());
                         }
                     } else if (bundle.getString(CREDENTIALS_ACTION_KEY).equals(CREDENTIALS_ACTION_DELETE)) {
                         credentialsViewModel.delete(credential);
-                        showSnackbar("Deleted credential");
+                        showSnackbar("Deleted credential", R.color.color_snackbar_text_delete);
                     } else {
                         Log.w(Utility.buildTag(getClass(), "onFragmentResult"), "unknown action: " + (bundle.getString(CREDENTIALS_ACTION_KEY)));
-                        Toast.makeText(getContext(), "unknown action " + bundle.getString(CREDENTIALS_ACTION_KEY), Toast.LENGTH_SHORT).show();
+                        showInfoDialog(String.format("Application error!\n Unknown action: %s\n Please report.", bundle.getString(CREDENTIALS_ACTION_KEY)), getActivity());
                     }
                     Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, credentials: %s", bundle.getString(CREDENTIALS_ACTION_KEY), credential));
                 } catch (Exception e) {
                     Log.e("", e.toString());
-                    throw new RuntimeException("Application Error: " + e);
+                    showInfoDialog(String.format("Application error!\n Error: %s\nErrorCode: 5001\nPlease report.", e.getMessage()), getActivity());
                 }
             }
         });
@@ -110,6 +112,7 @@ public class CredentialListFragment extends Fragment {
                 arguments.putString(CREDENTIALS_JSON_INTENT_KEY, Utility.getJsonMapper().writeValueAsString(newCredential));
             } catch (JsonProcessingException e) {
                 Log.e(Utility.buildTag(getClass(), "addBtn.setOnClickListener"), e.toString());
+                showInfoDialog(String.format("Application error!\n Error: %s\nErrorCode: 5000\nPlease report.", e.getMessage()), getActivity());
             }
 
             requireActivity().getSupportFragmentManager()
@@ -167,7 +170,7 @@ public class CredentialListFragment extends Fragment {
                 final int position = viewHolder.getAbsoluteAdapterPosition();
                 //   final Credential credential = credentialsViewModel.getCredentialLiveData().getValue().get(position);
                 credentialsViewModel.delete(credentialsViewModel.getCredentialLiveData().getValue().get(position));
-                showSnackbar("Deleted credential");
+                showSnackbar("Deleted credential", R.color.color_snackbar_text_delete);
                 //  mAdapter.removeItem(position);
 
                 /*
@@ -207,6 +210,7 @@ public class CredentialListFragment extends Fragment {
             arguments.putString(CREDENTIALS_JSON_INTENT_KEY, Utility.getJsonMapper().writeValueAsString(credential));
         } catch (JsonProcessingException e) {
             Log.e(Utility.buildTag(getClass(), "openViewCredential"), e.toString());
+            showInfoDialog(String.format("Application error!\n Error: %s\nErrorCode: 5002\nPlease report.", e.getMessage()), getActivity());
         }
 
         requireActivity().getSupportFragmentManager()
@@ -216,15 +220,24 @@ public class CredentialListFragment extends Fragment {
                 .commit();
     }
 
-    private void showSnackbar(String msg) {
+    private void showSnackbar(String msg, @ColorRes int bgColor) {
         Resources.Theme theme = getResources().newTheme();
         Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.list_layout), msg, Snackbar.LENGTH_LONG);
-        snackbar.setBackgroundTint(getResources().getColor(R.color.color_snackbar_background, theme));
-        if (msg.contains("Delete")) {
-            snackbar.setTextColor(getResources().getColor(R.color.color_snackbar_text_delete, theme));
-        } else if (msg.contains("Add")) {
-            snackbar.setTextColor(getResources().getColor(R.color.color_snackbar_text_add, theme));
-        }
+        snackbar.setTextColor(getResources().getColor(bgColor, theme));
         snackbar.show();
+    }
+
+    private void showInfoDialog(String infoMessage, Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Login failed!");
+        builder.setMessage(infoMessage);
+        // Set Cancelable false for when the user clicks on the outside the Dialog Box then it will remain show
+        builder.setCancelable(false);
+        // Set the positive button with yes name Lambda OnClickListener method is use of DialogInterface interface.
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            dialog.cancel();
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

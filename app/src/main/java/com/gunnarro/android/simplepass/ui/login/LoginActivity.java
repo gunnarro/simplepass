@@ -1,6 +1,8 @@
 package com.gunnarro.android.simplepass.ui.login;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,10 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
+                    showInfoDialog(getResources().getString(loginResult.getError()));
                 }
 
                 if (loginResult.getLoggedInUseDto() != null) {
@@ -135,9 +135,8 @@ public class LoginActivity extends AppCompatActivity {
             // fingerprint login dialog
             loginBinding.loginFingerprintBtn.setOnClickListener(view -> createBiometricPrompt().authenticate(createBiometricPromptInfo()));
         } catch (Exception e) {
-            e.printStackTrace();
             Log.e("LoginActivity", e.getMessage());
-            showLoginFailed(R.string.login_failed);
+            showInfoDialog(getResources().getString(R.string.login_failed));
         }
     }
 
@@ -149,21 +148,19 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Log.i("LoginActivity.showLoginFailed", "login failed, " + errorString);
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_LONG).show();
-    }
-
     private BiometricPrompt createBiometricPrompt() {
         return new BiometricPrompt(LoginActivity.this, ContextCompat.getMainExecutor(this),
                 new BiometricPrompt.AuthenticationCallback() {
                     @Override
                     public void onAuthenticationError(int errorCode, @NonNull CharSequence errorMsg) {
                         super.onAuthenticationError(errorCode, errorMsg);
-                        if ("Back to user/password login".contentEquals(errorMsg)) {
-                            // nothing to do, simply close fingerprint login dialog and stay in this view
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Authentication error: " + errorMsg, Toast.LENGTH_SHORT).show();
+                        switch (errorCode) {
+                            case BiometricPrompt.ERROR_USER_CANCELED:
+                            case BiometricPrompt.ERROR_TIMEOUT:
+                            case BiometricPrompt.ERROR_CANCELED:
+                                return;
+                            default:
+                                showInfoDialog("Authentication error!\n" + errorMsg);
                         }
                     }
 
@@ -183,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
                         try {
                             loginViewModel.loginFingerprint();
                         } catch (Exception e) {
-                            Toast.makeText(getApplicationContext(), "Authentication error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            showInfoDialog("Authentication error!\nError: " + e.getMessage());
                         }
                         Log.d("LoginActivity.onAuthenticationSucceeded", "" + principal + "version: " + android.os.Build.VERSION.SDK_INT + " -> " + android.os.Build.VERSION_CODES.R);
                         showMainActivity(1L);
@@ -195,7 +192,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onAuthenticationFailed() {
                         super.onAuthenticationFailed();
-                        Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
+                        showInfoDialog("Authentication failed, Please try again.");
                     }
                 });
     }
@@ -209,5 +206,19 @@ public class LoginActivity extends AppCompatActivity {
                 .setNegativeButtonText("Back to user/password login")
                 .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
                 .build();
+    }
+
+    private void showInfoDialog(String infoMessage) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setTitle("Login failed!");
+        builder.setMessage(infoMessage);
+        // Set Cancelable false for when the user clicks on the outside the Dialog Box then it will remain show
+        builder.setCancelable(false);
+        // Set the positive button with yes name Lambda OnClickListener method is use of DialogInterface interface.
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            dialog.cancel();
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

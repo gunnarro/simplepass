@@ -247,4 +247,5 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
     private boolean isInputFormDataValid() {
         return true;
     }
+
 }
