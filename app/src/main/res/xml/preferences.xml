@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="saFe-P Preferences">
 
     <PreferenceCategory
-        app:summary="Settings for simple password store"
-        app:title="SimplePassStore Settings">
+        app:title="Login configuration">
 
         <SeekBarPreference
             android:max="300"
@@ -16,6 +16,109 @@
             app:singleLineTitle="true"
             app:summary="Automatic logout after x seconds"
             app:title="Automatic logout after x seconds" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Password validator configuration">
+        <!--  password length between 8 and 16 characters: new LengthRule(8, 30),-->
+        <SeekBarPreference
+            android:max="30"
+            app:defaultValue="8"
+            app:key="pref_password_length_rule"
+            app:min="4"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true"
+            app:singleLineTitle="true"
+            app:summary="Password length between 4 and 30 characters"
+            app:title="Password length rule" />
+
+        <SeekBarPreference
+            android:max="5"
+            app:defaultValue="1"
+            app:key="pref_password_uppercase_rule"
+            app:min="4"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true"
+            app:singleLineTitle="true"
+            app:summary="Password uppercase characters between 0 and 5"
+            app:title="Password uppercase rule" />
+
+        <SeekBarPreference
+            android:max="5"
+            app:defaultValue="1"
+            app:key="pref_password_least_lowercase_rule"
+            app:min="4"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true"
+            app:singleLineTitle="true"
+            app:summary="Password at least 1 lowercase character"
+            app:title="Password at least lowercase rule" />
+
+        <SeekBarPreference
+            android:max="5"
+            app:defaultValue="1"
+            app:key="pref_password_least_digit_rule"
+            app:min="4"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true"
+            app:singleLineTitle="true"
+            app:summary="Password at least 1 digit character"
+            app:title="Password at least digit rule" />
+
+        <SeekBarPreference
+            android:max="5"
+            app:defaultValue="1"
+            app:key="pref_password_least_symbol_rule"
+            app:min="4"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true"
+            app:singleLineTitle="true"
+            app:summary="Password at least 1 symbol character"
+            app:title="Password at least symbol rule" />
+
+        <SeekBarPreference
+            android:max="5"
+            app:defaultValue="1"
+            app:key="pref_password_repeat_character_rule"
+            app:min="4"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true"
+            app:singleLineTitle="true"
+            app:summary="Password repeat character rule"
+            app:title="Password repeat character rule" />
+
+        <SeekBarPreference
+            android:max="5"
+            app:defaultValue="1"
+            app:key="pref_password_illegal_sequence_alphabetical_rule"
+            app:min="4"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true"
+            app:singleLineTitle="true"
+            app:summary="Password illegal alphabetical sequences, e.g fails when sequence >= x chars long"
+            app:title="Password illegal alphabetical sequence rule" />
+
+        <SeekBarPreference
+            android:max="5"
+            app:defaultValue="1"
+            app:key="pref_password_illegal_sequence_numerical_rule"
+            app:min="4"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true"
+            app:singleLineTitle="true"
+            app:summary="Password illegal numerical sequences, e.g fail when sequence >= x digits long"
+            app:title="Password illegal numerical sequence rule" />
+
+        <SeekBarPreference
+            android:max="5"
+            app:defaultValue="1"
+            app:key="pref_password_illegal_sequence_us_qwerty_rule"
+            app:min="4"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true"
+            app:singleLineTitle="true"
+            app:summary="Password illegal USQwerty sequences, e.g fail when sequence >= x chars long"
+            app:title="Password illegal USQwerty sequence rule" />
 
     </PreferenceCategory>
 </PreferenceScreen>

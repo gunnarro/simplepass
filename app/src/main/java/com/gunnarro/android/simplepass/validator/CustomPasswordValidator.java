@@ -2,8 +2,6 @@ package com.gunnarro.android.simplepass.validator;
 
 import android.graphics.Color;
 
-import com.gunnarro.android.simplepass.utility.AESCrypto;
-
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.EnglishSequenceData;
@@ -15,6 +13,7 @@ import org.passay.RuleResult;
 import org.passay.RuleResultDetail;
 import org.passay.WhitespaceRule;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,17 +24,8 @@ import java.util.stream.Collectors;
  */
 public class CustomPasswordValidator {
 
-    enum PasswordStrengthEnum {
-        WEAK(Color.RED), FAIR(Color.MAGENTA), GOOD(Color.BLUE), STRONG(Color.GREEN);
-
-        private final int color;
-
-        PasswordStrengthEnum(int color) {
-            this.color = color;
-        }
-    }
-
     private static final PasswordValidator passwordValidator;
+
     static {
         passwordValidator = new org.passay.PasswordValidator(Arrays.asList(
                 // length between 8 and 16 characters
@@ -66,6 +56,20 @@ public class CustomPasswordValidator {
         return ruleResult.getDetails().stream().map(RuleResultDetail::getErrorCode).collect(Collectors.toList());
     }
 
+    public static List<String> passwordStrengthValidation(String password) {
+        List<String> list = new ArrayList<>();
+        RuleResult ruleResult = passwordValidator.validate(new PasswordData(password));
+        ruleResult.getDetails().forEach(r -> {
+            StringBuilder sb = new StringBuilder();
+            String validationError = (r.getParameters().entrySet().stream()
+                    .map(e -> e.getKey() + "=" + e.getValue())
+                    .filter(s -> !s.contains("valid") && !s.contains("matching"))
+                    .collect(Collectors.joining(", ")));
+            list.add(r.getErrorCode() + ": " + validationError);
+        });
+        return list;
+    }
+
     public static boolean isValid(String password) {
         return passwordValidator.validate(new PasswordData(password)).isValid();
     }
@@ -83,6 +87,16 @@ public class CustomPasswordValidator {
             return PasswordStrengthEnum.FAIR.name();
         } else {
             return PasswordStrengthEnum.WEAK.name();
+        }
+    }
+
+    enum PasswordStrengthEnum {
+        WEAK(Color.RED), FAIR(Color.MAGENTA), GOOD(Color.BLUE), STRONG(Color.GREEN);
+
+        private final int color;
+
+        PasswordStrengthEnum(int color) {
+            this.color = color;
         }
     }
 }

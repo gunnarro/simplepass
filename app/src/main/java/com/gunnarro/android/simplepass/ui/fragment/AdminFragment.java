@@ -135,10 +135,8 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
     private void disableFingerprintLogin() {
         try {
             AppDatabase.disableFingerprintLogin(getContext());
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (GeneralSecurityException | IOException e) {
+           Log.e("", e.getMessage());
         }
     }
 }

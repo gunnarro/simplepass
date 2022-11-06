@@ -191,8 +191,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onAuthenticationFailed() {
-                        super.onAuthenticationFailed();
-                        showInfoDialog("Authentication failed, Please try again.");
+                        //showInfoDialog("Authentication failed, Please try again.");
                     }
                 });
     }

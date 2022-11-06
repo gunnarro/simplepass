@@ -4,7 +4,9 @@
     <string name="prompt_encryption_key">Encryption Key</string>
     <string name="prompt_encryption_key_repeat">Repeat Encryption Key</string>
     <string name="prompt_username">Username</string>
-    <string name="prompt_password">Master Password</string>
+    <string name="prompt_master_password">Master Password</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_password_broken_validation_rules">Broken Password Validation Rules</string>
     <string name="prompt_password_repeat">Master Password Repeat</string>
     <string name="prompt_url">Url</string>
     <string name="lbl_activate_fingerprint_login">"Activate fingerprint login"</string>
@@ -58,5 +60,15 @@
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
 
-    <string name="pref_automatic_logout_time">Automatic logout after x seconds</string>
+    <string name="pref_automatic_logout_time">pref_automatic_logout_timeout</string>
+    <string name="pref_password_length_rule">pref_password_length_rule</string>
+    <string name="pref_password_uppercase_rule">pref_password_uppercase_rule</string>
+    <string name="pref_password_least_lowercase_rule">pref_password_least_lowercase_rule</string>
+    <string name="pref_password_least_digit_rule">pref_password_least_digit_rule</string>
+    <string name="pref_password_least_symbol_rule">pref_password_least_symbol_rule</string>
+    <string name="pref_password_repeat_character_rule">pref_password_repeat_character_rule</string>
+    <string name="pref_password_illegal_sequence_alphabetical_rule">pref_password_illegal_sequence_alphabetical_rule</string>
+    <string name="pref_password_illegal_sequence_numerical_rule">pref_password_illegal_sequence_numerical_rule</string>
+    <string name="pref_password_illegal_sequence_us_qwerty_rule">pref_password_illegal_sequence_us_qwerty_rule</string>
+
 </resources>

@@ -67,7 +67,7 @@ public class LoginFingerprintActivity extends AppCompatActivity {
                     @Override
                     public void onAuthenticationFailed() {
                         super.onAuthenticationFailed();
-                        Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -121,11 +121,17 @@ public class LoginFingerprintActivity extends AppCompatActivity {
                 // Prompts the user to create credentials that your app accepts.
                 final Intent enrollIntent = new Intent(Settings.ACTION_BIOMETRIC_ENROLL);
                 enrollIntent.putExtra(Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED, "BIOMETRIC_STRONG | DEVICE_CREDENTIAL");
-                Toast.makeText(this, "Biometric not found on device!", Toast.LENGTH_LONG);
+                Toast.makeText(this, "Biometric not found on device!", Toast.LENGTH_LONG).show();
                 break;
             default:
-                Toast.makeText(this, "Biometric not found on device!", Toast.LENGTH_LONG);
+                Toast.makeText(this, "Biometric not found on device!", Toast.LENGTH_LONG).show();
 
+            case BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED:
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED:
+                break;
+            case BiometricManager.BIOMETRIC_STATUS_UNKNOWN:
+                break;
         }
     }
 

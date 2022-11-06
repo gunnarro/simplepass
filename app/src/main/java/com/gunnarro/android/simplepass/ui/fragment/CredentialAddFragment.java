@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.domain.EncryptedString;
@@ -27,6 +28,8 @@ import com.gunnarro.android.simplepass.utility.Utility;
 import com.gunnarro.android.simplepass.validator.CustomPasswordValidator;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -153,17 +156,23 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
             }
         });
 
-        EditText urlView = view.findViewById(R.id.credential_url);
-        urlView.setText(credential.getUrl());
-
         // hide fields if this is a new
         if (credential.getId() == null) {
             view.findViewById(R.id.credential_created_date_layout).setVisibility(View.GONE);
             view.findViewById(R.id.credential_last_modified_date_layout).setVisibility(View.GONE);
+            view.findViewById(R.id.credential_password_broken_validation_rules_layout).setVisibility(View.GONE);
             view.findViewById(R.id.btn_credential_register_delete).setVisibility(View.GONE);
         } else {
             TextInputLayout layout = view.findViewById(R.id.credential_password_layout);
             layout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
+            TextInputEditText passwordValidation = view.findViewById(R.id.credential_password_broken_validation_rules);
+            String brokenRules = CustomPasswordValidator.passwordStrengthValidation(credential.getPassword().getValue()).stream().map(String::toString).collect(Collectors.joining("\n"));
+            if (!brokenRules.isEmpty()) {
+                passwordValidation.setText(brokenRules.replace(":", ":\n"));
+            } else {
+                // nothing to show hide field
+                view.findViewById(R.id.credential_password_broken_validation_rules_layout).setVisibility(View.GONE);
+            }
         }
         Log.d(Utility.buildTag(getClass(), "updateAddCredentialView"), String.format("updated %s ", credential));
     }
@@ -208,9 +217,6 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         EditText passwordView = requireView().findViewById(R.id.credential_password);
         credential.setPassword(new EncryptedString(passwordView.getText().toString()));
         credential.setPasswordStatus(CustomPasswordValidator.passwordStrengthStatus(passwordView.getText().toString()));
-
-        EditText urlView = requireView().findViewById(R.id.credential_url);
-        credential.setUrl(urlView.getText().toString());
 
         try {
             return Utility.getJsonMapper().writerWithDefaultPrettyPrinter().writeValueAsString(credential);
