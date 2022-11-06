@@ -12,8 +12,8 @@ public class CustomPasswordValidatorTest {
 
     @Test
     public void passwordStrengthInvalid() {
-        List<String> result = CustomPasswordValidator.passwordStrength("sword");
-        Assert.assertEquals("INSUFFICIENT_UPPERCASE, INSUFFICIENT_DIGIT", result.toString());
+        List<String> result = CustomPasswordValidator.passwordStrength("swor_dwwewe");
+        Assert.assertEquals("[INSUFFICIENT_UPPERCASE, INSUFFICIENT_DIGIT]", result.toString());
         Assert.assertEquals("FAIR", CustomPasswordValidator.mapToPasswordStrength(result));
     }
 
