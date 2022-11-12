@@ -35,7 +35,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
     private static final String SHARED_PREFS_NAME = "com.gunnarro.android.simplepass.encrypted_shared_prefs";
     private static final String PREFS_KEY_DB_PASSPHRASE = "PREFS_KEY_DB_PASSPHRASE";
-    private static final String PREFS_KEY_MASTER_PASSWORD = "PREFS_KEY_MASTER_PASS";
+    private static final String PREFS_KEY_MASTER_PASS = "PREFS_KEY_MASTER_PASS";
     // mutable thread-safe singleton
     private static AppDatabase dbInstance;
 
@@ -103,12 +103,11 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     private static void saveEncryptionMasterPass(Context context, String masterPass) throws GeneralSecurityException, IOException {
-        getEncryptedSharedPrefs(context).edit().putString(PREFS_KEY_MASTER_PASSWORD, masterPass).apply();
-        Log.d("AppDatabase.saveEncryptionMasterPass", PREFS_KEY_MASTER_PASSWORD + "=" + masterPass);
+        getEncryptedSharedPrefs(context).edit().putString(PREFS_KEY_MASTER_PASS, masterPass).apply();
     }
 
     public static String getEncryptionMasterPass(Context context) throws GeneralSecurityException, IOException {
-        return getEncryptedSharedPrefs(context).getString(PREFS_KEY_MASTER_PASSWORD, null);
+        return getEncryptedSharedPrefs(context).getString(PREFS_KEY_MASTER_PASS, null);
     }
 
     public static boolean isFingerprintLoginEnabled(Context context) throws GeneralSecurityException, IOException {
@@ -126,8 +125,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     private static void deleteEncryptionMasterPass(Context context) throws GeneralSecurityException, IOException {
-        getEncryptedSharedPrefs(context).edit().remove(PREFS_KEY_MASTER_PASSWORD).apply();
-        Log.d("AppDatabase.deleteEncryptionMasterPass", PREFS_KEY_MASTER_PASSWORD);
+        getEncryptedSharedPrefs(context).edit().remove(PREFS_KEY_MASTER_PASS).apply();
     }
 
     /**
