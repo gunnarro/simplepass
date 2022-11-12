@@ -72,10 +72,14 @@ public class LoginViewModel extends AndroidViewModel {
                 Log.d("LoginViewModel.login", "first time login! create user: " + username);
                 userRepository.insert(encryptedLoginUser);
                 loginResult.setValue(new LoginResult(new LoggedInUserDto(1L, username)));
+                // check and save key if fingerprint login is enabled
+                enableFingerprintLogin(isFingerprintLoginEnabled, encryptionKey);
             } else if (user != null ) {
                 // If hit, we do know that the encryption key is correct, so let user pass.
                 Log.d("LoginViewModel.login", "user have access: " + encryptedLoginUser);
                 loginResult.setValue(new LoginResult(new LoggedInUserDto(user.getId(), username)));
+                // check and save key if fingerprint login is enabled
+                enableFingerprintLogin(isFingerprintLoginEnabled, encryptionKey);
             } else {
                 Log.d("LoginViewModel.login", "access denied for user, " + encryptedLoginUser + "(" + username + ")");
                 // FIXME will never hit because username is decrypted with wrong password
@@ -83,8 +87,6 @@ public class LoginViewModel extends AndroidViewModel {
                 // access denied for this user and encryption key combination
                 loginResult.setValue(new LoginResult(R.string.login_user_access_denied));
             }
-            // check and save key if fingerprint login is enabled
-            enableFingerprintLogin(isFingerprintLoginEnabled, encryptionKey);
         } catch (Exception e) {
             loginResult.setValue(new LoginResult(R.string.login_failed));
         }

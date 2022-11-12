@@ -121,16 +121,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             args.putLong(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY, loggedInUserId);
             int id = menuItem.getItemId();
             if (id == R.id.nav_settings) {
-                setTitle(R.string.title_settings);
                 ((NavigationView) findViewById(R.id.navigationView)).setCheckedItem(R.id.nav_settings);
                 viewFragment(preferencesFragment);
             } else if (id == R.id.nav_credential_list) {
-                setTitle(R.string.title_credential_list);
                 ((NavigationView) findViewById(R.id.navigationView)).setCheckedItem(R.id.nav_credential_list);
                 credentialStoreListFragment.setArguments(args);
                 viewFragment(credentialStoreListFragment);
             } else if (id == R.id.nav_admin) {
-                setTitle(R.string.title_admin);
                 ((NavigationView) findViewById(R.id.navigationView)).setCheckedItem(R.id.nav_admin);
                 viewFragment(adminFragment);
             } else if (id == R.id.nav_logout) {

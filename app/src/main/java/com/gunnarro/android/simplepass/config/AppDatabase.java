@@ -29,7 +29,7 @@ import java.util.concurrent.Executors;
 /**
  * Thread safe database instance.
  */
-@Database(entities = {User.class, Credential.class, Settings.class}, version = 20)
+@Database(entities = {User.class, Credential.class, Settings.class}, version = 22)
 public abstract class AppDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 1;
     public static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);

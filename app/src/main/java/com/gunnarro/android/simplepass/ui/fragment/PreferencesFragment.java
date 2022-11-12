@@ -32,6 +32,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         super.setPreferencesFromResource(R.xml.preferences, rootKey);
+        getActivity().setTitle(R.string.title_settings);
         Preference button = getPreferenceManager().findPreference("settings_back_button");
         if (button != null) {
             button.setOnPreferenceClickListener(arg0 -> {

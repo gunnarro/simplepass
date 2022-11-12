@@ -1,26 +1,27 @@
-package com.gunnarro.android.simplepass;
+package com.gunnarro.android.simplepass.utility;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.gunnarro.android.simplepass.exception.CryptoException;
 import com.gunnarro.android.simplepass.ui.fragment.CredentialAddFragment;
-import com.gunnarro.android.simplepass.utility.AESCrypto;
-import com.gunnarro.android.simplepass.utility.CryptoException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 
 /**
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class CryptoUtilsTest {
+public class AESCryptoTest {
 
     private static String encrypted;
 
-    @Before
+    @BeforeEach
     public void init() throws CryptoException {
-        AESCrypto.init("my-key-test");
+        AESCrypto.init("my-encryption-key-ie-master-password");
         encrypted = AESCrypto.encrypt("my-password");
     }
 
@@ -31,20 +32,13 @@ public class CryptoUtilsTest {
         assertEquals("my-password", decrypted);
     }
 
-    @Test(expected = CryptoException.class)
+    @Test
     public void decryptAES_wrong_key() throws CryptoException {
         AESCrypto.reset();
         AESCrypto.init("wrong-pass");
         System.out.println("encrypted: " + encrypted);
-        AESCrypto.decrypt(encrypted);
-    }
-
-    @Test
-    public void hasTextRegex() {
-        assertFalse(" ".matches(CredentialAddFragment.HAS_TEXT_REGEX));
-        assertFalse("   ".matches(CredentialAddFragment.HAS_TEXT_REGEX));
-        assertTrue("ddf".matches(CredentialAddFragment.HAS_TEXT_REGEX));
-        assertTrue("d d f".matches(CredentialAddFragment.HAS_TEXT_REGEX));
+        CryptoException ex = assertThrows(CryptoException.class, () -> AESCrypto.decrypt(encrypted));
+        assertEquals("Error while decrypting!", ex.getMessage());
     }
 
     @Test
@@ -54,5 +48,13 @@ public class CryptoUtilsTest {
         assertFalse("ddf".matches(CredentialAddFragment.EMPTY_TEXT_REGEX));
         assertFalse("d d f".matches(CredentialAddFragment.EMPTY_TEXT_REGEX));
         assertFalse(" d d f ".matches(CredentialAddFragment.EMPTY_TEXT_REGEX));
+    }
+
+    @Test
+    public void hasTextRegex() {
+        assertFalse(" ".matches(CredentialAddFragment.HAS_TEXT_REGEX));
+        assertFalse("   ".matches(CredentialAddFragment.HAS_TEXT_REGEX));
+        assertTrue("ddf".matches(CredentialAddFragment.HAS_TEXT_REGEX));
+        assertTrue("d d f".matches(CredentialAddFragment.HAS_TEXT_REGEX));
     }
 }

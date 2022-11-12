@@ -1,4 +1,4 @@
-package com.gunnarro.android.simplepass.utility;
+package com.gunnarro.android.simplepass.exception;
 
 public class CryptoException extends Exception {
 

@@ -58,6 +58,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setTitle(R.string.title_credential_add);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_credential_add, container, false);
         Credential credential = new Credential();
@@ -132,10 +133,10 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         userId.setText(credential.getFkUserId() != null ? credential.getFkUserId().toString() : null);
 
         EditText createdDateView = view.findViewById(R.id.credential_created_date);
-        createdDateView.setText(Utility.formatDateTime(credential.getCreatedDate()));
+        createdDateView.setText(credential.getCreatedDate() != null ? Utility.formatDateTime(credential.getCreatedDate()) : null);
 
         EditText lastModifiedDateView = view.findViewById(R.id.credential_last_modified_date);
-        lastModifiedDateView.setText(Utility.formatDateTime(credential.getLastModifiedDate()));
+        lastModifiedDateView.setText(credential.getLastModifiedDate() != null ? Utility.formatDateTime(credential.getLastModifiedDate()) : null);
 
         EditText systemView = view.findViewById(R.id.credential_system);
         systemView.setText(credential.getSystem());

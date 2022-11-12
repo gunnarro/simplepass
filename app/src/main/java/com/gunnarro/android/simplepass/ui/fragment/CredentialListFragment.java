@@ -89,6 +89,7 @@ public class CredentialListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setTitle(R.string.title_credential_list);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_credential_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.credential_recyclerview);

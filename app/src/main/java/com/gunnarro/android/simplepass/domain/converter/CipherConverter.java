@@ -7,7 +7,7 @@ import androidx.room.TypeConverter;
 
 import com.gunnarro.android.simplepass.domain.EncryptedString;
 import com.gunnarro.android.simplepass.utility.AESCrypto;
-import com.gunnarro.android.simplepass.utility.CryptoException;
+import com.gunnarro.android.simplepass.exception.CryptoException;
 
 /**
  * TypeConverter are methods that tell Room database how to convert custom types to and from kinds that Room understands.
