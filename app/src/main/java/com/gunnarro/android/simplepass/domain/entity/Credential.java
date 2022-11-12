@@ -68,7 +68,7 @@ public class Credential {
         return fkUserId;
     }
 
-    public void setFkUserId(@NonNull Long fkUserId) {
+    public void setFkUserId(Long fkUserId) {
         this.fkUserId = fkUserId;
     }
 
