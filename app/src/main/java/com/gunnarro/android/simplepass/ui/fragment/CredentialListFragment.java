@@ -45,7 +45,6 @@ public class CredentialListFragment extends Fragment {
     public static final String CREDENTIALS_ACTION_DELETE = "credentials_delete";
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private CredentialViewModel credentialsViewModel;
-    private Long loggedInUserId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,12 +92,12 @@ public class CredentialListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_credential_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.credential_recyclerview);
-        final CredentialListAdapter adapter = new CredentialListAdapter(getParentFragmentManager(), new CredentialListAdapter.CredentialDiff());
+        final CredentialListAdapter adapter = new CredentialListAdapter(new CredentialListAdapter.CredentialDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //recyclerView.setOnClickListener(v -> Log.d("", "clicked on list item...."));
 
-        loggedInUserId = getArguments() != null ? getArguments().getLong(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY) : 1L;
+        Long loggedInUserId = getArguments() != null ? getArguments().getLong(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY) : 1L;
         // Add an observer on the LiveData returned by getCredentialLiveData.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground. Update the cached copy of the credentials in the adapter.

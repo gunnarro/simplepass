@@ -43,7 +43,7 @@ public abstract class AppDatabase extends RoomDatabase {
      * Thread safe access to the database.
      * Singleton pattern
      */
-    public synchronized static AppDatabase getDatabase(final Context context) {
+    public static synchronized AppDatabase getDatabase(final Context context) {
         if (dbInstance == null) {
             // Allow only single single thread access to the database
             dbInstance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "simple_cred_store_db")
@@ -57,7 +57,7 @@ public abstract class AppDatabase extends RoomDatabase {
      * Thread safe access to the database.
      * Encrypted database
      */
-    public synchronized static AppDatabase getDatabaseEncrypted(final Context context) throws GeneralSecurityException, IOException {
+    public static synchronized AppDatabase getDatabaseEncrypted(final Context context) throws GeneralSecurityException, IOException {
         String passphrase = getDbPassphrase(context);
         if (passphrase == null) {
             passphrase = initializeDbPassphrase(context);

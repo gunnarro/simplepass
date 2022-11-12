@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
@@ -17,11 +16,8 @@ import com.gunnarro.android.simplepass.utility.Utility;
 
 public class CredentialListAdapter extends ListAdapter<Credential, CredentialViewHolder> implements AdapterView.OnItemClickListener {
 
-    private final FragmentManager fragmentManager;
-
-    public CredentialListAdapter(@NonNull FragmentManager fragmentManager, @NonNull DiffUtil.ItemCallback<Credential> diffCallback) {
+    public CredentialListAdapter(@NonNull DiffUtil.ItemCallback<Credential> diffCallback) {
         super(diffCallback);
-        this.fragmentManager = fragmentManager;
         Log.d("CredentialListAdapter", "init");
     }
 
@@ -29,16 +25,7 @@ public class CredentialListAdapter extends ListAdapter<Credential, CredentialVie
     @NonNull
     @Override
     public CredentialViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        CredentialViewHolder th = CredentialViewHolder.create(parent);
-        /*
-        th.itemView.findViewById(R.id.ic_credential_row_delete_id).setOnClickListener(v -> {
-            Bundle actionBundle = new Bundle();
-            actionBundle.putString(CredentialStoreListFragment.CREDENTIALS_JSON_INTENT_KEY, toJson(getItem(th.getBindingAdapterPosition())));
-            actionBundle.putString(CredentialStoreListFragment.CREDENTIALS_ACTION_KEY, CredentialStoreListFragment.CREDENTIALS_ACTION_DELETE);
-            fragmentManager.setFragmentResult(CredentialStoreListFragment.CREDENTIALS_REQUEST_KEY, actionBundle);
-        });
-         */
-        return th;
+        return CredentialViewHolder.create(parent);
     }
 
     private String toJson(Credential credential) {

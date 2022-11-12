@@ -67,9 +67,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
             }
         }
 
-        view.findViewById(R.id.change_master_password_btn).setOnClickListener(v -> {
-            returnToCredentialList();
-        });
+        view.findViewById(R.id.change_master_password_btn).setOnClickListener(v -> returnToCredentialList());
 
         SwitchMaterial fingerprintLoginSwitch = view.findViewById(R.id.admin_disable_fingerprint_login_switch);
         try {
