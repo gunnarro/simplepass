@@ -24,7 +24,7 @@ public class SettingsRepository {
     @Inject
     public SettingsRepository(Application application) throws GeneralSecurityException, IOException {
         Log.d("SettingsRepository", "init database..");
-        settingsDao = AppDatabase.getDatabaseEncrypted(application, null).settingsDao();
+        settingsDao = AppDatabase.getDatabaseEncrypted(application).settingsDao();
     }
 
     // Room executes all queries on a separate thread.

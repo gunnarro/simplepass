@@ -30,7 +30,7 @@ public class CredentialViewModel extends AndroidViewModel {
 
     public CredentialViewModel(@NonNull Application application) throws GeneralSecurityException, IOException {
         super(application);
-        credentialRepository = new CredentialRepository(AppDatabase.getDatabaseEncrypted(application, null).credentialDao());
+        credentialRepository = new CredentialRepository(AppDatabase.getDatabaseEncrypted(application).credentialDao());
         credentials = credentialRepository.getAllCredentials(1L);
     }
 
@@ -58,7 +58,7 @@ public class CredentialViewModel extends AndroidViewModel {
 
     // A placeholder encryptionKey validation check
     private List<String> isEncryptionKeyValid(String encryptionKey) {
-        return CustomPasswordValidator.passwordStrength(encryptionKey);
+        return new CustomPasswordValidator().passwordStrength(encryptionKey);
     }
 
     private boolean isSystemNameValid(String systemName) {

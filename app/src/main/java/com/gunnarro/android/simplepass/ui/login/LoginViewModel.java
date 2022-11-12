@@ -31,7 +31,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     public LoginViewModel(@NonNull Application application) throws GeneralSecurityException, IOException {
         super(application);
-        userRepository = new UserRepository(AppDatabase.getDatabaseEncrypted(application, null).userDao());
+        userRepository = new UserRepository(AppDatabase.getDatabaseEncrypted(application).userDao());
         Log.i("LoginViewModel", "initialized");
     }
 
@@ -105,7 +105,7 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     private List<String> isEncryptionKeyValid(String encryptionKey) {
-        return CustomPasswordValidator.passwordStrength(encryptionKey);
+        return new CustomPasswordValidator().passwordStrength(encryptionKey);
     }
 
     private boolean isUsernameValid(String username) {

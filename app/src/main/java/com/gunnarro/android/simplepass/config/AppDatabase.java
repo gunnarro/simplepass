@@ -43,41 +43,35 @@ public abstract class AppDatabase extends RoomDatabase {
      * Thread safe access to the database.
      * Singleton pattern
      */
-    public static AppDatabase getDatabase(final Context context) {
+    public synchronized static AppDatabase getDatabase(final Context context) {
         if (dbInstance == null) {
             // Allow only single single thread access to the database
-            synchronized (AppDatabase.class) {
-                if (dbInstance == null) {
-                    dbInstance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "simple_cred_store_db")
-                            .fallbackToDestructiveMigration()
-                            .build();
-                }
-            }
+            dbInstance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "simple_cred_store_db")
+                    .fallbackToDestructiveMigration()
+                    .build();
         }
         return dbInstance;
     }
 
     /**
+     * Thread safe access to the database.
      * Encrypted database
      */
-    public static AppDatabase getDatabaseEncrypted(final Context context, final String masterPassword) throws GeneralSecurityException, IOException {
+    public synchronized static AppDatabase getDatabaseEncrypted(final Context context) throws GeneralSecurityException, IOException {
         String passphrase = getDbPassphrase(context);
         if (passphrase == null) {
             passphrase = initializeDbPassphrase(context);
         }
+
         if (dbInstance == null) {
             // Allow only single single thread access to the database
-            synchronized (AppDatabase.class) {
-                if (dbInstance == null) {
-                    dbInstance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "simple_cred_store_encrypted_db")
-                            .fallbackToDestructiveMigration()
-                           // .allowMainThreadQueries() do not use this, only for testing purpose
-                            // From here will Room take over and integrate with SQLCipher for Android.
-                            .openHelperFactory(new SupportFactory(passphrase.getBytes(StandardCharsets.UTF_8)))
-                            .build();
-                    Log.d("AppDatabase.getDatabaseEncrypted", "init encrypted database");
-                }
-            }
+            dbInstance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "simple_cred_store_encrypted_db")
+                    .fallbackToDestructiveMigration()
+                    // .allowMainThreadQueries() do not use this, only for testing purpose
+                    // From here will Room take over and integrate with SQLCipher for Android.
+                    .openHelperFactory(new SupportFactory(passphrase.getBytes(StandardCharsets.UTF_8)))
+                    .build();
+            Log.d("AppDatabase.getDatabaseEncrypted", "init encrypted database");
         }
         Log.d("AppDatabase.getDatabaseEncrypted", "encrypted database finished");
         return dbInstance;
@@ -122,7 +116,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public static void enableFingerprintLogin(Context context, String masterPass) throws GeneralSecurityException, IOException {
-       saveEncryptionMasterPass(context, masterPass);
+        saveEncryptionMasterPass(context, masterPass);
         Log.d("AppDatabase.enableFingerprintLogin", "enabled fingerprint login");
     }
 

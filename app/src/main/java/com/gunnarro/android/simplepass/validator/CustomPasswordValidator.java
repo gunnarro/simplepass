@@ -37,10 +37,6 @@ public class CustomPasswordValidator {
         Log.d("CustomPasswordValidator", "initialized");
     }
 
-    public static PasswordValidator getInstance() {
-        return passwordValidator;
-    }
-
     public void reConfigureLengthRule(int minLength, int maxLength) {
         this.minPasswordLength = minLength;
         this.maxPasswordLength = maxLength;
