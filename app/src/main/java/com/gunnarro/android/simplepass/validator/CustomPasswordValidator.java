@@ -63,12 +63,12 @@ public class CustomPasswordValidator {
         configure();
     }
 
-    public static List<String> passwordStrength(String password) {
+    public List<String> passwordStrength(String password) {
         RuleResult ruleResult = passwordValidator.validate(new PasswordData(password));
         return ruleResult.getDetails().stream().map(RuleResultDetail::getErrorCode).collect(Collectors.toList());
     }
 
-    public static List<String> passwordStrengthValidation(String password) {
+    public List<String> passwordStrengthValidation(String password) {
         List<String> list = new ArrayList<>();
         RuleResult ruleResult = passwordValidator.validate(new PasswordData(password));
         ruleResult.getDetails().forEach(r -> {
@@ -82,7 +82,7 @@ public class CustomPasswordValidator {
         return list;
     }
 
-    public static String passwordStrengthStatus(String password) {
+    public String passwordStrengthStatus(String password) {
         return mapToPasswordStrength(passwordStrength(password));
     }
 

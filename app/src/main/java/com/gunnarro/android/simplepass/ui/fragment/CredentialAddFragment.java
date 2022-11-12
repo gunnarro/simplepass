@@ -167,7 +167,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
             TextInputLayout layout = view.findViewById(R.id.credential_password_layout);
             layout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
             TextInputEditText passwordValidation = view.findViewById(R.id.credential_password_broken_validation_rules);
-            String brokenRules = CustomPasswordValidator.passwordStrengthValidation(credential.getPassword().getValue()).stream().map(String::toString).collect(Collectors.joining("\n"));
+            String brokenRules = new CustomPasswordValidator().passwordStrengthValidation(credential.getPassword().getValue()).stream().map(String::toString).collect(Collectors.joining("\n"));
             if (!brokenRules.isEmpty()) {
                 passwordValidation.setText(brokenRules.replace(":", ":\n"));
             } else {
@@ -217,7 +217,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
 
         EditText passwordView = requireView().findViewById(R.id.credential_password);
         credential.setPassword(new EncryptedString(passwordView.getText().toString()));
-        credential.setPasswordStatus(CustomPasswordValidator.passwordStrengthStatus(passwordView.getText().toString()));
+        credential.setPasswordStatus(new CustomPasswordValidator().passwordStrengthStatus(passwordView.getText().toString()));
 
         try {
             return Utility.getJsonMapper().writerWithDefaultPrettyPrinter().writeValueAsString(credential);

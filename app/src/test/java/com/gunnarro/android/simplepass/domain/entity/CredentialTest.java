@@ -4,12 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import com.gunnarro.android.simplepass.domain.EncryptedString;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CredentialTest {
+
+class CredentialTest {
 
     @Test
-    public void checkPassword(){
+    void checkPassword(){
         Credential credential = new Credential();
         credential.setPassword(new EncryptedString("encrypted-password"));
         assertEquals("encrypted-password", credential.getPassword().getValue());
