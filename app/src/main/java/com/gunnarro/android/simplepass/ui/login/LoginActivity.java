@@ -157,6 +157,16 @@ public class LoginActivity extends AppCompatActivity {
                             case BiometricPrompt.ERROR_USER_CANCELED:
                             case BiometricPrompt.ERROR_TIMEOUT:
                             case BiometricPrompt.ERROR_CANCELED:
+                            case BiometricPrompt.ERROR_HW_NOT_PRESENT:
+                            case BiometricPrompt.ERROR_HW_UNAVAILABLE:
+                            case BiometricPrompt.ERROR_LOCKOUT:
+                            case BiometricPrompt.ERROR_LOCKOUT_PERMANENT:
+                            case BiometricPrompt.ERROR_NEGATIVE_BUTTON:
+                            case BiometricPrompt.ERROR_NO_BIOMETRICS:
+                            case BiometricPrompt.ERROR_NO_DEVICE_CREDENTIAL:
+                            case BiometricPrompt.ERROR_NO_SPACE:
+                            case BiometricPrompt.ERROR_UNABLE_TO_PROCESS:
+                            case BiometricPrompt.ERROR_VENDOR:
                                 return;
                             default:
                                 showInfoDialog("Authentication error!\n" + errorMsg);
@@ -213,9 +223,7 @@ public class LoginActivity extends AppCompatActivity {
         // Set Cancelable false for when the user clicks on the outside the Dialog Box then it will remain show
         builder.setCancelable(false);
         // Set the positive button with yes name Lambda OnClickListener method is use of DialogInterface interface.
-        builder.setPositiveButton("Ok", (dialog, which) -> {
-            dialog.cancel();
-        });
+        builder.setPositiveButton("Ok", (dialog, which) -> dialog.cancel());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
