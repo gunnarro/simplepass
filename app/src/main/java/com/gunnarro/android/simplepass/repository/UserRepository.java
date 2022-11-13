@@ -79,7 +79,7 @@ public class UserRepository {
             try {
                 Thread.sleep(100000L);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+               Log.e("Error find user!", e.getMessage());
             }
         }
         return null;
