@@ -74,9 +74,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
             boolean isEnabled = AppDatabase.isFingerprintLoginEnabled(getContext());
             fingerprintLoginSwitch.setChecked(isEnabled);
             fingerprintLoginSwitch.setEnabled(isEnabled);
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();
         }
 
