@@ -67,19 +67,19 @@ public class CredentialListFragment extends Fragment {
                                 showSnackbar("Updated credential", R.color.color_snackbar_text_update);
                             }
                         } catch (SimpleCredStoreApplicationException ex) {
-                            showInfoDialog(String.format("Application error!\nError: %s\n Please report.", ex.getMessage()), getActivity());
+                            showInfoDialog(String.format("Application error!%sError: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()), getActivity());
                         }
                     } else if (bundle.getString(CREDENTIALS_ACTION_KEY).equals(CREDENTIALS_ACTION_DELETE)) {
                         credentialsViewModel.delete(credential);
                         showSnackbar("Deleted credential", R.color.color_snackbar_text_delete);
                     } else {
                         Log.w(Utility.buildTag(getClass(), "onFragmentResult"), "unknown action: " + (bundle.getString(CREDENTIALS_ACTION_KEY)));
-                        showInfoDialog(String.format("Application error!\n Unknown action: %s\n Please report.", bundle.getString(CREDENTIALS_ACTION_KEY)), getActivity());
+                        showInfoDialog(String.format("Application error!%s Unknown action: %s%s Please report.", bundle.getString(CREDENTIALS_ACTION_KEY), System.lineSeparator(), System.lineSeparator()), getActivity());
                     }
                     Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, credentials: %s", bundle.getString(CREDENTIALS_ACTION_KEY), credential));
                 } catch (Exception e) {
                     Log.e("", e.toString());
-                    showInfoDialog(String.format("Application error!\n Error: %s\nErrorCode: 5001\nPlease report.", e.getMessage()), getActivity());
+                    showInfoDialog(String.format("Application error!%s Error: %s%sErrorCode: 5001%sPlease report.", e.getMessage(), System.lineSeparator(), System.lineSeparator(), System.lineSeparator()), getActivity());
                 }
             }
         });
@@ -210,7 +210,7 @@ public class CredentialListFragment extends Fragment {
             arguments.putString(CREDENTIALS_JSON_INTENT_KEY, Utility.getJsonMapper().writeValueAsString(credential));
         } catch (JsonProcessingException e) {
             Log.e(Utility.buildTag(getClass(), "openViewCredential"), e.toString());
-            showInfoDialog(String.format("Application error!\n Error: %s\nErrorCode: 5002\nPlease report.", e.getMessage()), getActivity());
+            showInfoDialog(String.format("Application error!%s Error: %s%sErrorCode: 5002%sPlease report.", e.getMessage(), System.lineSeparator(), System.lineSeparator(), System.lineSeparator()), getActivity());
         }
 
         requireActivity().getSupportFragmentManager()

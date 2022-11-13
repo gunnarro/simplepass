@@ -1,5 +1,6 @@
 package com.gunnarro.android.simplepass.ui.login;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
@@ -7,14 +8,14 @@ import androidx.annotation.Nullable;
  */
 class LoginFormState {
     @Nullable
-    private Integer usernameError;
+    private final Integer usernameError;
     @Nullable
     private Integer encryptionKeyError;
 
     @Nullable
     private String encryptionKeyErrorMsg;
 
-    private boolean isDataValid;
+    private final boolean isDataValid;
 
     LoginFormState(@Nullable Integer usernameError, @Nullable String encryptionKeyErrorMsg) {
         this.usernameError = usernameError;
@@ -47,9 +48,10 @@ class LoginFormState {
         return isDataValid;
     }
 
+    @NonNull
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("LoginFormState{");
+        final StringBuilder sb = new StringBuilder("LoginFormState{");
         sb.append("usernameError=").append(usernameError);
         sb.append(", encryptionKeyError=").append(encryptionKeyError);
         sb.append(", encryptionKeyErrorMsg='").append(encryptionKeyErrorMsg).append('\'');

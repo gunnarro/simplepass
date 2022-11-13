@@ -112,13 +112,10 @@ public class LoginActivity extends AppCompatActivity {
                 }
             };
             // encryptionKeyEditText.addTextChangedListener(afterTextChangedListener);
-            encryptionKeyEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    Log.d("LoginActivity.setOnFocusChangeListener", "check ..." + hasFocus);
-                    if (!hasFocus) {
-                        loginViewModel.loginDataChanged(usernameEditText.getText().toString(), encryptionKeyEditText.getText().toString());
-                    }
+            encryptionKeyEditText.setOnFocusChangeListener((v, hasFocus) -> {
+                Log.d("LoginActivity.setOnFocusChangeListener", "check ..." + hasFocus);
+                if (!hasFocus) {
+                    loginViewModel.loginDataChanged(usernameEditText.getText().toString(), encryptionKeyEditText.getText().toString());
                 }
             });
             /*
@@ -154,19 +151,19 @@ public class LoginActivity extends AppCompatActivity {
                     public void onAuthenticationError(int errorCode, @NonNull CharSequence errorMsg) {
                         super.onAuthenticationError(errorCode, errorMsg);
                         switch (errorCode) {
-                            case BiometricPrompt.ERROR_USER_CANCELED:
-                            case BiometricPrompt.ERROR_TIMEOUT:
-                            case BiometricPrompt.ERROR_CANCELED:
-                            case BiometricPrompt.ERROR_HW_NOT_PRESENT:
-                            case BiometricPrompt.ERROR_HW_UNAVAILABLE:
-                            case BiometricPrompt.ERROR_LOCKOUT:
-                            case BiometricPrompt.ERROR_LOCKOUT_PERMANENT:
-                            case BiometricPrompt.ERROR_NEGATIVE_BUTTON:
-                            case BiometricPrompt.ERROR_NO_BIOMETRICS:
-                            case BiometricPrompt.ERROR_NO_DEVICE_CREDENTIAL:
-                            case BiometricPrompt.ERROR_NO_SPACE:
-                            case BiometricPrompt.ERROR_UNABLE_TO_PROCESS:
-                            case BiometricPrompt.ERROR_VENDOR:
+                            case BiometricPrompt.ERROR_USER_CANCELED,
+                                    BiometricPrompt.ERROR_TIMEOUT,
+                                    BiometricPrompt.ERROR_CANCELED,
+                                    BiometricPrompt.ERROR_HW_NOT_PRESENT,
+                                    BiometricPrompt.ERROR_HW_UNAVAILABLE,
+                                    BiometricPrompt.ERROR_LOCKOUT,
+                                    BiometricPrompt.ERROR_LOCKOUT_PERMANENT,
+                                    BiometricPrompt.ERROR_NEGATIVE_BUTTON,
+                                    BiometricPrompt.ERROR_NO_BIOMETRICS,
+                                    BiometricPrompt.ERROR_NO_DEVICE_CREDENTIAL,
+                                    BiometricPrompt.ERROR_NO_SPACE,
+                                    BiometricPrompt.ERROR_UNABLE_TO_PROCESS,
+                                    BiometricPrompt.ERROR_VENDOR:
                                 return;
                             default:
                                 showInfoDialog("Authentication error!\n" + errorMsg);

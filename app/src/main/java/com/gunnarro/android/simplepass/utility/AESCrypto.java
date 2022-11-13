@@ -76,8 +76,8 @@ public class AESCrypto {
     }
 
     private static GCMParameterSpec getGCMParameterSpec(byte[] key) {
-        byte[] IV = Arrays.copyOf(key, GCM_IV_LENGTH);
-        return new GCMParameterSpec(GCM_TAG_LENGTH, IV);
+        byte[] iv = Arrays.copyOf(key, GCM_IV_LENGTH);
+        return new GCMParameterSpec(GCM_TAG_LENGTH, iv);
     }
 
     public static String encrypt(final String value) throws CryptoException {

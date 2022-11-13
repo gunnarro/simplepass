@@ -54,7 +54,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
         getActivity().setTitle(R.string.title_admin);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin, container, false);
-        Credential credential = new Credential();
+        Credential credential;
         // check if this is an existing or a new credential
         String credentialJson = getArguments() != null ? getArguments().getString(CredentialListFragment.CREDENTIALS_JSON_INTENT_KEY) : null;
         if (credentialJson != null) {

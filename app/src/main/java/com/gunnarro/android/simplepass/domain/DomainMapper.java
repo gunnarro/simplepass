@@ -5,6 +5,9 @@ import com.gunnarro.android.simplepass.domain.entity.Credential;
 
 public class DomainMapper {
 
+    private DomainMapper() {
+    }
+
     public static Credential mapToCredential(CredentialDto credentialDto) {
         Credential credential = new Credential();
         credential.setCreatedDate(credentialDto.getCreatedDate());
