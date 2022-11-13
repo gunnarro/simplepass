@@ -6,6 +6,8 @@
     <application
         android:name=".MyAppComponent"
         android:usesCleartextTraffic="false"
+        android:allowBackup="false"
+        android:fullBackupOnly="false"
         android:icon="@mipmap/ic_app_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_app_launcher"
