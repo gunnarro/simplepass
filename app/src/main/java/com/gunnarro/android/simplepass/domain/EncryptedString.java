@@ -7,8 +7,6 @@ public class EncryptedString {
     @NonNull
     private String value;
 
-    public EncryptedString() {}
-
     public EncryptedString(@NonNull String value) {
         this.value = value;
     }
@@ -18,9 +16,10 @@ public class EncryptedString {
         return value;
     }
 
+    @NonNull
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("EncryptedString{");
+        final StringBuilder sb = new StringBuilder("EncryptedString{");
         sb.append("value='").append(value).append('}');
         return sb.toString();
     }

@@ -106,7 +106,7 @@ public class User {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("User{");
+        final StringBuilder sb = new StringBuilder("User{");
         sb.append("id=").append(id);
         sb.append(", createdDate=").append(createdDate);
         sb.append(", lastLoginDate=").append(lastLoginDate);

@@ -151,7 +151,7 @@ public class Credential {
     @NonNull
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Credential{");
+        final StringBuilder sb = new StringBuilder("Credential{");
         sb.append("id=").append(id);
         sb.append(", fkUserId=").append(fkUserId);
         sb.append(", createdDate=").append(createdDate);
