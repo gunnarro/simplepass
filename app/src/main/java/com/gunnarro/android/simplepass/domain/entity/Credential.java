@@ -48,7 +48,6 @@ public class Credential {
     @ColumnInfo(name = "username", index = true)
     private String username;
 
-    @NonNull
     @ColumnInfo(name = "password", index = true)
     private EncryptedString password;
 
@@ -117,7 +116,6 @@ public class Credential {
         this.username = username;
     }
 
-    @NonNull
     public EncryptedString getPassword() {
         return password;
     }
