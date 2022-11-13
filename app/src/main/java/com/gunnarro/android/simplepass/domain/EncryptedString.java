@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 public class EncryptedString {
 
     @NonNull
-    private String value;
+    private final String value;
 
     public EncryptedString(@NonNull String value) {
         this.value = value;

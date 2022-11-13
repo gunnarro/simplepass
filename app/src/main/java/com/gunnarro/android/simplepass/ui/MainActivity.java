@@ -39,13 +39,13 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
-    CredentialListFragment credentialStoreListFragment;
+    final CredentialListFragment credentialStoreListFragment;
     @Inject
-    CredentialAddFragment credentialAddFragment;
+    final CredentialAddFragment credentialAddFragment;
     @Inject
-    PreferencesFragment preferencesFragment;
+    final PreferencesFragment preferencesFragment;
     @Inject
-    AdminFragment adminFragment;
+    final AdminFragment adminFragment;
 
     private DrawerLayout drawer;
     private Long loggedInUserId = null;

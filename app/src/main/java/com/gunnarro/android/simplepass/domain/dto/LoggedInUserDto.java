@@ -2,8 +2,8 @@ package com.gunnarro.android.simplepass.domain.dto;
 
 public class LoggedInUserDto {
 
-    private Long id;
-    private String userName;
+    private final Long id;
+    private final String userName;
 
     public LoggedInUserDto(Long id, String userName) {
         this.id = id;

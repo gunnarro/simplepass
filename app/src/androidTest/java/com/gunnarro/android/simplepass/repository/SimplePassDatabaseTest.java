@@ -13,8 +13,8 @@ import com.gunnarro.android.simplepass.config.AppDatabase;
 import com.gunnarro.android.simplepass.domain.EncryptedString;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
 import com.gunnarro.android.simplepass.domain.entity.User;
-import com.gunnarro.android.simplepass.utility.AESCrypto;
 import com.gunnarro.android.simplepass.exception.CryptoException;
+import com.gunnarro.android.simplepass.utility.AESCrypto;
 
 import org.junit.After;
 import org.junit.Before;
