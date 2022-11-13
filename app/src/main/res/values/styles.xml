@@ -68,7 +68,7 @@
 
     <style name="CustomTextInputReadOnlyLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <!-- not editable -->
-        <item name="android:enabled">false</item>
+        <item name="android:enabled">true</item>
         <!-- no background, no boarder -->
         <item name="boxBackgroundMode">none</item>
         <!-- The color of the label when it is collapsed and the text field is active -->

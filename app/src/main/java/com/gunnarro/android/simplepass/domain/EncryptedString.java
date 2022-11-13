@@ -5,7 +5,12 @@ import androidx.annotation.NonNull;
 public class EncryptedString {
 
     @NonNull
-    private final String value;
+    private String value;
+
+    /**
+     * Needed by json converter
+     */
+    public EncryptedString() {}
 
     public EncryptedString(@NonNull String value) {
         this.value = value;

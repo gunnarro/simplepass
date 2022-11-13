@@ -37,12 +37,13 @@ public class CredentialViewHolder extends RecyclerView.ViewHolder {
         return new CredentialViewHolder(view);
     }
 
-    public void bindListLine(Credential credential) {
+    public void bindListLine(@NonNull Credential credential) {
         credentialHeaderView.setText(credential.getSystem());
         usernameView.setText(credential.getUsername());
-        passwordView.setText(credential.getPassword() != null ? credential.getPassword().getValue() : null);
+        passwordView.setText(credential.getPassword().getValue());
         passwordStatusView.setBackgroundResource(mapPasswordStatusToColor(credential.getPasswordStatus()));
         usernameStatusView.setBackgroundResource(mapPasswordStatusToColor(credential.getPasswordStatus()));
+
     }
 
     private int mapPasswordStatusToColor(String status) {

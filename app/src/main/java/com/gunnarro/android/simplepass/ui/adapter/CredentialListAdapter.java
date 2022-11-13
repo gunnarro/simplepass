@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
 import com.gunnarro.android.simplepass.ui.view.CredentialViewHolder;
 import com.gunnarro.android.simplepass.utility.Utility;
@@ -28,19 +27,12 @@ public class CredentialListAdapter extends ListAdapter<Credential, CredentialVie
         return CredentialViewHolder.create(parent);
     }
 
-    private String toJson(Credential credential) {
-        try {
-            return Utility.getJsonMapper().writerWithDefaultPrettyPrinter().writeValueAsString(credential);
-        } catch (JsonProcessingException e) {
-            Log.e("toJson", e.toString());
-            throw new RuntimeException("unable to parse object to json! " + e);
-        }
-    }
-
     @Override
     public void onBindViewHolder(CredentialViewHolder holder, int position) {
         Credential current = getItem(position);
-        holder.bindListLine(current);
+        if (current != null) {
+            holder.bindListLine(current);
+        }
     }
 
     @Override

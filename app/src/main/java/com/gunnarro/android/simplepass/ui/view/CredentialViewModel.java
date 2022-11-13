@@ -31,6 +31,7 @@ public class CredentialViewModel extends AndroidViewModel {
     public CredentialViewModel(@NonNull Application application) throws GeneralSecurityException, IOException {
         super(application);
         credentialRepository = new CredentialRepository(AppDatabase.getDatabaseEncrypted(application).credentialDao());
+        // FIXME hardcoded userId
         credentials = credentialRepository.getAllCredentials(1L);
     }
 

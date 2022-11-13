@@ -13,6 +13,7 @@ import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.config.AppDatabase;
 import com.gunnarro.android.simplepass.domain.dto.LoggedInUserDto;
 import com.gunnarro.android.simplepass.domain.entity.User;
+import com.gunnarro.android.simplepass.exception.UserNotFoundException;
 import com.gunnarro.android.simplepass.repository.UserRepository;
 import com.gunnarro.android.simplepass.utility.AESCrypto;
 import com.gunnarro.android.simplepass.validator.CustomPasswordValidator;
@@ -54,7 +55,7 @@ public class LoginViewModel extends AndroidViewModel {
         AESCrypto.reset();
         AESCrypto.init(AppDatabase.getEncryptionMasterPass(getApplication().getApplicationContext()));
         List<User> users = userRepository.getUsers();
-        User user = users.stream().findFirst().orElse(null);
+        User user = users.stream().findFirst().orElseThrow(UserNotFoundException::new);
         Log.d("LoginViewModel.loginFingerprint", "login user OK: " + user);
         loginResult.setValue(new LoginResult(new LoggedInUserDto(user.getId(), user.getUsername())));
     }
