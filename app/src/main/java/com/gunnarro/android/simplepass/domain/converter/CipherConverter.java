@@ -2,12 +2,12 @@ package com.gunnarro.android.simplepass.domain.converter;
 
 import android.util.Log;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.room.TypeConverter;
 
 import com.gunnarro.android.simplepass.domain.EncryptedString;
-import com.gunnarro.android.simplepass.utility.AESCrypto;
 import com.gunnarro.android.simplepass.exception.CryptoException;
+import com.gunnarro.android.simplepass.utility.AESCrypto;
 
 /**
  * TypeConverter are methods that tell Room database how to convert custom types to and from kinds that Room understands.
@@ -22,7 +22,7 @@ public class CipherConverter {
     }
 
     @TypeConverter
-    public static String encrypt(@Nullable EncryptedString value) {
+    public static String encrypt(@NonNull EncryptedString value) {
         try {
             String encrypted = AESCrypto.encrypt(value.getValue());
             Log.d("CipherConverter.encrypt", value.getValue() + " -> " + encrypted);
@@ -34,15 +34,14 @@ public class CipherConverter {
     }
 
     @TypeConverter
-    public static EncryptedString decrypt(@Nullable String encryptedValue) {
+    public static EncryptedString decrypt(@NonNull String encryptedValue) {
         try {
             EncryptedString decrypted = new EncryptedString(AESCrypto.decrypt(encryptedValue));
             Log.d("CipherConverter.decrypt", encryptedValue + " -> " + decrypted.getValue());
             return decrypted;
         } catch (CryptoException e) {
             // ignore, value is not encrypted likely because of wrong key
-            // fixme only for check encryption, should return null
-            return new EncryptedString(encryptedValue);
+            return null;
         }
     }
 }
