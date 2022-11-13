@@ -1,8 +1,10 @@
 .gradle
+.build
 .idea
 .externalNativeBuild
 .cxx
 gradle
+out
 /local.properties
 /build
 /captures
