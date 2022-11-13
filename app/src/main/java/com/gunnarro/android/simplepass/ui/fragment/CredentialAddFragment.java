@@ -29,6 +29,7 @@ import com.gunnarro.android.simplepass.validator.CustomPasswordValidator;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -58,7 +59,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getActivity().setTitle(R.string.title_credential_add);
+        requireActivity().setTitle(R.string.title_credential_add);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_credential_add, container, false);
         Credential credential = new Credential();
@@ -127,16 +128,16 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
 
     private void updateAddCredentialView(View view, Credential credential) {
         TextView id = view.findViewById(R.id.credential_entity_id);
-        id.setText(credential.getId() != null ? credential.getId().toString() : null);
+        id.setText(String.valueOf(credential.getId()));
 
         TextView userId = view.findViewById(R.id.credential_user_id);
-        userId.setText(credential.getFkUserId() != null ? credential.getFkUserId().toString() : null);
+        userId.setText(String.valueOf(credential.getFkUserId()));
 
         EditText createdDateView = view.findViewById(R.id.credential_created_date);
-        createdDateView.setText(credential.getCreatedDate() != null ? Utility.formatDateTime(credential.getCreatedDate()) : null);
+        createdDateView.setText(Utility.formatDateTime(credential.getCreatedDate()));
 
         EditText lastModifiedDateView = view.findViewById(R.id.credential_last_modified_date);
-        lastModifiedDateView.setText(credential.getLastModifiedDate() != null ? Utility.formatDateTime(credential.getLastModifiedDate()) : null);
+        lastModifiedDateView.setText(Utility.formatDateTime(credential.getLastModifiedDate()));
 
         EditText systemView = view.findViewById(R.id.credential_system);
         systemView.setText(credential.getSystem());
@@ -182,17 +183,16 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
     public void onClick(View view) {
         // ask every time
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_MEDIA_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // You have not been granted access, ask for permission now.
-            //requestPermissionLauncher.launch(Manifest.permission.ACCESS_MEDIA_LOCATION);
-        } else {
-            Log.d(Utility.buildTag(getClass(), "onClick"), "save button, permission granted");
+            // You have not been granted access, ask for permission now, no need for nay permissions
+            Log.d(Utility.buildTag(getClass(), "onClick"), "save button, permission not granted");
         }
 
         int id = view.getId();
         if (id == R.id.btn_credential_register_save) {
-            Log.d(Utility.buildTag(getClass(), "onClick"), "save button, save entry: ");
+            Log.d(Utility.buildTag(getClass(), "onClick"), "save button, save entry");
         } else if (id == R.id.btn_credential_register_cancel) {
             // return back to main view
+            Log.d(Utility.buildTag(getClass(), "onClick"), "cancel button, return back to credential list view");
         }
     }
 
@@ -204,10 +204,16 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         credential.setFkUserId(!userId.getText().toString().isEmpty() ? Long.parseLong(userId.getText().toString()) : null);
 
         EditText createdDateView = requireView().findViewById(R.id.credential_created_date);
-        credential.setCreatedDate(Utility.toLocalDateTime(createdDateView.getText().toString()));
+        LocalDateTime createdDateTime = Utility.toLocalDateTime(createdDateView.getText().toString());
+        if (createdDateTime != null) {
+            credential.setCreatedDate(createdDateTime);
+        }
 
         EditText lastModifiedDateView = requireView().findViewById(R.id.credential_last_modified_date);
-        credential.setLastModifiedDate(Utility.toLocalDateTime(lastModifiedDateView.getText().toString()));
+        LocalDateTime lastModifiedDateTime = Utility.toLocalDateTime(lastModifiedDateView.getText().toString());
+        if (lastModifiedDateTime != null) {
+            credential.setLastModifiedDate(lastModifiedDateTime);
+        }
 
         EditText systemView = requireView().findViewById(R.id.credential_system);
         credential.setSystem(systemView.getText().toString());

@@ -32,7 +32,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         super.setPreferencesFromResource(R.xml.preferences, rootKey);
-        getActivity().setTitle(R.string.title_settings);
+        requireActivity().setTitle(R.string.title_settings);
         Preference button = getPreferenceManager().findPreference("settings_back_button");
         if (button != null) {
             button.setOnPreferenceClickListener(arg0 -> {
@@ -43,16 +43,23 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
             });
         }
 
-        getPreferenceManager().findPreference(getResources().getString(R.string.pref_automatic_logout_time)).setOnPreferenceChangeListener(this);
-        getPreferenceManager().findPreference(getResources().getString(R.string.pref_password_length_rule)).setOnPreferenceChangeListener(this);
-        getPreferenceManager().findPreference(getResources().getString(R.string.pref_password_uppercase_rule)).setOnPreferenceChangeListener(this);
-        getPreferenceManager().findPreference(getResources().getString(R.string.pref_password_least_lowercase_rule)).setOnPreferenceChangeListener(this);
-        getPreferenceManager().findPreference(getResources().getString(R.string.pref_password_least_digit_rule)).setOnPreferenceChangeListener(this);
-        getPreferenceManager().findPreference(getResources().getString(R.string.pref_password_least_symbol_rule)).setOnPreferenceChangeListener(this);
-        getPreferenceManager().findPreference(getResources().getString(R.string.pref_password_repeat_character_rule)).setOnPreferenceChangeListener(this);
-        getPreferenceManager().findPreference(getResources().getString(R.string.pref_password_illegal_sequence_alphabetical_rule)).setOnPreferenceChangeListener(this);
-        getPreferenceManager().findPreference(getResources().getString(R.string.pref_password_illegal_sequence_numerical_rule)).setOnPreferenceChangeListener(this);
-        getPreferenceManager().findPreference(Objects.requireNonNull(getResources().getString(R.string.pref_password_illegal_sequence_us_qwerty_rule))).setOnPreferenceChangeListener(this);
+        setOnPreferenceChangeListener(getResources().getString(R.string.pref_automatic_logout_time));
+        setOnPreferenceChangeListener(getResources().getString(R.string.pref_password_length_rule));
+        setOnPreferenceChangeListener(getResources().getString(R.string.pref_password_uppercase_rule));
+        setOnPreferenceChangeListener(getResources().getString(R.string.pref_password_least_lowercase_rule));
+        setOnPreferenceChangeListener(getResources().getString(R.string.pref_password_least_digit_rule));
+        setOnPreferenceChangeListener(getResources().getString(R.string.pref_password_least_symbol_rule));
+        setOnPreferenceChangeListener(getResources().getString(R.string.pref_password_repeat_character_rule));
+        setOnPreferenceChangeListener(getResources().getString(R.string.pref_password_illegal_sequence_alphabetical_rule));
+        setOnPreferenceChangeListener(getResources().getString(R.string.pref_password_illegal_sequence_numerical_rule));
+        setOnPreferenceChangeListener(Objects.requireNonNull(getResources().getString(R.string.pref_password_illegal_sequence_us_qwerty_rule)));
+    }
+
+    private void setOnPreferenceChangeListener(String preferenceResource) {
+        Preference preference = getPreferenceManager().findPreference(preferenceResource);
+        if (preference != null) {
+            preference.setOnPreferenceChangeListener(this);
+        }
     }
 
     @Override

@@ -47,9 +47,8 @@ public class Utility {
     public static String formatDateTime(LocalDateTime localDateTime) {
         if (localDateTime != null) {
             return localDateTime.format(dateTimeFormatter);
-        } else {
-            return null;
         }
+        return null;
     }
 
     public static LocalDateTime toLocalDateTime(String dateTimeStr) {

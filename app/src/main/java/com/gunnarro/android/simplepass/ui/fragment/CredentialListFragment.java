@@ -88,7 +88,7 @@ public class CredentialListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getActivity().setTitle(R.string.title_credential_list);
+        requireActivity().setTitle(R.string.title_credential_list);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_credential_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.credential_recyclerview);
@@ -222,7 +222,7 @@ public class CredentialListFragment extends Fragment {
 
     private void showSnackbar(String msg, @ColorRes int bgColor) {
         Resources.Theme theme = getResources().newTheme();
-        Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.list_layout), msg, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(requireView().findViewById(R.id.list_layout), msg, Snackbar.LENGTH_LONG);
         snackbar.setTextColor(getResources().getColor(bgColor, theme));
         snackbar.show();
     }

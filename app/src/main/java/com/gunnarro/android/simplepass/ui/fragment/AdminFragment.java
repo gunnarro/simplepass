@@ -51,7 +51,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getActivity().setTitle(R.string.title_admin);
+        requireActivity().setTitle(R.string.title_admin);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin, container, false);
         Credential credential;
