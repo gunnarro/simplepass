@@ -18,7 +18,6 @@ import java.util.Objects;
 @Entity(tableName = "user", indices = {@Index(value = {"username"}, unique = true)})
 public class User {
 
-    @NonNull
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private Long id;
