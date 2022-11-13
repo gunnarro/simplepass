@@ -1,8 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-ext {
-    agp_version = '7.3.0'
-}
+    ext {
+        agp_version = '7.3.0'
+    }
 }
 
 plugins {
@@ -44,4 +44,13 @@ ext {
     junitVersion = '4.13.2'
     androidxJunitVersion = '1.1.2'
 }
+
+test {
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}
+
+
 
