@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 public class Utility {
 
@@ -57,5 +58,13 @@ public class Utility {
             return null;
         }
         return LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ofPattern(DATE_TIME_PATTERN, Locale.getDefault()));
+    }
+
+    private static Pattern positiveIntegerPattern = Pattern.compile("[0-9]+");
+    public static boolean isInteger(String value) {
+        if (value == null) {
+            return false;
+        }
+        return positiveIntegerPattern.matcher(value).matches();
     }
 }

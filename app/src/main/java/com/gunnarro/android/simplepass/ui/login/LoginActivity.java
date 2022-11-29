@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.security.keystore.KeyGenParameterSpec;
+import android.security.keystore.KeyProperties;
+import android.security.keystore.UserNotAuthenticatedException;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -22,6 +25,11 @@ import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.config.AppDatabase;
 import com.gunnarro.android.simplepass.databinding.ActivityLoginBinding;
 import com.gunnarro.android.simplepass.ui.MainActivity;
+
+import java.security.InvalidKeyException;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -129,7 +137,36 @@ public class LoginActivity extends AppCompatActivity {
             // username/password login
             loginButton.setOnClickListener(v -> loginViewModel.login(usernameEditText.getText().toString(), encryptionKeyEditText.getText().toString(), loginBinding.loginEnableFingerprintLoginSwitch.isChecked()));
             // fingerprint login dialog
-            loginBinding.loginFingerprintBtn.setOnClickListener(view -> createBiometricPrompt().authenticate(createBiometricPromptInfo()));
+            // FIXME should use following
+            // biometricPrompt.authenticate(promptInfo, new BiometricPrompt.CryptoObject(cipher)); // Compliant
+            /**
+             biometricLoginButton.setOnClickListener(view -> {
+             // Exceptions are unhandled within this snippet.
+             Cipher cipher = getCipher();
+             SecretKey secretKey = getSecretKey();
+             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+             biometricPrompt.authenticate(promptInfo,
+             new BiometricPrompt.CryptoObject(cipher));
+             });
+
+             */
+            /*
+            generateSecretKey(new KeyGenParameterSpec.Builder(
+                    KEY_NAME,
+                    KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
+                    .setUserAuthenticationRequired(true)
+                    .setUserAuthenticationParameters(
+                            VALIDITY_DURATION_SECONDS,
+                            ALLOWED_AUTHENTICATORS
+                    )
+                    .build());
+            */
+
+            loginBinding.loginFingerprintBtn.setOnClickListener(view ->
+                    createBiometricPrompt().authenticate(createBiometricPromptInfo())
+            );
         } catch (Exception e) {
             Log.e("LoginActivity", e.getMessage());
             showInfoDialog(getResources().getString(R.string.login_failed));
@@ -224,4 +261,22 @@ public class LoginActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
+    /*
+    private void encryptSecretInformation() {
+        // Exceptions are unhandled for getCipher() and getSecretKey().
+        Cipher cipher = getCipher();
+        SecretKey secretKey = getSecretKey();
+        try {
+            // NullPointerException is unhandled; use Objects.requireNonNull().
+            ciper.init(Cipher.ENCRYPT_MODE, secretKey);
+            byte[] encryptedInfo = cipher.doFinal("plaintext-string".getBytes(Charset.defaultCharset()));
+        } catch (InvalidKeyException e) {
+            Log.e("MY_APP_TAG", "Key is invalid.");
+        } catch (UserNotAuthenticatedException e) {
+            Log.d("MY_APP_TAG", "The key's validity timed out.");
+            biometricPrompt.authenticate(promptInfo);
+        }
+    }*/
+
 }

@@ -81,7 +81,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         view.findViewById(R.id.btn_credential_register_save).setOnClickListener(v -> {
             view.findViewById(R.id.btn_credential_register_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(CredentialListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson(new Credential()));
+            result.putString(CredentialListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson());
             result.putString(CredentialListFragment.CREDENTIALS_ACTION_KEY, CredentialListFragment.CREDENTIALS_ACTION_SAVE);
             getParentFragmentManager().setFragmentResult(CredentialListFragment.CREDENTIALS_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new item intent");
@@ -91,7 +91,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         view.findViewById(R.id.btn_credential_register_delete).setOnClickListener(v -> {
             view.findViewById(R.id.btn_credential_register_delete).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(CredentialListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson(new Credential()));
+            result.putString(CredentialListFragment.CREDENTIALS_JSON_INTENT_KEY, getCredentialsAsJson());
             result.putString(CredentialListFragment.CREDENTIALS_ACTION_KEY, CredentialListFragment.CREDENTIALS_ACTION_DELETE);
             getParentFragmentManager().setFragmentResult(CredentialListFragment.CREDENTIALS_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new item intent");
@@ -196,12 +196,14 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         }
     }
 
-    private String getCredentialsAsJson(Credential credential) {
-        TextView id = requireView().findViewById(R.id.credential_entity_id);
-        credential.setId(!id.getText().toString().isEmpty() ? Long.parseLong(id.getText().toString()) : null);
+    private String getCredentialsAsJson() {
+        Credential credential = new Credential();
+        TextView idView = requireView().findViewById(R.id.credential_entity_id);
+        Log.d("getCredentialsAsJson", "idView=" + idView.getText() + ", is=" + (idView.getText().length()));
+        credential.setId(Utility.isInteger(idView.getText().toString()) ? Long.parseLong(idView.getText().toString()) : null);
 
-        TextView userId = requireView().findViewById(R.id.credential_user_id);
-        credential.setFkUserId(!userId.getText().toString().isEmpty() ? Long.parseLong(userId.getText().toString()) : null);
+        TextView userIdView = requireView().findViewById(R.id.credential_user_id);
+        credential.setFkUserId(Utility.isInteger(userIdView.getText().toString()) ? Long.parseLong(userIdView.getText().toString()) : null);
 
         EditText createdDateView = requireView().findViewById(R.id.credential_created_date);
         LocalDateTime createdDateTime = Utility.toLocalDateTime(createdDateView.getText().toString());
@@ -260,5 +262,4 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
     private boolean isInputFormDataValid() {
         return true;
     }
-
 }
