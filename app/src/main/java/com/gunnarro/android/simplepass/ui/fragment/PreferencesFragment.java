@@ -25,11 +25,6 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         super.setPreferencesFromResource(R.xml.preferences, rootKey);
         requireActivity().setTitle(R.string.title_settings);

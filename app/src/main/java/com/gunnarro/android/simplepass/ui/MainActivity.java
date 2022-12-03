@@ -136,8 +136,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startAutoLogoutUserTimer(1);
             }
             // close drawer after clicking the menu item
-            DrawerLayout drawer = findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
+            DrawerLayout tmpDrawer = findViewById(R.id.drawer_layout);
+            tmpDrawer.closeDrawer(GravityCompat.START);
             return false;
         } catch (Exception e) {
             Log.e(Utility.buildTag(getClass(), "onNavigationItemSelected"), e.getMessage());

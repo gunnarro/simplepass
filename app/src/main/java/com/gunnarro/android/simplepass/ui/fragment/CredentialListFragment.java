@@ -128,16 +128,6 @@ public class CredentialListFragment extends Fragment {
         return view;
     }
 
-    /**
-     * Update backup info after view is successfully create
-     */
-    @Override
-    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        //loggedInUserId = getArguments().getLong(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY);
-        //Log.d("onViewCreated", "args" + getArguments().getBundle(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY));
-    }
-
     /*
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -154,11 +144,6 @@ public class CredentialListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
  */
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
 
     /**
      *

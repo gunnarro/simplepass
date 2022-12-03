@@ -44,8 +44,7 @@ public class AESCrypto {
     // holds the key used to encrypt and decrypt
     private static SecretKeySpec secretKey;
 
-    public static String getSecretKey() {
-        return secretKey != null ? Arrays.toString(secretKey.getEncoded()) : null;
+    private AESCrypto() {
     }
 
     /**
@@ -121,9 +120,6 @@ public class AESCrypto {
      */
     public static String generatePassphrase() throws CryptoException {
         return Arrays.toString(buildSecretKey(UUID.randomUUID().toString()).getEncoded());
-      //  KeyGenerator keyGenerator = KeyGenerator.getInstance(SYMMETRIC_KEY_ALGORITHM);
-      //  keyGenerator.init(AES_KEY_SIZE);
-      //  return new String(keyGenerator.generateKey().getEncoded(), Charsets.ISO_8859_1);
     }
 
 }

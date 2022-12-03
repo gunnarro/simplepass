@@ -24,6 +24,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.domain.EncryptedString;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
+import com.gunnarro.android.simplepass.exception.SimpleCredStoreApplicationException;
 import com.gunnarro.android.simplepass.utility.Utility;
 import com.gunnarro.android.simplepass.validator.CustomPasswordValidator;
 
@@ -71,7 +72,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
                 Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, credentials: %s", credentialJson, credential));
             } catch (JsonProcessingException e) {
                 Log.e("", e.toString());
-                throw new RuntimeException("Application Error: " + e);
+                throw new SimpleCredStoreApplicationException("Application Error!", "5000", e);
             }
         }
 
@@ -116,14 +117,6 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
                 .replace(R.id.content_frame, CredentialListFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
-    }
-
-    /**
-     * Update backup info after view is successfully create
-     */
-    @Override
-    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     private void updateAddCredentialView(View view, Credential credential) {
@@ -231,7 +224,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
             return Utility.getJsonMapper().writerWithDefaultPrettyPrinter().writeValueAsString(credential);
         } catch (JsonProcessingException e) {
             Log.e("getCredentialsAsJson", e.toString());
-            throw new RuntimeException("unable to parse object to json! " + e);
+            throw new SimpleCredStoreApplicationException("unable to parse object to json!,", "5000", e);
         }
     }
 

@@ -3,40 +3,19 @@ package com.gunnarro.android.simplepass.ui.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyProperties;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
 import com.gunnarro.android.simplepass.R;
-import com.gunnarro.android.simplepass.domain.dto.LoggedInUserDto;
-import com.gunnarro.android.simplepass.ui.MainActivity;
-
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 
 public class LoginFingerprintActivity extends AppCompatActivity {
-
-    public final static String USERNAME_INTENT_NAME = "USERNAME";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,14 +43,10 @@ public class LoginFingerprintActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Authentication succeeded!", Toast.LENGTH_SHORT).show();
                     }
 
-                    @Override
-                    public void onAuthenticationFailed() {
-                        super.onAuthenticationFailed();
-                        //Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
-                    }
                 });
 
-        BiometricPrompt.PromptInfo promptInfo; promptInfo = new BiometricPrompt.PromptInfo.Builder()
+        BiometricPrompt.PromptInfo promptInfo;
+        promptInfo = new BiometricPrompt.PromptInfo.Builder()
                 .setTitle("Login with fingerprint")
                 .setSubtitle("Log in using your fingerprint")
                 .setNegativeButtonText("Back to user/password login")
@@ -83,27 +58,6 @@ public class LoginFingerprintActivity extends AppCompatActivity {
         Button biometricLoginButton = findViewById(R.id.biometric_login_btn);
         biometricLoginButton.setOnClickListener(view -> biometricPrompt.authenticate(promptInfo));
     }
-
-
-    private void generateSecretKey(KeyGenParameterSpec keyGenParameterSpec) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
-        KeyGenerator keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
-        keyGenerator.init(keyGenParameterSpec);
-        keyGenerator.generateKey();
-    }
-
-    private SecretKey getSecretKey() throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException, UnrecoverableKeyException {
-        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
-        // Before the keystore can be accessed, it must be loaded.
-        keyStore.load(null);
-        return ((SecretKey) keyStore.getKey("KEY_NAME", null));
-    }
-
-    private Cipher getCipher() throws NoSuchPaddingException, NoSuchAlgorithmException {
-        return Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/"
-                + KeyProperties.BLOCK_MODE_CBC + "/"
-                + KeyProperties.ENCRYPTION_PADDING_PKCS7);
-    }
-
 
     private void checkBiometric() {
         BiometricManager biometricManager = BiometricManager.from(this);
@@ -133,19 +87,6 @@ public class LoginFingerprintActivity extends AppCompatActivity {
             case BiometricManager.BIOMETRIC_STATUS_UNKNOWN:
                 break;
         }
-    }
-
-    private void updateUiWithUser(LoggedInUserDto model) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(USERNAME_INTENT_NAME, model.getUserName());
-        startActivity(intent);
-        // finally finish login activity
-        finish();
-    }
-
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Log.i("LoginActivity.showLoginFailed", "login failed, " + errorString);
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_LONG).show();
     }
 
     private void startLoginActivity() {
