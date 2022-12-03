@@ -1,5 +1,6 @@
 package com.gunnarro.android.simplepass.utility;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -10,6 +11,9 @@ import com.gunnarro.android.simplepass.ui.fragment.CredentialAddFragment;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 
 /**
@@ -56,5 +60,10 @@ class AESCryptoTest {
         assertFalse("   ".matches(CredentialAddFragment.HAS_TEXT_REGEX));
         assertTrue("ddf".matches(CredentialAddFragment.HAS_TEXT_REGEX));
         assertTrue("d d f".matches(CredentialAddFragment.HAS_TEXT_REGEX));
+    }
+
+    @Test
+    void getSecretKey() throws CryptoException {
+        assertNotNull(AESCrypto.generatePassphrase());
     }
 }

@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.room.TypeConverter;
 
 import com.gunnarro.android.simplepass.domain.EncryptedString;
-import com.gunnarro.android.simplepass.exception.CryptoException;
 import com.gunnarro.android.simplepass.utility.AESCrypto;
 
 /**
@@ -27,7 +26,7 @@ public class CipherConverter {
             String encrypted = AESCrypto.encrypt(value.getValue());
             Log.d("CipherConverter.encrypt", value.getValue() + " -> " + encrypted);
             return encrypted;
-        } catch (CryptoException e) {
+        } catch (Exception e) {
             // ignore, value is not decrypted likely because of wrong key
             return null;
         }
@@ -39,7 +38,7 @@ public class CipherConverter {
             EncryptedString decrypted = new EncryptedString(AESCrypto.decrypt(encryptedValue));
             Log.d("CipherConverter.decrypt", encryptedValue + " -> " + decrypted.getValue());
             return decrypted;
-        } catch (CryptoException e) {
+        } catch (Exception e) {
             // ignore, value is not encrypted likely because of wrong key
             return null;
         }

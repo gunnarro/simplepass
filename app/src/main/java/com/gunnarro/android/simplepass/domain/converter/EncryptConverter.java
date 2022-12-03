@@ -5,7 +5,6 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.room.TypeConverter;
 
-import com.gunnarro.android.simplepass.exception.CryptoException;
 import com.gunnarro.android.simplepass.utility.AESCrypto;
 
 /**
@@ -23,7 +22,7 @@ public class EncryptConverter {
             String encrypted = AESCrypto.encrypt(value);
             Log.d("EncryptConverter.encrypt", value + " -> " + encrypted);
             return encrypted;
-        } catch (CryptoException e) {
+        } catch (Exception e) {
             // ignore
             return null;
         }

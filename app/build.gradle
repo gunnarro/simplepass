@@ -85,6 +85,9 @@ dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4'
     implementation 'androidx.navigation:navigation-fragment:2.5.3'
     implementation 'androidx.navigation:navigation-ui:2.5.3'
+    // for password hashing
+    implementation 'de.mkammerer:argon2-jvm:2.11'
+    implementation 'org.jasypt:jasypt:1.9.3'
     // for password strength check
     implementation 'org.passay:passay:1.6.2'
     implementation 'nu.aaro.gustav:passwordstrengthmeter:0.4'

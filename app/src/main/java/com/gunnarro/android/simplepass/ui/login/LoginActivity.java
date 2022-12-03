@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyProperties;
-import android.security.keystore.UserNotAuthenticatedException;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -25,11 +22,6 @@ import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.config.AppDatabase;
 import com.gunnarro.android.simplepass.databinding.ActivityLoginBinding;
 import com.gunnarro.android.simplepass.ui.MainActivity;
-
-import java.security.InvalidKeyException;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
 
 public class LoginActivity extends AppCompatActivity {
 

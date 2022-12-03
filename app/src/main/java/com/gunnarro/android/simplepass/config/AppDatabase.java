@@ -16,42 +16,30 @@ import com.gunnarro.android.simplepass.domain.entity.User;
 import com.gunnarro.android.simplepass.repository.CredentialDao;
 import com.gunnarro.android.simplepass.repository.SettingsDao;
 import com.gunnarro.android.simplepass.repository.UserDao;
-import com.gunnarro.android.simplepass.utility.AESCrypto;
 
 import net.sqlcipher.database.SupportFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
  * Thread safe database instance.
+ * Backup is turned off for this database file.
  */
 @Database(entities = {User.class, Credential.class, Settings.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 1;
     public static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
-    private static final String SHARED_PREFS_NAME = "com.gunnarro.android.simplepass.encrypted_shared_prefs";
+    private static final String ENCRYPTED_SHARED_PREFS_NAME = "com.gunnarro.android.simplepass.encrypted_shared_prefs";
     private static final String PREFS_KEY_DB_PASSPHRASE = "PREFS_KEY_DB_PASSPHRASE";
     private static final String PREFS_KEY_MASTER_PASS = "PREFS_KEY_MASTER_PASS";
+    private static final String DATABASE_NAME = "simple_cred_store_encrypted_db";
     // mutable thread-safe singleton
     private static AppDatabase dbInstance;
-
-    /**
-     * Thread safe access to the database.
-     * Singleton pattern
-     */
-    public static synchronized AppDatabase getDatabase(final Context context) {
-        if (dbInstance == null) {
-            // Allow only single single thread access to the database
-            dbInstance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "simple_cred_store_db")
-                    .fallbackToDestructiveMigration()
-                    .build();
-        }
-        return dbInstance;
-    }
 
     /**
      * Thread safe access to the database.
@@ -65,7 +53,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
         if (dbInstance == null) {
             // Allow only single single thread access to the database
-            dbInstance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "simple_cred_store_encrypted_db")
+            dbInstance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, DATABASE_NAME)
                     .fallbackToDestructiveMigration()
                     // .allowMainThreadQueries() do not use this, only for testing purpose
                     // From here will Room take over and integrate with SQLCipher for Android.
@@ -78,23 +66,23 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     /**
+     * Shared Preferences is the way in which one can store and retrieve small amounts of primitive data as key/value pairs to a file on the device storage.
+     * The data stored using shared preferences are kept private within the scope of the application
+     * Generates a passphrase, simply a random string, and stores it in the encrypted shared preferences.
+     * Returns the newly generated passphrase.
+     */
+    private static String initializeDbPassphrase(Context context) throws GeneralSecurityException, IOException {
+        String passphrase = UUID.randomUUID().toString();
+        saveDbPassPhrase(context, passphrase);
+        return passphrase;
+    }
+
+    /**
      * Retrieves the passphrase for encryption from the encrypted shared preferences.
      * Returns null if there is no stored passphrase.
      */
     private static String getDbPassphrase(Context context) throws GeneralSecurityException, IOException {
         return getEncryptedSharedPrefs(context).getString(PREFS_KEY_DB_PASSPHRASE, null);
-    }
-
-    /**
-     * Shared Preferences is the way in which one can store and retrieve small amounts of primitive data as key/value pairs to a file on the device storage.
-     * The data stored using shared preferences are kept private within the scope of the application
-     * Generates a passphrase and stores it in the encrypted shared preferences.
-     * Returns the newly generated passphrase.
-     */
-    private static String initializeDbPassphrase(Context context) throws GeneralSecurityException, IOException {
-        String passphrase = AESCrypto.generatePassphrase();
-        saveDbPassPhrase(context, passphrase);
-        return passphrase;
     }
 
     private static void saveDbPassPhrase(Context context, String passphrase) throws GeneralSecurityException, IOException {
@@ -130,7 +118,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     /**
      * EncryptedSharedPreferences wraps the SharedPreferences class and automatically encrypts keys and values using a two-scheme method:
-     * Returns a reference to the encrypted shared preferences.
+     * Returns a reference to the encrypted shared preferences. Ensure that backup is turned off.
      */
     private static SharedPreferences getEncryptedSharedPrefs(Context context) throws GeneralSecurityException, IOException {
         MasterKey masterKey = new MasterKey.Builder(context)
@@ -139,7 +127,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
         return EncryptedSharedPreferences.create(
                 context,
-                SHARED_PREFS_NAME,
+                ENCRYPTED_SHARED_PREFS_NAME,
                 masterKey,
                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM

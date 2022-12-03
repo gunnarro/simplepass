@@ -31,6 +31,8 @@ Key features:
 - All data is deleted when app is uninstalled
 - All features are free to use, no advertisement
 - 100% based on open source
+- Backup to user's google drive is turned off.
+- No permission needed
 
 
 # Resources

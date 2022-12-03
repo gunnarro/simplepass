@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         loggedInUserId = getIntent().getExtras().getLong(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY);
 
-        Log.i(Utility.buildTag(getClass(), "onCreate"), "Credential store for userId=" + loggedInUserId + ", secret key: " + AESCrypto.getSecretKey());
+        Log.i(Utility.buildTag(getClass(), "onCreate"), "Credential store for userId=" + loggedInUserId);
 
         // Adding this line will prevent taking screenshot in your app
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
