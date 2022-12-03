@@ -1,7 +1,5 @@
 package com.gunnarro.android.simplepass.domain.entity;
 
-import static org.junit.Assert.assertEquals;
-
 import com.gunnarro.android.simplepass.domain.EncryptedString;
 
 import org.junit.jupiter.api.Assertions;

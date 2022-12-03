@@ -12,9 +12,6 @@ import com.gunnarro.android.simplepass.ui.fragment.CredentialAddFragment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-
 
 /**
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
