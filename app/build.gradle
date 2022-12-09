@@ -105,7 +105,6 @@ dependencies {
     // For App Authentication APIs
     implementation "androidx.security:security-app-authenticator:1.0.0-alpha02"
 
-
     // for fingerprint login
     implementation "androidx.biometric:biometric:$rootProject.biometricVersion"
     // for unit tests
@@ -118,5 +117,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
     androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
 
-    debugImplementation "androidx.fragment:fragment-testing:1.5.4"
+    debugImplementation "androidx.fragment:fragment-testing:1.5.5"
 }

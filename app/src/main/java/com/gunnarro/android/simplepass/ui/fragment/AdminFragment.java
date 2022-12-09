@@ -98,19 +98,6 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
                 .commit();
     }
 
-    /**
-     * Update backup info after view is successfully create
-     */
-    @Override
-    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
     @Override
     public void onClick(View view) {
         // ask every time
