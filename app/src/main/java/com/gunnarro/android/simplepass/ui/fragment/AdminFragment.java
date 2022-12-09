@@ -5,12 +5,9 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -21,9 +18,8 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.config.AppDatabase;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
+import com.gunnarro.android.simplepass.exception.SimpleCredStoreApplicationException;
 import com.gunnarro.android.simplepass.utility.Utility;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -63,7 +59,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
                 Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, credentials: %s", credentialJson, credential));
             } catch (JsonProcessingException e) {
                 Log.e("", e.toString());
-                throw new RuntimeException("Application Error: " + e);
+                throw new SimpleCredStoreApplicationException("Application Error", "5000", e);
             }
         }
 
@@ -110,9 +106,9 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
 
         int id = view.getId();
         if (id == R.id.btn_credential_register_save) {
-            Log.d(Utility.buildTag(getClass(), "onClick"), "save button, save entry: ");
+            Log.d(Utility.buildTag(getClass(), "onClick"), "save, save entry and return back to list");
         } else if (id == R.id.btn_credential_register_cancel) {
-            // return back to main view
+            Log.d(Utility.buildTag(getClass(), "onClick"), "cancel, return back to list");
         }
     }
 

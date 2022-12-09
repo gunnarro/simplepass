@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  */
 public class CustomPasswordValidator {
 
-    private static PasswordValidator passwordValidator;
+    private PasswordValidator passwordValidator;
     private int minPasswordLength = 8;
     private int maxPasswordLength = 30;
     private int numberOfUpperCaseChars = 1;
@@ -72,7 +72,6 @@ public class CustomPasswordValidator {
         List<String> list = new ArrayList<>();
         RuleResult ruleResult = passwordValidator.validate(new PasswordData(password));
         ruleResult.getDetails().forEach(r -> {
-            StringBuilder sb = new StringBuilder();
             String validationError = (r.getParameters().entrySet().stream()
                     .map(e -> e.getKey() + "=" + e.getValue())
                     .filter(s -> !s.contains("valid") && !s.contains("matching"))

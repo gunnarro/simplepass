@@ -73,13 +73,7 @@ public class UserRepository {
                 Log.d("UserRepository.findUser", "Task is done, return user: " + u);
                 return u;
             } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-            //Sleep for 10 ms second
-            try {
-                Thread.sleep(100000L);
-            } catch (InterruptedException e) {
-               Log.e("Error find user!", e.getMessage());
+                Log.e("Error find user!", e.getMessage());
             }
         }
         return null;

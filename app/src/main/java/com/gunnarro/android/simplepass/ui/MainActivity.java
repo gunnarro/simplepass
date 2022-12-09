@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // close drawer after clicking the menu item
             DrawerLayout tmpDrawer = findViewById(R.id.drawer_layout);
             tmpDrawer.closeDrawer(GravityCompat.START);
-            return false;
+            return true;
         } catch (Exception e) {
             Log.e(Utility.buildTag(getClass(), "onNavigationItemSelected"), e.getMessage());
             return false;

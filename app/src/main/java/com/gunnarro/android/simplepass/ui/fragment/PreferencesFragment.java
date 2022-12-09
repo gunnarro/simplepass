@@ -3,10 +3,7 @@ package com.gunnarro.android.simplepass.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 
-import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -62,17 +59,5 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Pre
         Log.d("PreferencesFragment", String.format("onPreferenceChange, preference key=%s, new value=%s", preference.getKey(), newValue));
         // update value
         return true;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        menu.clear();
-        Log.d("PreferencesFragment", "onCreateOptionsMenu. hasVisible=" + menu.hasVisibleItems());
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        // hide current options menu
-        menu.getItem(0).setVisible(false);
     }
 }

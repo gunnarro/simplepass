@@ -25,7 +25,7 @@ import com.gunnarro.android.simplepass.ui.MainActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public final static String LOGGED_IN_USER_ID_INTENT_KEY = "LOGGED_IN_USER_ID";
+    public static final String LOGGED_IN_USER_ID_INTENT_KEY = "LOGGED_IN_USER_ID";
 
     private LoginViewModel loginViewModel;
 
