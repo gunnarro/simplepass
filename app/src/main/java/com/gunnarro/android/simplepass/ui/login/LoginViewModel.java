@@ -89,7 +89,6 @@ public class LoginViewModel extends AndroidViewModel {
                 loginResult.setValue(new LoginResult(R.string.login_user_access_denied));
             }
         } catch (Exception e) {
-            e.printStackTrace();
             loginResult.setValue(new LoginResult(R.string.login_failed));
         }
     }
