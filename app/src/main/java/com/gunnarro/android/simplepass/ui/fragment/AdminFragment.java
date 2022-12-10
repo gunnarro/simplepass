@@ -1,14 +1,11 @@
 package com.gunnarro.android.simplepass.ui.fragment;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,6 +15,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.config.AppDatabase;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
+import com.gunnarro.android.simplepass.exception.ApplicationErrorCodes;
 import com.gunnarro.android.simplepass.exception.SimpleCredStoreApplicationException;
 import com.gunnarro.android.simplepass.utility.Utility;
 
@@ -96,14 +94,6 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        // ask every time
-        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_MEDIA_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // You have not been granted access, ask for permission now.
-            //requestPermissionLauncher.launch(Manifest.permission.ACCESS_MEDIA_LOCATION);
-        } else {
-            Log.d(Utility.buildTag(getClass(), "onClick"), "save button, permission granted");
-        }
-
         int id = view.getId();
         if (id == R.id.btn_credential_register_save) {
             Log.d(Utility.buildTag(getClass(), "onClick"), "save, save entry and return back to list");
@@ -116,7 +106,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
         try {
             AppDatabase.disableFingerprintLogin(getContext());
         } catch (GeneralSecurityException | IOException e) {
-           Log.e("", e.getMessage());
+            throw new SimpleCredStoreApplicationException(ApplicationErrorCodes.FINGERPRINT_DISABLE_ERROR.errorMsg, ApplicationErrorCodes.FINGERPRINT_DISABLE_ERROR.errorCode, e);
         }
     }
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.gunnarro.android.simplepass.config.AppDatabase;
 import com.gunnarro.android.simplepass.domain.entity.User;
+import com.gunnarro.android.simplepass.exception.SimpleCredStoreApplicationException;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -34,32 +35,14 @@ public class UserRepository {
             Future<List<User>> future = service.take();
             return future.get();
         } catch (Exception e) {
-            throw new Exception("get users failures!", e.getCause());
+            throw new SimpleCredStoreApplicationException("get users failures!", "5000", e.getCause());
         }
-/*
-        Future<List<User>> result = AppDatabase.databaseExecutor.submit(callableGetUsersTask);
-        while (!result.isDone()) {
-            try {
-                users= result.get();
-                Log.d("UserRepository.findUser", "Task is done, return user: " + users);
-                return users;
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-            //Sleep for 10 ms second
-            try {
-                Thread.sleep(100000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        return users;
-
- */
     }
 
-    // Room executes all queries on a separate thread.
-    // Observed LiveData will notify the observer when the data has changed.
+    /**
+     * Room executes all queries on a separate thread.
+     * Observed LiveData will notify the observer when the data has changed.
+     */
     public User findUser(String username) {
         Log.d("UserRepository.findUser", "user: " + username);
         Callable<User> callableFindUserTask = () -> {
@@ -69,11 +52,9 @@ public class UserRepository {
         Future<User> result = AppDatabase.databaseExecutor.submit(callableFindUserTask);
         while (!result.isDone()) {
             try {
-                User u = result.get();
-                Log.d("UserRepository.findUser", "Task is done, return user: " + u);
-                return u;
-            } catch (InterruptedException | ExecutionException e) {
-                Log.e("Error find user!", e.getMessage());
+                return result.get();
+            } catch (ExecutionException | InterruptedException e) {
+                throw new SimpleCredStoreApplicationException("Error find user!", "5005", e);
             }
         }
         return null;
@@ -101,15 +82,12 @@ public class UserRepository {
                 userDao.insert(user);
                 Log.d("UserRepository.insert", "created new user. user: " + user.getUsername());
             } catch (SQLiteConstraintException e) {
-                Log.e("UserRepository.insert", e.getMessage());
+                throw new SimpleCredStoreApplicationException("Error inser user!", "5010", e);
             }
         });
     }
 
     public void delete(User user) {
-        AppDatabase.databaseExecutor.execute(() -> {
-            userDao.delete(user);
-            Log.d("CredentialRepository.save", "deleted, id=" + user.getUsername());
-        });
+        AppDatabase.databaseExecutor.execute(() -> userDao.delete(user));
     }
 }

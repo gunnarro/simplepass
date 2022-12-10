@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-public class DomainMapperTest {
+class DomainMapperTest {
 
     @Test
     void mapToCredential() {
@@ -22,7 +22,9 @@ public class DomainMapperTest {
         credentialDto.setUsername("gunnarro");
         credentialDto.setLastModifiedDate(LocalDateTime.now());
         credentialDto.setPasswordStatus("STRONG");
+
         Credential credential = DomainMapper.mapToCredential(credentialDto);
+
         assertEquals(credentialDto.getFkUserId(), credential.getFkUserId());
         assertEquals(credentialDto.getId(), credential.getId());
         assertEquals(credentialDto.getCreatedDate(), credential.getCreatedDate());
@@ -44,7 +46,9 @@ public class DomainMapperTest {
         credential.setUsername("gunnarro");
         credential.setLastModifiedDate(LocalDateTime.now());
         credential.setPasswordStatus("STRONG");
+
         CredentialDto credentialDto = DomainMapper.mapToCredentialDto(credential);
+
         assertEquals(credential.getFkUserId(), credentialDto.getFkUserId());
         assertEquals(credential.getId(), credentialDto.getId());
         assertEquals(credential.getCreatedDate(), credentialDto.getCreatedDate());

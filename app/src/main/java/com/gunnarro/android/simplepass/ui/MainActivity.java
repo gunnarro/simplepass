@@ -24,9 +24,6 @@ import com.gunnarro.android.simplepass.utility.AESCrypto;
 import com.gunnarro.android.simplepass.utility.Utility;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -60,9 +57,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(Utility.buildTag(getClass(), "onCreate"), "context: " + getApplicationContext());
-        Log.d(Utility.buildTag(getClass(), "onCreate"), "app file dir: " + getApplicationContext().getFilesDir().getPath());
-
         loggedInUserId = getIntent().getExtras().getLong(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY);
 
         Log.i(Utility.buildTag(getClass(), "onCreate"), "Credential store for userId=" + loggedInUserId);
@@ -157,16 +151,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.i(Utility.buildTag(getClass(), "checkPermissions"), "Start check permissions...no permission needed");
     }
 
-    /**
-     * This function is called when user accept or decline the permission.
-     * Request Code is used to check which permission called this function.
-     * This request code is provided when user is prompt for permission.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d(Utility.buildTag(getClass(), "onRequestPermissions"), String.format("no permission needed. requestCode=%s, permission=%s, grantResult=%s", requestCode, new ArrayList<>(Arrays.asList(permissions)), new ArrayList<>(Collections.singletonList(grantResults))));
-    }
 
     /**
      * logout user automatically after a given period of time.

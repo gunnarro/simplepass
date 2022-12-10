@@ -22,17 +22,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
-import com.gunnarro.android.simplepass.exception.SimpleCredStoreApplicationException;
 import com.gunnarro.android.simplepass.ui.adapter.CredentialListAdapter;
 import com.gunnarro.android.simplepass.ui.login.LoginActivity;
 import com.gunnarro.android.simplepass.ui.swipe.SwipeCallback;
 import com.gunnarro.android.simplepass.ui.view.CredentialViewModel;
 import com.gunnarro.android.simplepass.utility.Utility;
-
-import org.jetbrains.annotations.NotNull;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -58,24 +56,7 @@ public class CredentialListFragment extends Fragment {
                 Log.d(Utility.buildTag(getClass(), "onFragmentResult"), "intent: " + requestKey + "json:  + " + bundle.getString(CREDENTIALS_JSON_INTENT_KEY));
                 try {
                     Credential credential = mapper.readValue(bundle.getString(CREDENTIALS_JSON_INTENT_KEY), Credential.class);
-                    if (bundle.getString(CREDENTIALS_ACTION_KEY).equals(CREDENTIALS_ACTION_SAVE)) {
-                        try {
-                            credentialsViewModel.save(credential);
-                            if (credential.getId() == null) {
-                                showSnackbar("Added credential", R.color.color_snackbar_text_add);
-                            } else {
-                                showSnackbar("Updated credential", R.color.color_snackbar_text_update);
-                            }
-                        } catch (SimpleCredStoreApplicationException ex) {
-                            showInfoDialog(String.format("Application error!%sError: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()), getActivity());
-                        }
-                    } else if (bundle.getString(CREDENTIALS_ACTION_KEY).equals(CREDENTIALS_ACTION_DELETE)) {
-                        credentialsViewModel.delete(credential);
-                        showSnackbar("Deleted credential", R.color.color_snackbar_text_delete);
-                    } else {
-                        Log.w(Utility.buildTag(getClass(), "onFragmentResult"), "unknown action: " + (bundle.getString(CREDENTIALS_ACTION_KEY)));
-                        showInfoDialog(String.format("Application error!%s Unknown action: %s%s Please report.", bundle.getString(CREDENTIALS_ACTION_KEY), System.lineSeparator(), System.lineSeparator()), getActivity());
-                    }
+                    handleButtonActions(credential, bundle.getString(CREDENTIALS_ACTION_KEY));
                     Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, credentials: %s", bundle.getString(CREDENTIALS_ACTION_KEY), credential));
                 } catch (Exception e) {
                     Log.e("", e.toString());
@@ -95,14 +76,11 @@ public class CredentialListFragment extends Fragment {
         final CredentialListAdapter adapter = new CredentialListAdapter(new CredentialListAdapter.CredentialDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        //recyclerView.setOnClickListener(v -> Log.d("", "clicked on list item...."));
-
         Long loggedInUserId = getArguments() != null ? getArguments().getLong(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY) : 1L;
         // Add an observer on the LiveData returned by getCredentialLiveData.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground. Update the cached copy of the credentials in the adapter.
         credentialsViewModel.getCredentialLiveData().observe(requireActivity(), adapter::submitList);
-
         FloatingActionButton addButton = view.findViewById(R.id.add_credential);
         addButton.setOnClickListener(v -> {
             Bundle arguments = new Bundle();
@@ -115,11 +93,7 @@ public class CredentialListFragment extends Fragment {
                 showInfoDialog(String.format("Application error!\n Error: %s\nErrorCode: 5000\nPlease report.", e.getMessage()), getActivity());
             }
 
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.content_frame, CredentialAddFragment.class, arguments)
-                    .setReorderingAllowed(true)
-                    .commit();
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, CredentialAddFragment.class, arguments).setReorderingAllowed(true).commit();
         });
         // enable swipe
         enableSwipeToLeftAndDeleteItem(recyclerView);
@@ -128,45 +102,37 @@ public class CredentialListFragment extends Fragment {
         return view;
     }
 
-    /*
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.options_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_sort_list) {
-           Log.d("onOptionsItemSelected", "sort list");
+    private void handleButtonActions(Credential credential, String action) {
+        if (CREDENTIALS_ACTION_SAVE.equals(action)) {
+            try {
+                credentialsViewModel.save(credential);
+                if (credential.getId() == null) {
+                    showSnackbar("Added credential", R.color.color_snackbar_text_add);
+                } else {
+                    showSnackbar("Updated credential", R.color.color_snackbar_text_update);
+                }
+            } catch (Exception ex) {
+                showInfoDialog(String.format("Application error!%sError: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()), getActivity());
+            }
+        } else if (CREDENTIALS_ACTION_DELETE.equals(action)) {
+            credentialsViewModel.delete(credential);
+            showSnackbar("Deleted credential", R.color.color_snackbar_text_delete);
+        } else {
+            Log.w(Utility.buildTag(getClass(), "onFragmentResult"), "unknown action: " + action);
+            showInfoDialog(String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()), getActivity());
         }
-        return super.onOptionsItemSelected(item);
     }
- */
 
     /**
      *
      */
     private void enableSwipeToLeftAndDeleteItem(RecyclerView recyclerView) {
-        SwipeCallback swipeToDeleteCallback = new SwipeCallback(getContext(), ItemTouchHelper.LEFT, getResources().getColor(R.color.color_bg_swipe_left, null), R.drawable.ic_delete_black_24dp) {
+        SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.LEFT, getResources().getColor(R.color.color_bg_swipe_left, null), R.drawable.ic_delete_black_24dp) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int position = viewHolder.getAbsoluteAdapterPosition();
-                //   final Credential credential = credentialsViewModel.getCredentialLiveData().getValue().get(position);
                 credentialsViewModel.delete(credentialsViewModel.getCredentialLiveData().getValue().get(position));
                 showSnackbar("Deleted credential", R.color.color_snackbar_text_delete);
-                //  mAdapter.removeItem(position);
-
-                /*
-                snackbar.setAction("UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mAdapter.restoreItem(credential, position);
-                        recyclerView.scrollToPosition(position);
-                    }
-                });
-                 */
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
@@ -178,7 +144,7 @@ public class CredentialListFragment extends Fragment {
      *
      */
     private void enableSwipeToRightAndViewItem(RecyclerView recyclerView) {
-        SwipeCallback swipeToDeleteCallback = new SwipeCallback(getContext(), ItemTouchHelper.RIGHT, getResources().getColor(R.color.color_bg_swipe_right, null), R.drawable.ic_add_black_24dp) {
+        SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.RIGHT, getResources().getColor(R.color.color_bg_swipe_right, null), R.drawable.ic_add_black_24dp) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 openViewCredential(credentialsViewModel.getCredentialLiveData().getValue().get(viewHolder.getAbsoluteAdapterPosition()));
@@ -198,16 +164,12 @@ public class CredentialListFragment extends Fragment {
             showInfoDialog(String.format("Application error!%s Error: %s%sErrorCode: 5002%sPlease report.", e.getMessage(), System.lineSeparator(), System.lineSeparator(), System.lineSeparator()), getActivity());
         }
 
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_frame, CredentialAddFragment.class, arguments)
-                .setReorderingAllowed(true)
-                .commit();
+        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, CredentialAddFragment.class, arguments).setReorderingAllowed(true).commit();
     }
 
     private void showSnackbar(String msg, @ColorRes int bgColor) {
         Resources.Theme theme = getResources().newTheme();
-        Snackbar snackbar = Snackbar.make(requireView().findViewById(R.id.list_layout), msg, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(requireView().findViewById(R.id.list_layout), msg, BaseTransientBottomBar.LENGTH_LONG);
         snackbar.setTextColor(getResources().getColor(bgColor, theme));
         snackbar.show();
     }
