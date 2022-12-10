@@ -3,7 +3,6 @@ package com.gunnarro.android.simplepass.domain.entity;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
@@ -22,11 +21,9 @@ public class User {
     @ColumnInfo(name = "id")
     private Long id;
 
-    @NonNull
     @ColumnInfo(name = "created_date")
     private LocalDateTime createdDate = LocalDateTime.now();
 
-    @NonNull
     @ColumnInfo(name = "last_login_date")
     private LocalDateTime lastLoginDate = LocalDateTime.now();
 
@@ -34,14 +31,9 @@ public class User {
     @ColumnInfo(name = "username")
     private String username;
 
-    @NonNull
     @ColumnInfo(name = "failed_login_attempts")
     private Integer failedLoginAttempts = 0;
 
-    public User() {
-    }
-
-    @Ignore
     public User(@NonNull String username) {
         this.username = username;
     }
