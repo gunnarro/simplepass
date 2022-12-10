@@ -1,6 +1,5 @@
 package com.gunnarro.android.simplepass.repository;
 
-import android.database.sqlite.SQLiteConstraintException;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -43,7 +42,7 @@ public class CredentialRepository {
     public void delete(Credential credential) {
         AppDatabase.databaseExecutor.execute(() -> {
             credentialDao.delete(credential);
-            Log.d("CredentialRepository.save", "deleted, id=" + credential.getId());
+            Log.d("CredentialRepository.delete", "deleted, id=" + credential.getId());
         });
     }
 
@@ -79,25 +78,5 @@ public class CredentialRepository {
         service.submit(() -> credentialDao.update(credential));
         Future<Integer> future = service.take();
         return future.get();
-    }
-
-    // You must call this on a non-UI thread or your app will throw an exception. Room ensures
-    // that you're not doing any long running operations on the main thread, blocking the UI.
-    public void saveDeprecated(Credential credential) {
-        Log.d("CredentialRepository.save", "start save: " + credential);
-        AppDatabase.databaseExecutor.execute(() -> {
-            try {
-                if (credential.getId() == null) {
-                    Long id = credentialDao.insert(credential);
-                    Log.d("CredentialRepository.save", "inserted (new), id=" + id);
-                } else {
-                    credentialDao.update(credential);
-                    Log.d("CredentialRepository.save", "updated: " + credential);
-                }
-            } catch (SQLiteConstraintException e) {
-                Log.e("CredentialRepository.save", e.getMessage());
-                throw new SimpleCredStoreApplicationException("Error", e.getMessage(), e.getCause());
-            }
-        });
     }
 }

@@ -16,7 +16,6 @@ public interface UserDao {
     /**
      * Return all users
      * Do not return user where failed login attempt is greater than allowed
-     * @return
      */
     @Query("SELECT * FROM user")
     List<User> getUsers();
