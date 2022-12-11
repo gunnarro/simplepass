@@ -43,6 +43,7 @@ subprojects {
 
 // Define versions in a single place
 ext {
+    compileSdkVersion = 33
     // application library version
     room_version = '2.4.3'
     kotlin_version = '1.6.0'

@@ -16,6 +16,7 @@ sonarqube {
 }
 
 android {
+    compileSdk compileSdkVersion
 
     defaultConfig {
         applicationId "com.gunnarro.android.simplepass"
