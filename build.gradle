@@ -21,8 +21,6 @@ plugins {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
@@ -86,7 +84,6 @@ ext {
     // For App Authentication APIs
     androidx_security_app_authenticator = '1.0.0-alpha02'
     // for unit tests
-    junit = '4.13.2'
     junit_vintage_engine = '5.9.1'
     junit_jupiter = '5.9.1'
     mockito_inline = '4.9.0'
@@ -95,7 +92,6 @@ ext {
     androidx_espresso_core = '3.5.0'
     //
     androidx_fragment_testing = '1.5.5'
-    sourceCompatibility = JavaVersion.VERSION_17
 }
 
 // default reportsDirectory $buildDir/reports/jacoco
