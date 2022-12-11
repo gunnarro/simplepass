@@ -3,10 +3,6 @@ plugins {
     id 'jacoco'
 }
 
-ext {
-    compileSdkVersion = 33
-}
-
 sonarqube {
     properties {
         property "sonar.projectKey", "gunnarro_simplepass"
@@ -16,7 +12,8 @@ sonarqube {
 }
 
 android {
-    compileSdk compileSdkVersion
+    compileSdk 33
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.gunnarro.android.simplepass"
@@ -65,6 +62,7 @@ android {
     lintOptions {
         warning 'InvalidPackage'
     }
+    buildToolsVersion '30.0.3'
 }
 
 dependencies {
