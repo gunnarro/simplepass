@@ -12,17 +12,16 @@ buildscript {
 }
 
 plugins {
-    id 'com.android.application' version '7.3.0' apply false
-    id 'com.android.library' version '7.3.0' apply false
+    id 'com.android.application' version '7.3.1' apply false
+    id 'com.android.library' version '7.3.1' apply false
     id "org.sonarqube" version "3.4.0.2513"
     id "java"
     id "jacoco"
 }
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 allprojects {
@@ -44,12 +43,53 @@ subprojects {
 
 // Define versions in a single place
 ext {
-    roomVersion = '2.4.3'
-    kotlinVersion = '1.6.0'
-    biometricVersion = "1.1.0"
-    // testing
-    junitVersion = '4.13.2'
-    androidxJunitVersion = '1.1.2'
+    // application library version
+    room_version = '2.4.3'
+    kotlin_version = '1.6.0'
+    biometric_version = "1.1.0"
+    // android
+    android_arch_navigation = '1.0.0'
+    // androidx
+    androidx_appcompat = '1.5.1'
+    androidx_core_ktx = '1.9.0'
+    androidx_constraint_layout = '2.1.4'
+    androidx_lifecycle_extensions = '2.2.0'
+    androidx_legacy_support_v4 = '1.0.0'
+    androidx_drawerlayout = '1.1.1'
+    androidx_appcompat = '1.5.1'
+    androidx_recyclerview = '1.2.1'
+    androidx_preference = '1.2.0'
+    androidx_lifecycle_livedata_ktx = '2.5.1'
+    androidx_lifecycle_viewmodel_ktx = '2.5.1'
+    androidx_annotation = '1.5.0'
+    androidx_navigation_fragment = '2.5.3'
+    androidx_navigation_ui = '2.5.3'
+    // google
+    google_android_material = '1.7.0'
+    google_dagger_hilt_android = '2.44.2'
+    // xml
+    jackson_databind = '2.14.1'
+    jackson_datatype_jsr310 = '2.14.1'
+    // for password hashing
+    mkammerer_argon2_jvm = '2.11'
+    jasypt = '1.9.3'
+    // for password strength check
+    passay = '1.6.2'
+    gustav_passwordstrengthmeter = '0.4'
+    // For Identity Credential APIs
+    androidx_security_identity_credential = '1.0.0-alpha03'
+    // For App Authentication APIs
+    androidx_security_app_authenticator = '1.0.0-alpha02'
+    // for unit tests
+    junit = '4.13.2'
+    junit_vintage_engine = '5.9.1'
+    junit_jupiter = '5.9.1'
+    mockito_inline = '4.9.0'
+    // for android instrumentation tests
+    androidx_junit = '1.1.4'
+    androidx_espresso_core = '3.5.0'
+    //
+    androidx_fragment_testing = '1.5.5'
 }
 
 // default reportsDirectory $buildDir/reports/jacoco

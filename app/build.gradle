@@ -3,6 +3,10 @@ plugins {
     id 'jacoco'
 }
 
+ext {
+    compileSdkVersion = 33
+}
+
 sonarqube {
     properties {
         property "sonar.projectKey", "gunnarro_simplepass"
@@ -12,7 +16,6 @@ sonarqube {
 }
 
 android {
-    compileSdk 33
 
     defaultConfig {
         applicationId "com.gunnarro.android.simplepass"
@@ -37,10 +40,6 @@ android {
     productFlavors {
     }
 
-    lintOptions {
-        abortOnError false
-    }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -57,65 +56,69 @@ android {
         viewBinding true
     }
     namespace 'com.gunnarro.android.simplepass'
+
+    lint {
+        abortOnError false
+    }
+
+    lintOptions {
+        warning 'InvalidPackage'
+    }
 }
 
 dependencies {
     // Android
-    implementation "android.arch.navigation:navigation-fragment:1.0.0"
-    implementation "android.arch.navigation:navigation-ui:1.0.0"
+    implementation "android.arch.navigation:navigation-fragment:$android_arch_navigation"
+    implementation "android.arch.navigation:navigation-ui:$android_arch_navigation"
     // androidx
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation "androidx.preference:preference:1.2.0"
-
+    implementation "androidx.appcompat:appcompat:$androidx_appcompat"
+    implementation "androidx.core:core-ktx:$androidx_core_ktx"
+    implementation "androidx.constraintlayout:constraintlayout:$androidx_constraint_layout"
+    implementation "androidx.lifecycle:lifecycle-extensions:$androidx_lifecycle_extensions"
+    implementation "androidx.legacy:legacy-support-v4:$androidx_legacy_support_v4"
+    implementation "androidx.drawerlayout:drawerlayout:$androidx_drawerlayout"
+    implementation "androidx.appcompat:appcompat:$androidx_appcompat"
+    implementation "androidx.recyclerview:recyclerview:$androidx_recyclerview"
+    implementation "androidx.preference:preference:$androidx_preference"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidx_lifecycle_livedata_ktx"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidx_lifecycle_viewmodel_ktx"
+    implementation "androidx.annotation:annotation:$androidx_annotation"
+    implementation "androidx.navigation:navigation-fragment:$androidx_navigation_fragment"
+    implementation "androidx.navigation:navigation-ui:$androidx_navigation_ui"
     // google
-    implementation 'com.google.android.material:material:1.7.0'
-    implementation 'com.google.dagger:hilt-android:2.44.2'
-    implementation 'androidx.annotation:annotation:1.5.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0'
-    implementation 'androidx.navigation:navigation-fragment:2.5.3'
-    implementation 'androidx.navigation:navigation-ui:2.5.3'
+    implementation "com.google.android.material:material:$google_android_material"
+    implementation "com.google.dagger:hilt-android:$google_dagger_hilt_android"
+    // xml
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_databind"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_datatype_jsr310"
     // for password hashing
-    implementation 'de.mkammerer:argon2-jvm:2.11'
-    implementation 'org.jasypt:jasypt:1.9.3'
+    implementation "de.mkammerer:argon2-jvm:$mkammerer_argon2_jvm"
+    implementation "org.jasypt:jasypt:$jasypt"
     // for password strength check
-    implementation 'org.passay:passay:1.6.2'
-    implementation 'nu.aaro.gustav:passwordstrengthmeter:0.4'
-
+    implementation "org.passay:passay:$passay"
+    implementation "nu.aaro.gustav:passwordstrengthmeter:$gustav_passwordstrengthmeter"
     // Room components
     //noinspection GradleDependency
-    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
-    annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
     // encrypt/decrypt database
     implementation 'net.zetetic:android-database-sqlcipher:4.5.2'
     implementation "androidx.security:security-crypto:1.1.0-alpha04"
-    //  implementation "androidx.security:security-crypto-ktx:1.1.0-alpha03"
     // For Identity Credential APIs
-    implementation "androidx.security:security-identity-credential:1.0.0-alpha03"
+    implementation "androidx.security:security-identity-credential:$androidx_security_identity_credential"
     // For App Authentication APIs
-    implementation "androidx.security:security-app-authenticator:1.0.0-alpha02"
-
+    implementation "androidx.security:security-app-authenticator:$androidx_security_app_authenticator"
     // for fingerprint login
-    implementation "androidx.biometric:biometric:$rootProject.biometricVersion"
+    implementation "androidx.biometric:biometric:$rootProject.biometric_version"
     // for unit tests
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation "org.junit.vintage:junit-vintage-engine:5.9.1"
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
-    testImplementation 'org.mockito:mockito-inline:4.8.0'
+    testImplementation "junit:junit:$junit"
+    testImplementation "org.junit.vintage:junit-vintage-engine:$junit_vintage_engine"
+    testImplementation "org.junit.jupiter:junit-jupiter:$junit_jupiter"
+    testImplementation "org.mockito:mockito-inline:$mockito_inline"
     // for android instrumentation tests
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
-    androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_espresso_core"
+    androidTestImplementation "androidx.room:room-testing:$rootProject.room_version"
 
-    debugImplementation "androidx.fragment:fragment-testing:1.5.5"
+    debugImplementation "androidx.fragment:fragment-testing:$androidx_fragment_testing"
 }
