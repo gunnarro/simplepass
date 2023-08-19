@@ -95,6 +95,7 @@ public class User {
         return Objects.hash(username);
     }
 
+    @NonNull
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("User{");
