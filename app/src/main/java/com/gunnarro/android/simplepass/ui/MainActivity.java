@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // check and grant or deny permissions
         checkPermissions();
         // Finally, start timer for automatically logout user after å given period of time
-        startAutoLogoutUserTimer(600000);
+        startAutoLogoutUserTimer(60000);
     }
 
     @Override
