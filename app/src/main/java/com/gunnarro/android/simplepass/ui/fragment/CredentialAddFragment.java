@@ -15,9 +15,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -27,8 +25,6 @@ import com.gunnarro.android.simplepass.domain.entity.Credential;
 import com.gunnarro.android.simplepass.exception.SimpleCredStoreApplicationException;
 import com.gunnarro.android.simplepass.utility.Utility;
 import com.gunnarro.android.simplepass.validator.CustomPasswordValidator;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
@@ -45,7 +41,7 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
     public static final String HAS_TEXT_REGEX = "\\w.*+";
     // match one or more withe space
     public static final String EMPTY_TEXT_REGEX = "\\s+";
-    private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+   // private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Inject
     public CredentialAddFragment() {
@@ -68,9 +64,9 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         String credentialJson = getArguments() != null ? getArguments().getString(CredentialListFragment.CREDENTIALS_JSON_INTENT_KEY) : null;
         if (credentialJson != null) {
             try {
-                credential = mapper.readValue(credentialJson, Credential.class);
+                credential = Utility.gsonMapper().fromJson(credentialJson, Credential.class);
                 Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, credentials: %s", credentialJson, credential));
-            } catch (JsonProcessingException e) {
+            } catch (Exception e) {
                 Log.e("", e.toString());
                 throw new SimpleCredStoreApplicationException("Application Error!", "5000", e);
             }
@@ -168,6 +164,8 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
                 // nothing to show hide field
                 view.findViewById(R.id.credential_password_broken_validation_rules_layout).setVisibility(View.GONE);
             }
+            // change button icon to from add new to save
+            ((MaterialButton)view.findViewById(R.id.btn_credential_register_save)).setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_check_black_24dp));
         }
         Log.d(Utility.buildTag(getClass(), "updateAddCredentialView"), String.format("updated %s ", credential));
     }
@@ -221,8 +219,8 @@ public class CredentialAddFragment extends Fragment implements View.OnClickListe
         credential.setPasswordStatus(new CustomPasswordValidator().passwordStrengthStatus(passwordView.getText().toString()));
 
         try {
-            return Utility.getJsonMapper().writerWithDefaultPrettyPrinter().writeValueAsString(credential);
-        } catch (JsonProcessingException e) {
+            return Utility.gsonMapper().toJson(credential);
+        } catch (Exception e) {
             Log.e("getCredentialsAsJson", e.toString());
             throw new SimpleCredStoreApplicationException("unable to parse object to json!,", "5000", e);
         }

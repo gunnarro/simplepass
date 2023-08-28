@@ -28,7 +28,7 @@ public class CredentialListAdapter extends ListAdapter<Credential, CredentialVie
     }
 
     @Override
-    public void onBindViewHolder(CredentialViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CredentialViewHolder holder, int position) {
         Credential current = getItem(position);
         if (current != null) {
             holder.bindListLine(current);

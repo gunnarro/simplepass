@@ -14,4 +14,13 @@ class CredentialTest {
         credential.setPassword(new EncryptedString("encrypted-password"));
         Assertions.assertEquals("encrypted-password", credential.getPassword().getValue());
     }
+
+    @Test
+    void defaultValues() {
+        Credential credential = new Credential();
+        Assertions.assertNull(credential.getId());
+        Assertions.assertNull(credential.getCreatedDate());
+        Assertions.assertNull(credential.getLastModifiedDate());
+        Assertions.assertNotNull(credential.toString());
+    }
 }

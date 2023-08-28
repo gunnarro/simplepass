@@ -12,8 +12,10 @@ import androidx.security.crypto.MasterKey;
 
 import com.gunnarro.android.simplepass.domain.config.Settings;
 import com.gunnarro.android.simplepass.domain.entity.Credential;
+import com.gunnarro.android.simplepass.domain.entity.Message;
 import com.gunnarro.android.simplepass.domain.entity.User;
 import com.gunnarro.android.simplepass.repository.CredentialDao;
+import com.gunnarro.android.simplepass.repository.MessageDao;
 import com.gunnarro.android.simplepass.repository.SettingsDao;
 import com.gunnarro.android.simplepass.repository.UserDao;
 
@@ -30,7 +32,7 @@ import java.util.concurrent.Executors;
  * Thread safe database instance.
  * Backup is turned off for this database file.
  */
-@Database(entities = {User.class, Credential.class, Settings.class}, version = 1)
+@Database(entities = {User.class, Credential.class, Settings.class, Message.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 1;
     public static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -139,4 +141,6 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDao userDao();
 
     public abstract SettingsDao settingsDao();
+
+    public abstract MessageDao messageDao();
 }

@@ -18,6 +18,7 @@ import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.ui.fragment.AdminFragment;
 import com.gunnarro.android.simplepass.ui.fragment.CredentialAddFragment;
 import com.gunnarro.android.simplepass.ui.fragment.CredentialListFragment;
+import com.gunnarro.android.simplepass.ui.fragment.MessageListFragment;
 import com.gunnarro.android.simplepass.ui.fragment.PreferencesFragment;
 import com.gunnarro.android.simplepass.ui.login.LoginActivity;
 import com.gunnarro.android.simplepass.utility.AESCrypto;
@@ -36,9 +37,10 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
-    final CredentialListFragment credentialStoreListFragment;
+    final CredentialListFragment credentialListFragment;
     @Inject
     final CredentialAddFragment credentialAddFragment;
+    final MessageListFragment messageListFragment;
     @Inject
     final PreferencesFragment preferencesFragment;
     @Inject
@@ -48,8 +50,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Long loggedInUserId = null;
 
     public MainActivity() {
-        this.credentialStoreListFragment = new CredentialListFragment();
+        this.credentialListFragment = new CredentialListFragment();
         this.credentialAddFragment = new CredentialAddFragment();
+        this.messageListFragment = new MessageListFragment();
         this.preferencesFragment = new PreferencesFragment();
         this.adminFragment = new AdminFragment();
     }
@@ -86,12 +89,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setCheckedItem(R.id.nav_credential_list);
 
         if (savedInstanceState == null) {
-            viewFragment(credentialStoreListFragment);
+            viewFragment(credentialListFragment);
         }
         // check and grant or deny permissions
         checkPermissions();
         // Finally, start timer for automatically logout user after å given period of time
-        startAutoLogoutUserTimer(60000);
+        //startAutoLogoutUserTimer(60000);
     }
 
     @Override
@@ -119,15 +122,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 viewFragment(preferencesFragment);
             } else if (id == R.id.nav_credential_list) {
                 ((NavigationView) findViewById(R.id.navigationView)).setCheckedItem(R.id.nav_credential_list);
-                credentialStoreListFragment.setArguments(args);
-                viewFragment(credentialStoreListFragment);
+                credentialListFragment.setArguments(args);
+                viewFragment(credentialListFragment);
+            } else if (id == R.id.nav_message_list) {
+                ((NavigationView) findViewById(R.id.navigationView)).setCheckedItem(R.id.nav_message_list);
+                messageListFragment.setArguments(args);
+                viewFragment(messageListFragment);
             } else if (id == R.id.nav_admin) {
                 ((NavigationView) findViewById(R.id.navigationView)).setCheckedItem(R.id.nav_admin);
                 viewFragment(adminFragment);
             } else if (id == R.id.nav_logout) {
                 // always clear the key
                 AESCrypto.reset();
-                startAutoLogoutUserTimer(1);
+                startAutoLogoutUserTimer(100000);
             }
             // close drawer after clicking the menu item
             DrawerLayout tmpDrawer = findViewById(R.id.drawer_layout);

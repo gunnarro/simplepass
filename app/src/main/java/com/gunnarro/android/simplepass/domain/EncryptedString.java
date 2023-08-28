@@ -2,16 +2,17 @@ package com.gunnarro.android.simplepass.domain;
 
 import androidx.annotation.NonNull;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+//import com.fasterxml.jackson.annotation.JsonCreator;
+//import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class EncryptedString {
 
     @NonNull
     private final String value;
 
-    @JsonCreator
-    public EncryptedString(@NonNull @JsonProperty("value") String value) {
+  //  @JsonCreator
+    public EncryptedString(@NonNull //@JsonProperty("value")
+                            String value) {
         this.value = value;
     }
 

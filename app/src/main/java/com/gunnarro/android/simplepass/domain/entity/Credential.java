@@ -54,6 +54,7 @@ public class Credential {
     @ColumnInfo(name = "password_status", index = true)
     private String passwordStatus;
 
+
     public Long getId() {
         return id;
     }
@@ -152,8 +153,8 @@ public class Credential {
         final StringBuilder sb = new StringBuilder("Credential{");
         sb.append("id=").append(id);
         sb.append(", fkUserId=").append(fkUserId);
-        sb.append(", createdDate=").append(createdDate);
-        sb.append(", lastModifiedDate=").append(lastModifiedDate);
+        sb.append(", createdDate=").append(createdDate != null ? createdDate : null);
+        sb.append(", lastModifiedDate=").append(lastModifiedDate != null ? lastModifiedDate : null);
         sb.append(", system='").append(system).append('\'');
         sb.append(", url='").append(url).append('\'');
         sb.append(", username='").append(username).append('\'');

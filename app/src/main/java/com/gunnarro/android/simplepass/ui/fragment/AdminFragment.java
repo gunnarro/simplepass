@@ -8,9 +8,6 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.gunnarro.android.simplepass.R;
 import com.gunnarro.android.simplepass.config.AppDatabase;
@@ -30,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class AdminFragment extends Fragment implements View.OnClickListener {
 
-    private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+  //  private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Inject
     public AdminFragment() {
@@ -53,9 +50,9 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
         String credentialJson = getArguments() != null ? getArguments().getString(CredentialListFragment.CREDENTIALS_JSON_INTENT_KEY) : null;
         if (credentialJson != null) {
             try {
-                credential = mapper.readValue(credentialJson, Credential.class);
+                credential = Utility.gsonMapper().fromJson(credentialJson, Credential.class);
                 Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, credentials: %s", credentialJson, credential));
-            } catch (JsonProcessingException e) {
+            } catch (Exception e) {
                 Log.e("", e.toString());
                 throw new SimpleCredStoreApplicationException("Application Error", "5000", e);
             }

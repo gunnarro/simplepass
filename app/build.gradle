@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId "com.gunnarro.android.simplepass"
-        minSdk 26
+        minSdk 29
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -40,7 +40,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+           // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -56,14 +56,17 @@ android {
 
     lint {
         abortOnError false
-    }
-
-    lintOptions {
         warning 'InvalidPackage'
     }
+
 }
 
 dependencies {
+    // quickfix for kotlin duplicate class error message
+  //  implementation "org.jetbrains.kotlin:kotlin-bom:1.8.0"
+  //  runtimeOnly 'org.jetbrains.kotlin:kotlin-bom:1.8.10'
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+
     // Android
     implementation "android.arch.navigation:navigation-fragment:$android_arch_navigation"
     implementation "android.arch.navigation:navigation-ui:$android_arch_navigation"
@@ -77,8 +80,7 @@ dependencies {
     implementation "androidx.legacy:legacy-support-v4:$androidx_legacy_support_v4"
     //noinspection GradleDependency
     implementation "androidx.drawerlayout:drawerlayout:$androidx_drawerlayout"
-    //noinspection GradleDependency
-    implementation "androidx.appcompat:appcompat:$androidx_appcompat"
+
     //noinspection GradleDependency
     implementation "androidx.recyclerview:recyclerview:$androidx_recyclerview"
     implementation "androidx.preference:preference:$androidx_preference"
@@ -88,7 +90,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidx_lifecycle_viewmodel_ktx"
     //noinspection GradleDependency
     implementation "androidx.annotation:annotation:$androidx_annotation"
+    //noinspection GradleDependency
     implementation "androidx.navigation:navigation-fragment:$androidx_navigation_fragment"
+    //noinspection GradleDependency
     implementation "androidx.navigation:navigation-ui:$androidx_navigation_ui"
     // google
     //noinspection GradleDependency
@@ -96,10 +100,11 @@ dependencies {
     //noinspection GradleDependency
     implementation "com.google.dagger:hilt-android:$google_dagger_hilt_android"
     // xml
+    implementation "com.google.code.gson:gson:$google_gson"
     //noinspection GradleDependency
-    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_databind"
+  //  implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_databind"
     //noinspection GradleDependency
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_datatype_jsr310"
+  //  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_datatype_jsr310"
     // for password hashing
     implementation "de.mkammerer:argon2-jvm:$mkammerer_argon2_jvm"
     implementation "org.jasypt:jasypt:$jasypt"
@@ -111,7 +116,7 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     // encrypt/decrypt database
-    implementation 'net.zetetic:android-database-sqlcipher:4.5.2'
+    implementation 'net.zetetic:android-database-sqlcipher:4.5.4'
     implementation "androidx.security:security-crypto:1.1.0-alpha06"
     // For Identity Credential APIs
     implementation "androidx.security:security-identity-credential:$androidx_security_identity_credential"
@@ -135,3 +140,5 @@ dependencies {
     //noinspection GradleDependency
     debugImplementation "androidx.fragment:fragment-testing:$androidx_fragment_testing"
 }
+
+

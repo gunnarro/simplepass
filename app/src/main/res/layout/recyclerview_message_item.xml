@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="2dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/message_item_entity_id"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text=""
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/message_header_txt"
+        style="@style/credential_list_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:background="@color/color_tbl_header"
+        android:text="@string/prompt_message_tag"
+        android:textAlignment="textStart"
+        android:textStyle="normal" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/message_header_txt"
+        android:gravity="center"
+        android:paddingLeft="4dp"
+        android:paddingTop="4dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="4dp">
+        <TableRow>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/message_content"
+                    style="@style/CustomTextInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+                    android:gravity="start"
+                    android:textStyle="normal"
+                    android:maxLines="50"
+                    android:enabled="false"
+                    android:inputType="textMultiLine"
+                    android:text="content will be put here!"/>
+        </TableRow>
+    </TableLayout>
+</RelativeLayout>

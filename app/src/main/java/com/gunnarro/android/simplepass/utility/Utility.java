@@ -2,27 +2,42 @@ package com.gunnarro.android.simplepass.utility;
 
 import android.util.Log;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class Utility {
 
     private static final String DATE_TIME_PATTERN = "dd-MM-yyyy HH:mm";
-    private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    //  private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
     private static String currentUUID;
+
+    public static DateTimeFormatter getDateTimeFormatter() {
+        return dateTimeFormatter;
+    }
+
+    private static final Gson gson = new GsonBuilder()
+            //   .registerTypeAdapter(Id.class, new IdTypeAdapter())
+            // .setDateFormat(DateFormat.LONG)
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+            .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+            .setPrettyPrinting()
+            .setDateFormat("dd-MM-yyyy HH:mm:ss.SSS")
+            // .setVersion(1.0)
+            .create();
 
     private Utility() {
         genNewUUID();
     }
 
-    public static ObjectMapper getJsonMapper() {
-        return mapper;
+
+    public static Gson gsonMapper() {
+        return gson;
     }
 
     public static void genNewUUID() {
@@ -49,10 +64,11 @@ public class Utility {
         if (dateTimeStr == null || dateTimeStr.length() != DATE_TIME_PATTERN.length()) {
             return null;
         }
-        return LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ofPattern(DATE_TIME_PATTERN, Locale.getDefault()));
+        return LocalDateTime.parse(dateTimeStr, dateTimeFormatter);
     }
 
     private static final Pattern positiveIntegerPattern = Pattern.compile("\\d+");
+
     public static boolean isInteger(String value) {
         if (value == null) {
             return false;

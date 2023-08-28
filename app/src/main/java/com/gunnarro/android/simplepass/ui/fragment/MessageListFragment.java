@@ -22,39 +22,38 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.simplepass.R;
-import com.gunnarro.android.simplepass.domain.entity.Credential;
-import com.gunnarro.android.simplepass.ui.adapter.CredentialListAdapter;
+import com.gunnarro.android.simplepass.domain.entity.Message;
+import com.gunnarro.android.simplepass.ui.adapter.MessageListAdapter;
 import com.gunnarro.android.simplepass.ui.login.LoginActivity;
 import com.gunnarro.android.simplepass.ui.swipe.SwipeCallback;
-import com.gunnarro.android.simplepass.ui.view.CredentialViewModel;
+import com.gunnarro.android.simplepass.ui.view.MessageViewModel;
 import com.gunnarro.android.simplepass.utility.Utility;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class CredentialListFragment extends Fragment {
-    public static final String CREDENTIALS_JSON_INTENT_KEY = "credentials_as_json";
-    public static final String CREDENTIALS_REQUEST_KEY = "2";
-    public static final String CREDENTIALS_ACTION_KEY = "12";
-    public static final String CREDENTIALS_ACTION_SAVE = "credentials_save";
-    public static final String CREDENTIALS_ACTION_DELETE = "credentials_delete";
-    //private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
-    private CredentialViewModel credentialsViewModel;
+public class MessageListFragment extends Fragment {
+    public static final String MESSAGE_JSON_INTENT_KEY = "message_as_json";
+    public static final String MESSAGE_REQUEST_KEY = "3";
+    public static final String MESSAGE_ACTION_KEY = "13";
+    public static final String MESSAGE_ACTION_SAVE = "message_save";
+    public static final String MESSAGE_ACTION_DELETE = "message_delete";
+    private MessageViewModel messageViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Get a new or existing ViewModel from the ViewModelProvider.
-        credentialsViewModel = new ViewModelProvider(this).get(CredentialViewModel.class);
-        // Pick up callback from add credentials view
-        getParentFragmentManager().setFragmentResultListener(CREDENTIALS_REQUEST_KEY, this, new FragmentResultListener() {
+        messageViewModel = new ViewModelProvider(this).get(MessageViewModel.class);
+        // Pick up callback from add message view
+        getParentFragmentManager().setFragmentResultListener(MESSAGE_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
-                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), "intent: " + requestKey + "json:  + " + bundle.getString(CREDENTIALS_JSON_INTENT_KEY));
+                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), "intent: " + requestKey + "json:  + " + bundle.getString(MESSAGE_JSON_INTENT_KEY));
                 try {
-                    Credential credential = Utility.gsonMapper().fromJson(bundle.getString(CREDENTIALS_JSON_INTENT_KEY), Credential.class);
-                    handleButtonActions(credential, bundle.getString(CREDENTIALS_ACTION_KEY));
-                    Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, credentials: %s", bundle.getString(CREDENTIALS_ACTION_KEY), credential));
+                    Message message = Utility.gsonMapper().fromJson(bundle.getString(MESSAGE_JSON_INTENT_KEY), Message.class);
+                    handleButtonActions(message, bundle.getString(MESSAGE_ACTION_KEY));
+                    Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, message: %s", bundle.getString(MESSAGE_ACTION_KEY), message));
                 } catch (Exception e) {
                     Log.e("", e.toString());
                     showInfoDialog(String.format("Application error!%s Error: %s%sErrorCode: 5001%sPlease report.", e.getMessage(), System.lineSeparator(), System.lineSeparator(), System.lineSeparator()), getActivity());
@@ -66,31 +65,31 @@ public class CredentialListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        requireActivity().setTitle(R.string.title_credential_list);
+        requireActivity().setTitle(R.string.title_message_list);
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_recycler_credential_list, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.credential_recyclerview);
-        final CredentialListAdapter adapter = new CredentialListAdapter(new CredentialListAdapter.CredentialDiff());
+        View view = inflater.inflate(R.layout.fragment_recycler_message_list, container, false);
+        RecyclerView recyclerView = view.findViewById(R.id.message_recyclerview);
+        final MessageListAdapter adapter = new MessageListAdapter(new MessageListAdapter.MessageDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         Long loggedInUserId = getArguments() != null ? getArguments().getLong(LoginActivity.LOGGED_IN_USER_ID_INTENT_KEY) : 1L;
         // Add an observer on the LiveData returned by getCredentialLiveData.
         // The onChanged() method fires when the observed data changes and the activity is
-        // in the foreground. Update the cached copy of the credentials in the adapter.
-        credentialsViewModel.getCredentialLiveData().observe(requireActivity(), adapter::submitList);
-        FloatingActionButton addButton = view.findViewById(R.id.add_credential);
+        // in the foreground. Update the cached copy of the message in the adapter.
+        messageViewModel.getMessageLiveData().observe(requireActivity(), adapter::submitList);
+        FloatingActionButton addButton = view.findViewById(R.id.add_message);
         addButton.setOnClickListener(v -> {
             Bundle arguments = new Bundle();
             try {
-                Credential newCredential = new Credential();
-                newCredential.setFkUserId(loggedInUserId);
-                arguments.putString(CREDENTIALS_JSON_INTENT_KEY, Utility.gsonMapper().toJson(newCredential));
+                Message newMessage = new Message();
+                newMessage.setFkUserId(loggedInUserId);
+                arguments.putString(MESSAGE_JSON_INTENT_KEY, Utility.gsonMapper().toJson(newMessage));
             } catch (Exception e) {
                 Log.e(Utility.buildTag(getClass(), "addBtn.setOnClickListener"), e.toString());
                 showInfoDialog(String.format("Application error!\n Error: %s\nErrorCode: 5000\nPlease report.", e.getMessage()), getActivity());
             }
 
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, CredentialAddFragment.class, arguments).setReorderingAllowed(true).commit();
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, MessageAddFragment.class, arguments).setReorderingAllowed(true).commit();
         });
         // enable swipe
         enableSwipeToLeftAndDeleteItem(recyclerView);
@@ -99,24 +98,24 @@ public class CredentialListFragment extends Fragment {
         return view;
     }
 
-    private void handleButtonActions(Credential credential, String action) {
-        if (CREDENTIALS_ACTION_SAVE.equals(action)) {
+    private void handleButtonActions(Message message, String action) {
+        if (MESSAGE_ACTION_SAVE.equals(action)) {
             try {
-                credentialsViewModel.save(credential);
-                if (credential.getId() == null) {
-                    showSnackbar("Added credential", R.color.color_snackbar_text_add);
+                messageViewModel.save(message);
+                if (message.getId() == null) {
+                    showSnackbar("Added message", R.color.color_snackbar_text_add);
                 } else {
-                    showSnackbar("Updated credential", R.color.color_snackbar_text_update);
+                    showSnackbar("Updated message", R.color.color_snackbar_text_update);
                 }
             } catch (Exception ex) {
-                showInfoDialog(String.format("Application error!%sError: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()), getActivity());
+                showInfoDialog(String.format("Application error! %s Error: %s %s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()), getActivity());
             }
-        } else if (CREDENTIALS_ACTION_DELETE.equals(action)) {
-            credentialsViewModel.delete(credential);
-            showSnackbar("Deleted credential", R.color.color_snackbar_text_delete);
+        } else if (MESSAGE_ACTION_DELETE.equals(action)) {
+            messageViewModel.delete(message);
+            showSnackbar("Deleted message", R.color.color_snackbar_text_delete);
         } else {
             Log.w(Utility.buildTag(getClass(), "onFragmentResult"), "unknown action: " + action);
-            showInfoDialog(String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()), getActivity());
+            showInfoDialog(String.format("Application error! %s Unknown action: %s %s Please report.", action, System.lineSeparator(), System.lineSeparator()), getActivity());
         }
     }
 
@@ -128,13 +127,13 @@ public class CredentialListFragment extends Fragment {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int position = viewHolder.getAbsoluteAdapterPosition();
-                credentialsViewModel.delete(credentialsViewModel.getCredentialLiveData().getValue().get(position));
-                showSnackbar("Deleted credential", R.color.color_snackbar_text_delete);
+                messageViewModel.delete(messageViewModel.getMessageLiveData().getValue().get(position));
+                showSnackbar("Deleted message", R.color.color_snackbar_text_delete);
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(recyclerView);
-        Log.i(Utility.buildTag(getClass(), "enableSwipeToLeftAndDeleteItem"), "enabled swipe handler for delete credential list item");
+        Log.i(Utility.buildTag(getClass(), "enableSwipeToLeftAndDeleteItem"), "enabled swipe handler for delete message list item");
     }
 
     /**
@@ -144,29 +143,29 @@ public class CredentialListFragment extends Fragment {
         SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.RIGHT, getResources().getColor(R.color.color_bg_swipe_right, null), R.drawable.ic_add_black_24dp) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                openViewCredential(credentialsViewModel.getCredentialLiveData().getValue().get(viewHolder.getAbsoluteAdapterPosition()));
+                openViewMessage(messageViewModel.getMessageLiveData().getValue().get(viewHolder.getAbsoluteAdapterPosition()));
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(recyclerView);
-        Log.i(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "enabled swipe handler for view credential list item");
+        Log.i(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "enabled swipe handler for message list item");
     }
 
-    private void openViewCredential(Credential credential) {
+    private void openViewMessage(Message message) {
         Bundle arguments = new Bundle();
         try {
-            arguments.putString(CREDENTIALS_JSON_INTENT_KEY, Utility.gsonMapper().toJson(credential));
+            arguments.putString(MESSAGE_JSON_INTENT_KEY, Utility.gsonMapper().toJson(message));
         } catch (Exception e) {
-            Log.e(Utility.buildTag(getClass(), "openViewCredential"), e.toString());
+            Log.e(Utility.buildTag(getClass(), "openViewMessage"), e.toString());
             showInfoDialog(String.format("Application error!%s Error: %s%sErrorCode: 5002%sPlease report.", e.getMessage(), System.lineSeparator(), System.lineSeparator(), System.lineSeparator()), getActivity());
         }
 
-        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, CredentialAddFragment.class, arguments).setReorderingAllowed(true).commit();
+        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, MessageAddFragment.class, arguments).setReorderingAllowed(true).commit();
     }
 
     private void showSnackbar(String msg, @ColorRes int bgColor) {
         Resources.Theme theme = getResources().newTheme();
-        Snackbar snackbar = Snackbar.make(requireView().findViewById(R.id.credential_list_layout), msg, BaseTransientBottomBar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(requireView().findViewById(R.id.message_list_layout), msg, BaseTransientBottomBar.LENGTH_LONG);
         snackbar.setTextColor(getResources().getColor(bgColor, theme));
         snackbar.show();
     }
