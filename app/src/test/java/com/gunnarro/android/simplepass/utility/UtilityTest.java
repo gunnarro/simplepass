@@ -22,16 +22,15 @@ class UtilityTest {
         assertEquals("11-11-2022 23:32", Utility.formatDateTime(LocalDateTime.now().withYear(2022).withMonth(11).withDayOfMonth(11).withHour(23).withMinute(32).withSecond(23)));
     }
 
-    @Disabled
     @Test
     void credentialToJson() {
         Credential credential = new Credential();
-        credential.setLastModifiedDate(LocalDateTime.of(2023,12,12, 12, 12, 12));
-        assertEquals("{\"LastModifiedDate\": \"12-12-2023 12:12\" }", Utility.gsonMapper().toJson(credential).trim());
+        credential.setLastModifiedDate(LocalDateTime.of(2023, 12, 12, 12, 12, 12));
+        assertEquals("{  \"LastModifiedDate\": \"12-12-2023 12:12\"}", Utility.gsonMapper().toJson(credential).replace("\n", "").trim());
     }
 
     @Test
     void messageToJson() {
-        assertEquals("", Utility.gsonMapper().toJson(new Message()));
+        assertEquals("{}", Utility.gsonMapper().toJson(new Message()));
     }
 }
